@@ -48,5 +48,7 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
+        // you'll retrun all the options of where the bishop can go based on where it is now.
+        // return new ArrayList<>()
     }
 }
