@@ -10,7 +10,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
+    private ChessGame.TeamColor pieceColor;
+    private PieceType type;
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.pieceColor = pieceColor;
+        this.type = type;
     }
 
     /**
@@ -29,14 +34,14 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return type;
     }
 
     /**
@@ -47,6 +52,51 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+
+        // ok return pieceMoves ArrayList but get that even from a function doesnt matter where u put it tbh
+        if (type == PieceType.KNIGHT) {
+            System.out.println("type = knight! calling knigh function");
+            // maybe make a folder for piece moves?
+        }
+
+
+
+
+        // lets do knight first!!!
+
+
+
+
+        // ok so like just make a for loop that adds all the ways it can move and then
+        // within the for loop check somehow if someone else is there - might have to
+        // go through all the pieces?
+        // and just check like is their position there rn?
+
+
+
+        // if bishop then call bishop moves given original ChessPosition
+        // else if pawn call pawn etc
+
+//        RETURN LIKE THIS
+//        var pieceMoves = new ArrayList<>(testPiece.pieceMoves(board, startPosition));
+
+
+
+//        This method is similar to ChessGame.validMoves, except it does not honor whose
+//        turn it is or check if the king is being attacked. This method DOES!!! account
+//        for enemy and friendly pieces blocking movement paths.
+
+//        not implementing ChessGame.validMoves in this part
+
+
+
+        // The pieceMoves method will need to take into account the type of piece, and the location of other pieces on the board.
+
+
+
+
+
+
         throw new RuntimeException("Not implemented");
         // you'll retrun all the options of where the bishop can go based on where it is now.
         // return new ArrayList<>()
