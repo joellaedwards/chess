@@ -1,6 +1,9 @@
 package chess;
 
+import chess.PieceMoves.KnightMoves;
+
 import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * Represents a single chess piece
@@ -51,15 +54,21 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+
+    // PROMOTION ONLY HAPPENS WHEN A PAWN MOVES <3
+
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
         // ok return pieceMoves ArrayList but get that even from a function doesnt matter where u put it tbh
         if (type == PieceType.KNIGHT) {
             System.out.println("type = knight! calling knigh function");
-            // maybe make a folder for piece moves?
+            return new KnightMoves().returnKnightMoves(board, myPosition, pieceColor);
         }
 
-
+        else {
+            return null;
+        }
 
 
         // lets do knight first!!!
@@ -93,11 +102,6 @@ public class ChessPiece {
         // The pieceMoves method will need to take into account the type of piece, and the location of other pieces on the board.
 
 
-
-
-
-
-        throw new RuntimeException("Not implemented");
         // you'll retrun all the options of where the bishop can go based on where it is now.
         // return new ArrayList<>()
     }

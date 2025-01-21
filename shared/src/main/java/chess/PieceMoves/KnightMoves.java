@@ -1,7 +1,7 @@
 package chess.PieceMoves;
-import chess.ChessBoard;
-import chess.ChessPosition;
+import chess.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class KnightMoves {
@@ -18,76 +18,92 @@ public class KnightMoves {
     // mm we're also gonna need to know the color of this piece
     // OH I KNOW ChessPiece.pieceColor  !!!!!
 
-    public ArrayList<ChessPosition> returnKnightMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessPosition> moves = new ArrayList<>();
-        ArrayList<ChessPosition> availableMoves = new ArrayList<>();
+    public ArrayList<ChessMove> returnKnightMoves(ChessBoard board, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        ArrayList<ChessMove> availableMoves = new ArrayList<>();
 
-        int startingRow = myPosition.getRow();
-        int startingCol = myPosition.getColumn();
+        int startingRow = startingPosition.getRow();
+        int startingCol = startingPosition.getColumn();
 
         int rowNum = startingRow;
         int colNum = startingCol;
 
         // going up? (and to the right!)
-        while (rowNum <= 8 && colNum <= 8) {
+        while (rowNum <= 6 && colNum <= 7) {
 
             rowNum = rowNum + 2;
             colNum = colNum + 1;
 
-            // check here if one of our own pieces is there.
-            // if not add to availableMoves arraylist
-
+            ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+            ChessPiece pieceAtNewPosition = board.getPiece(currPosition);
+            ChessGame.TeamColor otherPieceColor = null;
+            if (pieceAtNewPosition != null) {
+                otherPieceColor = pieceAtNewPosition.getTeamColor();
+            }
+            if (otherPieceColor != myColor) {
+                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+                availableMoves.add(currMove);
+            }
         }
 
         rowNum = startingRow;
         colNum = startingCol;
 
         // hands up like the celieing cant hold us but left this time
-        while (rowNum <= 8 && colNum >= 1) {
+        while (rowNum <= 6 && colNum >= 2) {
 
             rowNum = rowNum + 2;
             colNum = colNum - 1;
 
-            // TODO CHECK HERE
+            ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+            ChessPiece pieceAtNewPosition = board.getPiece(currPosition);
+            ChessGame.TeamColor otherPieceColor = null;
+            if (pieceAtNewPosition != null) {
+                otherPieceColor = pieceAtNewPosition.getTeamColor();
+            }
+            if (otherPieceColor != myColor) {
+                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+                availableMoves.add(currMove);
+            }
         }
 
         rowNum = startingRow;
         colNum = startingCol;
 
 
-        // get low low low low (right
-        while (rowNum >= 1 && colNum <= 8) {
+        // get low low low low (right)
+        while (rowNum >= 3 && colNum <= 7) {
             rowNum = rowNum - 2;
             colNum = colNum + 1;
 
-            // check here!
-
+            ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+            ChessPiece pieceAtNewPosition = board.getPiece(currPosition);
+            ChessGame.TeamColor otherPieceColor = null;
+            if (pieceAtNewPosition != null) {
+                otherPieceColor = pieceAtNewPosition.getTeamColor();
+            }
+            if (otherPieceColor != myColor) {
+                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+                availableMoves.add(currMove);
+            }
         }
 
         // to the left to the left (and still down)
-        while (rowNum >= 1 && colNum >= 1) {
+        while (rowNum >= 3 && colNum >= 2) {
             rowNum = rowNum - 2;
             colNum = colNum - 1;
 
-            // a check! but not in the way u think for chess
-
+            ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+            ChessPiece pieceAtNewPosition = board.getPiece(currPosition);
+            ChessGame.TeamColor otherPieceColor = null;
+            if (pieceAtNewPosition != null) {
+                otherPieceColor = pieceAtNewPosition.getTeamColor();
+            }
+            if (otherPieceColor != myColor) {
+                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+                availableMoves.add(currMove);
+            }
         }
-
-
-
-        // moves will be anywhere it can go and then we'll for loop for maybe and see ? we'll see what's easiest
-        // maybe dont make two dif arrays actually maybe just do the addition/subtraction and then check there like right then
-
-        // how do i get the color? huh
-
-        // if (board.getPiece([thisposition]).pieceColor != myPiecesColor) {
-        //    go ahead and add it
-        // }
-
-
         return availableMoves;
     }
-
-
-
 }
