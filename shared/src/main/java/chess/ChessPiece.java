@@ -3,7 +3,7 @@ package chess;
 import chess.PieceMoves.KnightMoves;
 
 import java.util.Collection;
-import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -62,7 +62,7 @@ public class ChessPiece {
 
         // ok return pieceMoves ArrayList but get that even from a function doesnt matter where u put it tbh
         if (type == PieceType.KNIGHT) {
-            System.out.println("type = knight! calling knigh function");
+            System.out.println("type = knight! calling knight function");
             return new KnightMoves().returnKnightMoves(board, myPosition, pieceColor);
         }
 
@@ -70,18 +70,12 @@ public class ChessPiece {
             return null;
         }
 
-
         // lets do knight first!!!
-
-
-
 
         // ok so like just make a for loop that adds all the ways it can move and then
         // within the for loop check somehow if someone else is there - might have to
         // go through all the pieces?
         // and just check like is their position there rn?
-
-
 
         // if bishop then call bishop moves given original ChessPosition
         // else if pawn call pawn etc
@@ -105,4 +99,29 @@ public class ChessPiece {
         // you'll retrun all the options of where the bishop can go based on where it is now.
         // return new ArrayList<>()
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ChessPiece that)) {
+            return false;
+        }
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                '}';
+    }
+
 }
