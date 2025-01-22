@@ -1,5 +1,6 @@
 package chess;
 
+import chess.PieceMoves.BishopMoves;
 import chess.PieceMoves.KnightMoves;
 import chess.PieceMoves.RookMoves;
 
@@ -69,6 +70,10 @@ public class ChessPiece {
         else if (type == PieceType.ROOK) {
             System.out.println("type = rook! calling rook function");
             return new RookMoves().returnRookMoves(board, myPosition, pieceColor);
+        }
+        else if (type == PieceType.BISHOP) {
+            System.out.println("type = bishop! calling bishop function");
+            return new BishopMoves().returnBishopMoves(board, myPosition, pieceColor);
         }
 
         else {
