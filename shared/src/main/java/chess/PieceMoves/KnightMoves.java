@@ -87,8 +87,6 @@ public class KnightMoves {
             availableMoves.add(currMove);
         }
 
-
-
         return availableMoves;
     }
 
@@ -102,10 +100,6 @@ public class KnightMoves {
         if (pieceAtNewPosition != null) {
             otherPieceColor = pieceAtNewPosition.getTeamColor();
         }
-        if (otherPieceColor == myColor) {
-            return false;
-        }
-        System.out.print("adding a move to " + position.getRow() + ", " + position.getColumn());
-        return true;
+        return otherPieceColor != myColor;
     }
 }
