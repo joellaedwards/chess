@@ -54,8 +54,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum);
                     ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    System.out.println("adding " + currMove.toString());
-                    availableMoves.add(currMove);
+                    if (!availableMoves.contains(currMove)) {
+                        System.out.println("adding " + currMove.toString());
+                        availableMoves.add(currMove);
+                    }
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
@@ -80,7 +82,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     ChessPosition backUpPosition = new ChessPosition(rowNum, colNum - 1);
                     ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    availableMoves.add(currMove);
+                    if (!availableMoves.contains(currMove)) {
+                        System.out.println("adding " + currMove.toString());
+                        availableMoves.add(currMove);
+                    }
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
@@ -102,7 +107,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
                     ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    availableMoves.add(currMove);
+                    if (!availableMoves.contains(currMove)) {
+                        System.out.println("adding " + currMove.toString());
+                        availableMoves.add(currMove);
+                    }
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
