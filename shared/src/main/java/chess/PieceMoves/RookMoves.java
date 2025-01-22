@@ -23,14 +23,18 @@ public class RookMoves {
         while (rowNum < 8) {
             rowNum++;
             ChessPosition currPosition = new ChessPosition(rowNum, colNum);
-            ChessGame.TeamColor otherPieceColor = null;
             ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
             if (pieceAtCurrPosition != null) {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
-                    ChessPosition backUpPosition = new ChessPosition(rowNum - 1, colNum);
-                    ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    System.out.println("adding " + currMove.toString());
-                    availableMoves.add(currMove);
+                    if (rowNum - 1 >= 1 && (rowNum - 1) != startingRow) {
+                        ChessPosition backUpPosition = new ChessPosition(rowNum - 1, colNum);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        System.out.println("adding " + currMove.toString());
+                        availableMoves.add(currMove);
+                    }
+                    else {
+                        break;
+                    }
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
@@ -48,15 +52,19 @@ public class RookMoves {
         while (rowNum > 1) {
             rowNum--;
             ChessPosition currPosition = new ChessPosition(rowNum, colNum);
-            ChessGame.TeamColor otherPieceColor = null;
             ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
             if (pieceAtCurrPosition != null) {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
-                    ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum);
-                    ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    if (!availableMoves.contains(currMove)) {
-                        System.out.println("adding " + currMove.toString());
-                        availableMoves.add(currMove);
+                    if (rowNum + 1 <= 8 && (rowNum + 1) != startingRow) {
+                        ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            System.out.println("adding " + currMove.toString());
+                            availableMoves.add(currMove);
+                        }
+                    }
+                    else {
+                        break;
                     }
                 }
                 else {
@@ -76,15 +84,19 @@ public class RookMoves {
         while (colNum < 8) {
             colNum++;
             ChessPosition currPosition = new ChessPosition(rowNum, colNum);
-            ChessGame.TeamColor otherPieceColor = null;
             ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
             if (pieceAtCurrPosition != null) {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
-                    ChessPosition backUpPosition = new ChessPosition(rowNum, colNum - 1);
-                    ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    if (!availableMoves.contains(currMove)) {
-                        System.out.println("adding " + currMove.toString());
-                        availableMoves.add(currMove);
+                    if (colNum - 1 >= 1 && (colNum - 1) != startingCol) {
+                        ChessPosition backUpPosition = new ChessPosition(rowNum, colNum - 1);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            System.out.println("adding " + currMove.toString());
+                            availableMoves.add(currMove);
+                        }
+                    }
+                    else {
+                        break;
                     }
                 }
                 else {
@@ -101,15 +113,19 @@ public class RookMoves {
         while (colNum > 1) {
             colNum--;
             ChessPosition currPosition = new ChessPosition(rowNum, colNum);
-            ChessGame.TeamColor otherPieceColor = null;
             ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
             if (pieceAtCurrPosition != null) {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
-                    ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
-                    ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                    if (!availableMoves.contains(currMove)) {
-                        System.out.println("adding " + currMove.toString());
-                        availableMoves.add(currMove);
+                    if (colNum + 1 <= 8 && (colNum + 1) != startingCol) {
+                        ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            System.out.println("adding " + currMove.toString());
+                            availableMoves.add(currMove);
+                        }
+                    }
+                    else {
+                        break;
                     }
                 }
                 else {
