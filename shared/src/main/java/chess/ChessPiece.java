@@ -1,6 +1,7 @@
 package chess;
 
 import chess.PieceMoves.KnightMoves;
+import chess.PieceMoves.RookMoves;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -64,6 +65,10 @@ public class ChessPiece {
         if (type == PieceType.KNIGHT) {
             System.out.println("type = knight! calling knight function");
             return new KnightMoves().returnKnightMoves(board, myPosition, pieceColor);
+        }
+        else if (type == PieceType.ROOK) {
+            System.out.println("type = rook! calling rook function");
+            return new RookMoves().returnRookMoves(board, myPosition, pieceColor);
         }
 
         else {
