@@ -145,28 +145,7 @@ public class BishopMoves {
     }
 
 
-//    public boolean checkPieceAtPosition(ChessBoard board, ChessPosition currPosition, ChessGame.TeamColor myColor, int rowOrColNum, int startingRowOrCol, int plusOrMinus) {
-//        // plus is 1, minus is 2
-//        ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
-//        if (pieceAtCurrPosition != null) {
-//            if (pieceAtCurrPosition.getTeamColor() == myColor) {
-//                if (rowOrColNum + 1 <= 8 && (rowOrColNum + 1) != startingRowOrCol) {
-//                    ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
-//                    ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-//                    if (!availableMoves.contains(currMove)) {
-//                        System.out.println("adding " + currMove.toString());
-//                        availableMoves.add(currMove);
-//                    }
-//                } else {
-//                    break;
-//                }
-//            } else {
-//                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-//                availableMoves.add(currMove);
-//            }
-//            break;
-//        }
-//    }
+
 }
 
 

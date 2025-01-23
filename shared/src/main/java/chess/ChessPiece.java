@@ -80,7 +80,9 @@ public class ChessPiece {
         else if (type == PieceType.KING) {
             return new KingMoves().returnKingMoves(board, myPosition, pieceColor);
         }
-
+        else if (type == PieceType.PAWN) {
+            return new PawnMoves().returnPawnMoves(board, myPosition, pieceColor);
+        }
         else {
             return null;
         }

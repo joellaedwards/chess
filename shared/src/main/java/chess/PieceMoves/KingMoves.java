@@ -15,7 +15,6 @@ public class KingMoves {
         }
 
 
-
         // up one
         ChessPosition newPosition = new ChessPosition(startingPosition.getRow() + 1, startingPosition.getColumn());
         if (isAcceptableMove(board, newPosition, myColor)) {
