@@ -1,9 +1,6 @@
 package chess;
 
-import chess.PieceMoves.BishopMoves;
-import chess.PieceMoves.KnightMoves;
-import chess.PieceMoves.QueenMoves;
-import chess.PieceMoves.RookMoves;
+import chess.PieceMoves.*;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -79,6 +76,9 @@ public class ChessPiece {
         else if (type == PieceType.QUEEN) {
             System.out.println("type = queen! calling queen function");
             return new QueenMoves().returnQueenMoves(board, myPosition, pieceColor);
+        }
+        else if (type == PieceType.KING) {
+            return new KingMoves().returnKingMoves(board, myPosition, pieceColor);
         }
 
         else {
