@@ -8,7 +8,13 @@ import java.util.ArrayList;
 
 public class KingMoves {
     public ArrayList<ChessMove> returnKingMoves(ChessBoard board, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
+
+
         ArrayList<ChessMove> availableMoves = new ArrayList<>();
+        int startingRow = startingPosition.getRow();
+        int startingColumn = startingPosition.getColumn();
+        int rowNum;
+        int colNum;
         ChessGame.TeamColor otherColor = ChessGame.TeamColor.WHITE;
         if (myColor == ChessGame.TeamColor.WHITE) {
             otherColor = ChessGame.TeamColor.BLACK;
@@ -80,23 +86,28 @@ public class KingMoves {
             availableMoves.add(newMove);
         }
 
-        ArrayList<ChessMove> bishopMoves = new BishopMoves().returnBishopMoves(board, startingPosition, otherColor);
-        for (ChessMove move : bishopMoves) {
-            availableMoves.remove(move);
-        }
-        ArrayList<ChessMove> knightMoves = new KnightMoves().returnKnightMoves(board, startingPosition, otherColor);
-        for (ChessMove move : knightMoves) {
-            availableMoves.remove(move);
-        }
-        // TODO pawns
-        ArrayList<ChessMove> queenMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
-        for (ChessMove move : queenMoves) {
-            availableMoves.remove(move);
-        }
-        ArrayList<ChessMove> rookMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
-        for (ChessMove move : rookMoves) {
-            availableMoves.remove(move);
-        }
+//        ArrayList<ChessMove> bishopMoves = new BishopMoves().returnBishopMoves(board, startingPosition, otherColor);
+//        for (ChessMove move : bishopMoves) {
+//            availableMoves.remove(move);
+//        }
+//        ArrayList<ChessMove> knightMoves = new KnightMoves().returnKnightMoves(board, startingPosition, otherColor);
+//        for (ChessMove move : knightMoves) {
+//            availableMoves.remove(move);
+//        }
+////        ArrayList<ChessMove> pawnMoves = new PawnMoves().returnPawnMoves(board, startingPosition, otherColor);
+////        for (ChessMove move : pawnMoves) {
+////            availableMoves.remove(move);
+////        }
+//        // TODO but it's only for the diagonal moves from the pawn.
+//        // TODO it needs to not get queens moves based on this beginning spot weiss du
+//        ArrayList<ChessMove> queenMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
+//        for (ChessMove move : queenMoves) {
+//            availableMoves.remove(move);
+//        }
+//        ArrayList<ChessMove> rookMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
+//        for (ChessMove move : rookMoves) {
+//            availableMoves.remove(move);
+//        }
 
         return availableMoves;
     }
