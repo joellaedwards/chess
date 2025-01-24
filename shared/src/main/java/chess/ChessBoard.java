@@ -45,7 +45,101 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        // add pawns
+        int row = 7;
+        for (int col = 1; col < 9; col++) {
+            ChessPosition position = new ChessPosition(row, col);
+            ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            addPiece(position, piece);
+        }
+        row = 2;
+        for (int col = 1; col < 9; col++) {
+            ChessPosition position = new ChessPosition(row, col);
+            ChessPiece piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            addPiece(position, piece);
+        }
+        // black rook
+        int time = 0;
+        row = 8;
+        int col = 1;
+        while (time < 2) {
+            time++;
+            ChessPosition position = new ChessPosition(row, col);
+            ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+            addPiece(position, piece);
+            col = 8;
+        }
+        // black knights
+        time = 0;
+        col = 2;
+        while (time < 2) {
+            time++;
+            ChessPosition position = new ChessPosition(row, col);
+            ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+            addPiece(position, piece);
+            col = 7;
+        }
+        // black bishops
+        time = 0;
+        col = 3;
+        while (time < 2) {
+            time++;
+            ChessPosition position = new ChessPosition(row, col);
+            ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+            addPiece(position, piece);
+            col = 6;
+        }
+        // black queen
+        ChessPosition position = new ChessPosition(row, 4);
+        ChessPiece piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        addPiece(position, piece);
+        // black king
+        position = new ChessPosition(row, 5);
+        piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        addPiece(position, piece);
+
+
+        // white rook
+        time = 0;
+        row = 1;
+        col = 1;
+        while (time < 2) {
+            time++;
+            position = new ChessPosition(row, col);
+            piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+            addPiece(position, piece);
+            col = 8;
+        }
+        // white knights
+        time = 0;
+        col = 2;
+        while (time < 2) {
+            time++;
+            position = new ChessPosition(row, col);
+            piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+            addPiece(position, piece);
+            col = 7;
+        }
+        // white bishops
+        time = 0;
+        col = 3;
+        while (time < 2) {
+            time++;
+            position = new ChessPosition(row, col);
+            piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+            addPiece(position, piece);
+            col = 6;
+        }
+        // white queen
+        position = new ChessPosition(row, 4);
+        piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        addPiece(position, piece);
+        // white king
+        position = new ChessPosition(row, 5);
+        piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+        addPiece(position, piece);
+
+
     }
 
     @Override

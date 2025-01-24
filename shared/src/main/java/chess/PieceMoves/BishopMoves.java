@@ -26,7 +26,6 @@ public class BishopMoves {
                     if (rowNum - 1 >= 1 && (rowNum - 1) != startingRow && colNum - 1 >= 1 && (colNum - 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum - 1, colNum - 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        System.out.println("adding " + currMove.toString());
                         availableMoves.add(currMove);
                     }
                     else {
@@ -35,13 +34,11 @@ public class BishopMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
             }
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            System.out.println("adding " + currMove.toString());
             availableMoves.add(currMove);
         }
 
@@ -58,7 +55,6 @@ public class BishopMoves {
                     if (rowNum - 1 >= 1 && (rowNum - 1) != startingRow && colNum + 1 <= 8 && (colNum + 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum - 1, colNum + 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        System.out.println("adding " + currMove.toString());
                         availableMoves.add(currMove);
                     }
                     else {
@@ -67,13 +63,11 @@ public class BishopMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
             }
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            System.out.println("adding " + currMove.toString());
             availableMoves.add(currMove);
         }
 
@@ -90,7 +84,6 @@ public class BishopMoves {
                     if (rowNum + 1 <= 8 && (rowNum + 1) != startingRow && colNum - 1 >= 1 && (colNum - 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum - 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        System.out.println("adding " + currMove.toString());
                         availableMoves.add(currMove);
                     }
                     else {
@@ -99,13 +92,11 @@ public class BishopMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
             }
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            System.out.println("adding " + currMove.toString());
             availableMoves.add(currMove);
         }
 
@@ -122,7 +113,6 @@ public class BishopMoves {
                     if (rowNum + 1 <= 8 && (rowNum + 1) != startingRow && colNum + 1 <= 8 && (colNum + 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum + 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        System.out.println("adding " + currMove.toString());
                         availableMoves.add(currMove);
                     }
                     else {
@@ -131,13 +121,11 @@ public class BishopMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
             }
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            System.out.println("adding " + currMove.toString());
             availableMoves.add(currMove);
         }
 

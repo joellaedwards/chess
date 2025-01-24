@@ -29,7 +29,6 @@ public class RookMoves {
                     if (rowNum - 1 >= 1 && (rowNum - 1) != startingRow) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum - 1, colNum);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        System.out.println("adding " + currMove.toString());
                         availableMoves.add(currMove);
                     }
                     else {
@@ -38,13 +37,11 @@ public class RookMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
             }
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            System.out.println("adding " + currMove.toString());
             availableMoves.add(currMove);
         }
 
@@ -59,7 +56,6 @@ public class RookMoves {
                         ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
                         if (!availableMoves.contains(currMove)) {
-                            System.out.println("adding " + currMove.toString());
                             availableMoves.add(currMove);
                         }
                     }
@@ -69,7 +65,6 @@ public class RookMoves {
                 }
                 else {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    System.out.println("adding " + currMove.toString());
                     availableMoves.add(currMove);
                 }
                 break;
@@ -91,7 +86,6 @@ public class RookMoves {
                         ChessPosition backUpPosition = new ChessPosition(rowNum, colNum - 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
                         if (!availableMoves.contains(currMove)) {
-                            System.out.println("adding " + currMove.toString());
                             availableMoves.add(currMove);
                         }
                     }
@@ -120,7 +114,6 @@ public class RookMoves {
                         ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
                         ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
                         if (!availableMoves.contains(currMove)) {
-                            System.out.println("adding " + currMove.toString());
                             availableMoves.add(currMove);
                         }
                     }

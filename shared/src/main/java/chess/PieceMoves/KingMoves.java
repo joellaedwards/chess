@@ -9,30 +9,19 @@ import java.util.ArrayList;
 public class KingMoves {
     public ArrayList<ChessMove> returnKingMoves(ChessBoard board, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
 
-
         ArrayList<ChessMove> availableMoves = new ArrayList<>();
-        int startingRow = startingPosition.getRow();
-        int startingColumn = startingPosition.getColumn();
-        int rowNum;
-        int colNum;
-        ChessGame.TeamColor otherColor = ChessGame.TeamColor.WHITE;
-        if (myColor == ChessGame.TeamColor.WHITE) {
-            otherColor = ChessGame.TeamColor.BLACK;
-        }
 
 
         // up one
         ChessPosition newPosition = new ChessPosition(startingPosition.getRow() + 1, startingPosition.getColumn());
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
         // and to the right diagonal
         newPosition = new ChessPosition(startingPosition.getRow() + 1, startingPosition.getColumn() + 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 
@@ -41,7 +30,6 @@ public class KingMoves {
         newPosition = new ChessPosition(startingPosition.getRow(), startingPosition.getColumn() + 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 
@@ -50,14 +38,12 @@ public class KingMoves {
         newPosition = new ChessPosition(startingPosition.getRow() - 1, startingPosition.getColumn() + 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
         // down one
         newPosition = new ChessPosition(startingPosition.getRow() - 1, startingPosition.getColumn());
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 
@@ -66,7 +52,6 @@ public class KingMoves {
         newPosition = new ChessPosition(startingPosition.getRow() - 1, startingPosition.getColumn() - 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 
@@ -74,7 +59,6 @@ public class KingMoves {
         newPosition = new ChessPosition(startingPosition.getRow(), startingPosition.getColumn() - 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 
@@ -82,7 +66,6 @@ public class KingMoves {
         newPosition = new ChessPosition(startingPosition.getRow() + 1, startingPosition.getColumn() - 1);
         if (isAcceptableMove(board, newPosition, myColor)) {
             ChessMove newMove = new ChessMove(startingPosition, newPosition, null);
-            System.out.println("adding " + newMove.toString());
             availableMoves.add(newMove);
         }
 

@@ -62,19 +62,15 @@ public class ChessPiece {
 
         // ok return pieceMoves ArrayList but get that even from a function doesnt matter where u put it tbh
         if (type == PieceType.KNIGHT) {
-            System.out.println("type = knight! calling knight function");
             return new KnightMoves().returnKnightMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.ROOK) {
-            System.out.println("type = rook! calling rook function");
             return new RookMoves().returnRookMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.BISHOP) {
-            System.out.println("type = bishop! calling bishop function");
             return new BishopMoves().returnBishopMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.QUEEN) {
-            System.out.println("type = queen! calling queen function");
             return new QueenMoves().returnQueenMoves(board, myPosition, pieceColor);
         }
         else if (type == PieceType.KING) {
