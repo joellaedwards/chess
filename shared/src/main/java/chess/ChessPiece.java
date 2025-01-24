@@ -55,8 +55,6 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
 
-    // PROMOTION ONLY HAPPENS WHEN A PAWN MOVES <3
-
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
@@ -83,34 +81,6 @@ public class ChessPiece {
             return null;
         }
 
-        // lets do knight first!!!
-
-        // ok so like just make a for loop that adds all the ways it can move and then
-        // within the for loop check somehow if someone else is there - might have to
-        // go through all the pieces?
-        // and just check like is their position there rn?
-
-        // if bishop then call bishop moves given original ChessPosition
-        // else if pawn call pawn etc
-
-//        RETURN LIKE THIS
-//        var pieceMoves = new ArrayList<>(testPiece.pieceMoves(board, startPosition));
-
-
-
-//        This method is similar to ChessGame.validMoves, except it does not honor whose
-//        turn it is or check if the king is being attacked. This method DOES!!! account
-//        for enemy and friendly pieces blocking movement paths.
-
-//        not implementing ChessGame.validMoves in this part
-
-
-
-        // The pieceMoves method will need to take into account the type of piece, and the location of other pieces on the board.
-
-
-        // you'll retrun all the options of where the bishop can go based on where it is now.
-        // return new ArrayList<>()
     }
 
     @Override

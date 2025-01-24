@@ -109,7 +109,7 @@ public class KingMoves {
     }
 // if you have to check and make sure the king doesnt move to a spot
     // where it could get taken, call all the other piece moves and make
-    // sure the new position isnt in their posible positions
+    // sure the new position isnt in their possible positions
 
 
 
