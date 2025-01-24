@@ -16,8 +16,9 @@ public class PawnMoves {
 
         if (myColor == ChessGame.TeamColor.WHITE) {
             if (startingRow == 2) {
+                ChessPosition oneUp = new ChessPosition(3, startingColumn);
                 ChessPosition currPosition = new ChessPosition(4, colNum);
-                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
+                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && isAcceptableMove(board, oneUp, startingPosition, myColor) && !isOccupied(board, currPosition) && !isOccupied(board, oneUp)) {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(board, currPosition, myColor)) {
                         currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
@@ -39,42 +40,44 @@ public class PawnMoves {
 
             // take diagonally
             ChessPosition diagonalPosition = new ChessPosition(startingRow + 1, colNum + 1);
-            ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
-            if (pieceAtDiagonal != null) {
-                if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                    ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
-                    if (canBePromoted(board, diagonalPosition, myColor)) {
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
-                    }
-                    else {
-                    availableMoves.add(currMove);
+            if (isAcceptableMove(board, diagonalPosition,startingPosition, myColor)) {
+                ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
+                if (pieceAtDiagonal != null) {
+                    if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                        ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
+                        if (canBePromoted(board, diagonalPosition, myColor)) {
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
+                            availableMoves.add(currMove);
+                        } else {
+                            availableMoves.add(currMove);
+                        }
                     }
                 }
             }
             ChessPosition otherDiagonal = new ChessPosition(startingRow + 1, colNum - 1);
-            ChessPiece otherPiece = board.getPiece(otherDiagonal);
-            if (otherPiece != null) {
-                if (otherPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                    ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
-                    if (canBePromoted(board, otherDiagonal, myColor)) {
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
-                    }
-                    else {
-                        availableMoves.add(currMove);
+            if (isAcceptableMove(board, otherDiagonal, startingPosition, myColor)) {
+                ChessPiece otherPiece = board.getPiece(otherDiagonal);
+                if (otherPiece != null) {
+                    if (otherPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                        ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
+                        if (canBePromoted(board, otherDiagonal, myColor)) {
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
+                            availableMoves.add(currMove);
+                        } else {
+                            availableMoves.add(currMove);
+                        }
                     }
                 }
             }
@@ -104,8 +107,9 @@ public class PawnMoves {
 
         if (myColor == ChessGame.TeamColor.BLACK) {
             if (startingRow == 7) {
+                ChessPosition downJustOne = new ChessPosition(6, colNum);
                 ChessPosition currPosition = new ChessPosition(5, colNum);
-                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
+                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && isAcceptableMove(board, downJustOne, startingPosition, myColor) && !isOccupied(board, downJustOne) && !isOccupied(board, currPosition)) {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(board, currPosition, myColor)) {
                         currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
@@ -126,42 +130,45 @@ public class PawnMoves {
 
             // take diagonally
             ChessPosition diagonalPosition = new ChessPosition(startingRow - 1, colNum + 1);
-            ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
-            if (pieceAtDiagonal != null) {
-                if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
-                    if (canBePromoted(board, diagonalPosition, myColor)) {
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
-                    }
-                    else {
-                        availableMoves.add(currMove);
+            if (isAcceptableMove(board, diagonalPosition, startingPosition, myColor)) {
+                ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
+                if (pieceAtDiagonal != null) {
+                    if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
+                        if (canBePromoted(board, diagonalPosition, myColor)) {
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
+                            availableMoves.add(currMove);
+                        } else {
+                            availableMoves.add(currMove);
+                        }
                     }
                 }
             }
+
             ChessPosition otherDiagonal = new ChessPosition(startingRow - 1, colNum - 1);
-            ChessPiece otherPiece = board.getPiece(otherDiagonal);
-            if (otherPiece != null) {
-                if (otherPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
-                    if (canBePromoted(board, otherDiagonal, myColor)) {
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
-                    }
-                    else {
-                        availableMoves.add(currMove);
+            if (isAcceptableMove(board, otherDiagonal, startingPosition, myColor)) {
+                ChessPiece otherPiece = board.getPiece(otherDiagonal);
+                if (otherPiece != null) {
+                    if (otherPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
+                        if (canBePromoted(board, otherDiagonal, myColor)) {
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
+                            availableMoves.add(currMove);
+                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
+                            availableMoves.add(currMove);
+                        } else {
+                            availableMoves.add(currMove);
+                        }
                     }
                 }
             }
