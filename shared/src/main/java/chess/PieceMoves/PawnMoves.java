@@ -12,20 +12,29 @@ public class PawnMoves {
         int colNum = startingColumn;
 
 
-        // if its the first time the pawn is moved it can be moved forward 2 sqares
+        // if its the first time the pawn is moved it can be moved forward 2 squares
 
         if (myColor == ChessGame.TeamColor.WHITE) {
             if (startingRow == 2) {
                 ChessPosition currPosition = new ChessPosition(4, colNum);
-                if (isAcceptableMove(board, currPosition, myColor)) {
+                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(board, currPosition, myColor)) {
-                        // TODO should be able to pick promotion type
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
-                    availableMoves.add(currMove);
+                    else {
+                        availableMoves.add(currMove);
+                    }
+                    }
                 }
-            }
+
 
 
             // take diagonally
@@ -35,9 +44,18 @@ public class PawnMoves {
                 if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.BLACK) {
                     ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                     if (canBePromoted(board, diagonalPosition, myColor)) {
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
+                    else {
                     availableMoves.add(currMove);
+                    }
                 }
             }
             ChessPosition otherDiagonal = new ChessPosition(startingRow + 1, colNum - 1);
@@ -46,21 +64,38 @@ public class PawnMoves {
                 if (otherPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
                     ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                     if (canBePromoted(board, otherDiagonal, myColor)) {
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
-                    availableMoves.add(currMove);
+                    else {
+                        availableMoves.add(currMove);
+                    }
                 }
             }
 
             // just go up one
             ChessPosition currPosition = new ChessPosition(startingRow + 1, colNum);
-            if (isAcceptableMove(board, currPosition, myColor)) {
+            if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
                 ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                 if (canBePromoted(board, currPosition, myColor)) {
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
+                    availableMoves.add(currMove);
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
+                    availableMoves.add(currMove);
                     currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
-                    // TODO should be able to pick promotion type
+                    availableMoves.add(currMove);
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
+                    availableMoves.add(currMove);
                 }
-                availableMoves.add(currMove);
+                else {
+                    availableMoves.add(currMove);
+                }
             }
 
         }
@@ -70,13 +105,21 @@ public class PawnMoves {
         if (myColor == ChessGame.TeamColor.BLACK) {
             if (startingRow == 7) {
                 ChessPosition currPosition = new ChessPosition(5, colNum);
-                if (isAcceptableMove(board, currPosition, myColor)) {
+                if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
                     ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(board, currPosition, myColor)) {
-                        // TODO should be able to pick promotion type
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
-                    availableMoves.add(currMove);
+                    else {
+                        availableMoves.add(currMove);
+                    }
                 }
             }
 
@@ -88,9 +131,18 @@ public class PawnMoves {
                 if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.WHITE) {
                     ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                     if (canBePromoted(board, diagonalPosition, myColor)) {
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
-                    availableMoves.add(currMove);
+                    else {
+                        availableMoves.add(currMove);
+                    }
                 }
             }
             ChessPosition otherDiagonal = new ChessPosition(startingRow - 1, colNum - 1);
@@ -99,21 +151,38 @@ public class PawnMoves {
                 if (otherPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
                     ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                     if (canBePromoted(board, otherDiagonal, myColor)) {
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
+                        availableMoves.add(currMove);
                         currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
+                        availableMoves.add(currMove);
+                        currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
+                        availableMoves.add(currMove);
                     }
-                    availableMoves.add(currMove);
+                    else {
+                        availableMoves.add(currMove);
+                    }
                 }
             }
 
             // just go down one
             ChessPosition currPosition = new ChessPosition(startingRow - 1, colNum);
-            if (isAcceptableMove(board, currPosition, myColor)) {
+            if (isAcceptableMove(board, currPosition, startingPosition, myColor) && !isOccupied(board, currPosition)) {
                 ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                 if (canBePromoted(board, currPosition, myColor)) {
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
+                    availableMoves.add(currMove);
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
+                    availableMoves.add(currMove);
                     currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
-                    // TODO should be able to pick promotion type
+                    availableMoves.add(currMove);
+                    currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
+                    availableMoves.add(currMove);
                 }
-                availableMoves.add(currMove);
+                else {
+                    availableMoves.add(currMove);
+                }
             }
 
         }
@@ -138,12 +207,21 @@ public class PawnMoves {
     }
 
 
-    public boolean isAcceptableMove(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
+    public boolean isAcceptableMove(ChessBoard board, ChessPosition position, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
         if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
             return false;
         }
-        ChessPiece pieceAtNewPosition = board.getPiece(position);
-        return pieceAtNewPosition == null;
+        if (position == startingPosition) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isOccupied(ChessBoard board, ChessPosition position) {
+        if (board.getPiece(position) != null) {
+            return true;
+        }
+        return false;
     }
 
     public boolean canBePromoted(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
