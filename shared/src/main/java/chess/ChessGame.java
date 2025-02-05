@@ -77,24 +77,64 @@ public class ChessGame {
         Collection<ChessMove> openMoves = new ArrayList<>();
         ChessPiece piece = board.getPiece(startPosition);
         openMoves = piece.pieceMoves(board, startPosition);
-
         Collection<ChessMove> validMoves = new ArrayList<>();
 
+        // deep copy of board
 
         //  A move is valid if it is a "piece move" for the piece at the input location and making
         //  that move would not leave the team’s king in danger of check
 
+
+        for (ChessMove move : openMoves) {
+            try {
+                makeMove(move);
+            } catch (InvalidMoveException) {
+                return null;
+
+            }
+        }
+
+//        for (ChessMove move : openMoves) {
+//
+//            // i think make a copy of the board here with this piece in its new position
+//            // then check if the team is in check and if its not add to valid moves
+//            int row = 4;
+//
+//          //  if (ChessGame.isInCheck)
+//        }
+
+        return validMoves;
+
+    }
+
+    /**
+     * Makes a move in a chess game
+     *
+     * @param move chess move to preform
+     * @throws InvalidMoveException if move is invalid
+     */
+
+//    Receives a given move and executes it, provided it is a legal move.
+//    If the move is illegal, it throws an InvalidMoveException. A move is illegal if
+//    it is not a "valid" move for the piece at the starting location,
+//    (A move is valid if it is a "piece move" for the piece at the input location and making
+//     that move would not leave the team’s king in danger of check)
+//
+//    or if it’s not the corresponding team's turn.
+    public void makeMove(ChessMove move) throws InvalidMoveException {
+        ChessPiece pieceToMove;
+        if (move.getPromotionPiece() == null) {
+            pieceToMove = board.getPiece(move.getStartPosition());
+        }
+        else {
+            pieceToMove = new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
+        }
+
+
         ChessBoard copyBoard = new ChessBoard();
-        // for ( iterate through every spot on the board) {
-
-        // TODO check if theres a piece there before adding anything
-        // TODO how do i iterate through all the spots on the board?
-        // should i just create a copy of the board as it goes? eh probably not
-
         for (int i = 1; i < 9; ++i) {
             for (int k = 1; k < 9; ++k) {
 
-                // created new from ints so no need to do deep copy
                 ChessPosition currPosition = new ChessPosition(i, k);
 
                 if (board.getPiece(currPosition) != null) {
@@ -107,33 +147,24 @@ public class ChessGame {
                 }
             }
         }
+        // remove piece from starting position
+        copyBoard.addPiece(move.getStartPosition(), null);
+        // add to where it ends up
+        copyBoard.addPiece(move.getEndPosition(), pieceToMove);
 
+        // execute the move here on the copy board
 
+        if (copyBoard.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) {
+            throw new InvalidMoveException("not your turn.");
+        }
+        else if (isInCheck(board.getPiece(move.getStartPosition()).getTeamColor())) {
+            throw new InvalidMoveException("puts your king in check");
+        }
+        else {
+            board.addPiece(move.getStartPosition(), null);
+            board.addPiece(move.getEndPosition(), pieceToMove);
+        }
 
-
-
-//        for (ChessMove move : openMoves) {
-//
-//            // i think make a copy of the board here with this piece in its new position
-//            // then check if the team is in check and if its not add to valid moves
-//            int row = 4;
-//
-//          //  if (ChessGame.isInCheck)
-//        }
-        ChessBoard something = board;
-
-        return validMoves;
-
-    }
-
-    /**
-     * Makes a move in a chess game
-     *
-     * @param move chess move to preform
-     * @throws InvalidMoveException if move is invalid
-     */
-    public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
     }
 
     /**
