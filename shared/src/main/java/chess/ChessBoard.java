@@ -15,6 +15,7 @@ public class ChessBoard {
         
     }
 
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -26,6 +27,8 @@ public class ChessBoard {
         int columnNum = position.getColumn() - 1;
         squares[rowNum][columnNum] = piece;
     }
+
+
 
     /**
      * Gets a chess piece on the chessboard

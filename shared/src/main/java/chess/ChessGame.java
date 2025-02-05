@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -59,8 +60,70 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
+
+//    Takes as input a position on the chessboard and returns all moves the piece
+//    there can legally make. If there is no piece at that location, this method returns null.
+
+//    A move is valid if it is a "piece move" for the piece at the input location and making
+//    that move would not leave the team’s king in danger of check
+
+
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+
+        if (board.getPiece(startPosition) == null) {
+            return null;
+        }
+
+        Collection<ChessMove> openMoves = new ArrayList<>();
+        ChessPiece piece = board.getPiece(startPosition);
+        openMoves = piece.pieceMoves(board, startPosition);
+
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+
+        //  A move is valid if it is a "piece move" for the piece at the input location and making
+        //  that move would not leave the team’s king in danger of check
+
+        ChessBoard copyBoard = new ChessBoard();
+        // for ( iterate through every spot on the board) {
+
+        // TODO check if theres a piece there before adding anything
+        // TODO how do i iterate through all the spots on the board?
+        // should i just create a copy of the board as it goes? eh probably not
+
+        for (int i = 1; i < 9; ++i) {
+            for (int k = 1; k < 9; ++k) {
+
+                // created new from ints so no need to do deep copy
+                ChessPosition currPosition = new ChessPosition(i, k);
+
+                if (board.getPiece(currPosition) != null) {
+                    // get the piece that's at this position on the real board
+                    // maybe do an if here
+                    ChessPiece currPiece = board.getPiece(currPosition);
+                    ChessPiece copiedPiece = new ChessPiece(currPiece);
+                    copyBoard.addPiece(currPosition, copiedPiece);
+
+                }
+            }
+        }
+
+
+
+
+
+//        for (ChessMove move : openMoves) {
+//
+//            // i think make a copy of the board here with this piece in its new position
+//            // then check if the team is in check and if its not add to valid moves
+//            int row = 4;
+//
+//          //  if (ChessGame.isInCheck)
+//        }
+        ChessBoard something = board;
+
+        return validMoves;
+
     }
 
     /**
