@@ -2,6 +2,18 @@ package chess;
 
 import java.util.Collection;
 
+
+
+//This class serves as the top-level management of the Chess Game.
+// It is responsible for executing moves as well as reporting the game status.
+//
+//By default, a new ChessGame represents an immediately playable board with the
+// pieces in their default locations and the starting player set to WHITE.
+//
+//ChessGame functionality will now implement the rules of Chess not handled by the
+// ChessPiece class. This will involve removing moves returned from ChessPiece.validMoves()
+// that violate game rules.
+
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -9,6 +21,8 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private TeamColor team;
+    private ChessBoard board;
 
     public ChessGame() {
 
@@ -18,7 +32,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return team;
     }
 
     /**
@@ -27,7 +41,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.team = team;
     }
 
     /**
@@ -96,7 +110,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -105,6 +119,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 }
