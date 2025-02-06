@@ -143,6 +143,15 @@ public class ChessGame {
 //    or if it’s not the corresponding team's turn.
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
+        if (board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException("no piece at starting position");
+        }
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+
+        if (!validMoves.contains(move)) {
+            throw new InvalidMoveException("not a valid move");
+        }
+
         ChessPiece pieceToMove;
         ChessPiece originalPiece = board.getPiece(move.getStartPosition());
         if (originalPiece.getTeamColor() != getTeamTurn()) {
@@ -156,19 +165,12 @@ public class ChessGame {
             pieceToMove = new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
         }
 
-        ChessPiece undoPiece = board.getPiece(move.getEndPosition());
+        // make move
         // remove piece from starting position
         board.addPiece(move.getStartPosition(), null);
         // add to where it ends up
         board.addPiece(move.getEndPosition(), pieceToMove);
 
-
-        if (isInCheck(originalPiece.getTeamColor())) {
-            // undo the move
-            board.addPiece(move.getEndPosition(), undoPiece);
-            board.addPiece(move.getStartPosition(), originalPiece);
-            throw new InvalidMoveException("puts your king in check");
-        }
 
         if (getTeamTurn() == TeamColor.WHITE) {
             setTeamTurn(TeamColor.BLACK);
@@ -219,6 +221,8 @@ public class ChessGame {
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
+
+//    Returns true if the given team has no way to protect their king from being captured.
     public boolean isInCheckmate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
     }
