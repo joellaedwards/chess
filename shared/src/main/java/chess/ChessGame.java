@@ -74,7 +74,7 @@ public class ChessGame {
             return null;
         }
 
-        Collection<ChessMove> openMoves = new ArrayList<>();
+        Collection<ChessMove> openMoves;
         ChessPiece piece = board.getPiece(startPosition);
         openMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new ArrayList<>();
@@ -85,23 +85,17 @@ public class ChessGame {
         //  that move would not leave the team’s king in danger of check
 
 
+        boolean isValidMove = true;
         for (ChessMove move : openMoves) {
             try {
                 makeMove(move);
-            } catch (InvalidMoveException) {
-                return null;
+            } catch (InvalidMoveException e) {
+                isValidMove = false;
 
             }
         }
 
-//        for (ChessMove move : openMoves) {
-//
-//            // i think make a copy of the board here with this piece in its new position
-//            // then check if the team is in check and if its not add to valid moves
-//            int row = 4;
-//
-//          //  if (ChessGame.isInCheck)
-//        }
+
 
         return validMoves;
 
@@ -123,6 +117,7 @@ public class ChessGame {
 //    or if it’s not the corresponding team's turn.
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceToMove;
+        ChessPiece originalPiece = board.getPiece(move.getStartPosition());
         if (move.getPromotionPiece() == null) {
             pieceToMove = board.getPiece(move.getStartPosition());
         }
@@ -130,6 +125,11 @@ public class ChessGame {
             pieceToMove = new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
         }
 
+        // execute the move here on the copy board
+
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) {
+            throw new InvalidMoveException("not your turn.");
+        }
 
         ChessBoard copyBoard = new ChessBoard();
         for (int i = 1; i < 9; ++i) {
@@ -148,16 +148,15 @@ public class ChessGame {
             }
         }
         // remove piece from starting position
-        copyBoard.addPiece(move.getStartPosition(), null);
+        board.addPiece(move.getStartPosition(), null);
         // add to where it ends up
-        copyBoard.addPiece(move.getEndPosition(), pieceToMove);
+        board.addPiece(move.getEndPosition(), pieceToMove);
 
-        // execute the move here on the copy board
 
-        if (copyBoard.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) {
-            throw new InvalidMoveException("not your turn.");
-        }
-        else if (isInCheck(board.getPiece(move.getStartPosition()).getTeamColor())) {
+        if (isInCheck(board.getPiece(move.getStartPosition()).getTeamColor())) {
+            // undo the move
+            board.addPiece(move.getEndPosition(), null);
+            board.addPiece(move.getStartPosition(), originalPiece);
             throw new InvalidMoveException("puts your king in check");
         }
         else {
@@ -174,7 +173,31 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // this includes like if the queen was protecting the king you cant move it.
+        ChessPosition kingPosition = null;
+        ArrayList<ChessPosition> nextTurnMoves = new ArrayList<>();
+
+        // find the king
+        for (int i = 1; i <= 8; ++i) {
+            for (int k = 1; k <= 8; ++k) {
+                ChessPosition currPosition = new ChessPosition(i, k);
+                if (board.getPiece(currPosition) != null) {
+
+                    // if the opp color, add to nextTurnMoves
+                    if (board.getPiece(currPosition).getTeamColor() != teamColor) {
+                        for (ChessMove move : board.getPiece(currPosition).pieceMoves(board, currPosition)) {
+                            nextTurnMoves.add(move.getEndPosition());
+                        }
+                    }
+                    // if my king, save position
+                    else if (board.getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(currPosition).getTeamColor() == teamColor) {
+                        kingPosition = new ChessPosition(currPosition);
+                    }
+                }
+            }
+        }
+
+        return (nextTurnMoves.contains(kingPosition));
     }
 
     /**
