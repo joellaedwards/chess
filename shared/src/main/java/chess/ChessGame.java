@@ -95,7 +95,6 @@ public class ChessGame {
         openMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new ArrayList<>();
 
-        // deep copy of board
 
         //  A move is valid if it is a "piece move" for the piece at the input location and making
         //  that move would not leave the team’s king in danger of check
@@ -134,13 +133,6 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
 
-//    Receives a given move and executes it, provided it is a legal move.
-//    If the move is illegal, it throws an InvalidMoveException. A move is illegal if
-//    it is not a "valid" move for the piece at the starting location,
-//    (A move is valid if it is a "piece move" for the piece at the input location and making
-//     that move would not leave the team’s king in danger of check)
-//
-//    or if it’s not the corresponding team's turn.
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
         if (board.getPiece(move.getStartPosition()) == null) {
@@ -187,7 +179,6 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // this includes like if the queen was protecting the king you cant move it.
         ChessPosition kingPosition = null;
         ArrayList<ChessPosition> nextTurnMoves = new ArrayList<>();
 
@@ -224,7 +215,51 @@ public class ChessGame {
 
 //    Returns true if the given team has no way to protect their king from being captured.
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // see if its in check
+
+     //   if (isInCheck(teamColor)) {
+            // do i check through the whole board again and see where the moves are that the color could make?
+
+            for (int i = 1; i <= 8; ++i) {
+                for (int k = 1; k <= 8; ++k) {
+                    ChessPosition currPosition = new ChessPosition(i, k);
+                    ChessPiece currPiece = board.getPiece(currPosition);
+
+                    if (currPiece != null) {
+                        if (currPiece.getTeamColor() == teamColor) {
+                            Collection<ChessMove> availableMoves = validMoves(currPosition);
+                            if (!availableMoves.isEmpty()) {
+                                return false;
+                            }
+                        }
+                    }
+
+
+//                        for (ChessMove move : availableMoves) {
+//                            ChessPiece movePiece = currPiece;
+//                            if (move.getPromotionPiece() != null) {
+//                                movePiece = new ChessPiece(currPiece.getTeamColor(), move.getPromotionPiece());
+//                            }
+//
+//                            ChessPiece undoPiece = board.getPiece(move.getEndPosition());
+//                            board.addPiece(move.getStartPosition(), null);
+//                            board.addPiece(move.getEndPosition(), movePiece);
+//
+//                            // the king is not in check with this move.
+//                            if (!isInCheck(teamColor)) {
+//                                return false;
+//                            }
+//
+//                            board.addPiece(move.getEndPosition(), undoPiece);
+//                            board.addPiece(move.getStartPosition(), currPiece);
+//
+//                        }
+
+
+                }
+            }
+       // }
+        return true;
     }
 
     /**
