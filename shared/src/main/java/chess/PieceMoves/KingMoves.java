@@ -69,29 +69,6 @@ public class KingMoves {
             availableMoves.add(newMove);
         }
 
-//        ArrayList<ChessMove> bishopMoves = new BishopMoves().returnBishopMoves(board, startingPosition, otherColor);
-//        for (ChessMove move : bishopMoves) {
-//            availableMoves.remove(move);
-//        }
-//        ArrayList<ChessMove> knightMoves = new KnightMoves().returnKnightMoves(board, startingPosition, otherColor);
-//        for (ChessMove move : knightMoves) {
-//            availableMoves.remove(move);
-//        }
-////        ArrayList<ChessMove> pawnMoves = new PawnMoves().returnPawnMoves(board, startingPosition, otherColor);
-////        for (ChessMove move : pawnMoves) {
-////            availableMoves.remove(move);
-////        }
-//        // TODO but it's only for the diagonal moves from the pawn.
-//        // TODO it needs to not get queens moves based on this beginning spot weiss du
-//        ArrayList<ChessMove> queenMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
-//        for (ChessMove move : queenMoves) {
-//            availableMoves.remove(move);
-//        }
-//        ArrayList<ChessMove> rookMoves = new QueenMoves().returnQueenMoves(board, startingPosition, otherColor);
-//        for (ChessMove move : rookMoves) {
-//            availableMoves.remove(move);
-//        }
-
         return availableMoves;
     }
 
@@ -107,12 +84,6 @@ public class KingMoves {
         }
         return otherPieceColor != myColor;
     }
-// if you have to check and make sure the king doesnt move to a spot
-    // where it could get taken, call all the other piece moves and make
-    // sure the new position isnt in their possible positions
-
-
-
 
 
 }
