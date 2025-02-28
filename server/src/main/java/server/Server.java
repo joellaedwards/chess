@@ -1,8 +1,17 @@
 package server;
+import com.google.gson.Gson;
 
+import model.UserData;
+import service.*;
 import spark.*;
 
+
 public class Server {
+    private final UserService service;
+
+    public Server(UserService service) {
+        this.service = service;
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -14,8 +23,9 @@ public class Server {
 
         // provide method, path, and functional interface method
         // path can have variables, designate that w a :
-        Spark.get("/user", (req, res) -> )
+//        Spark.post("/user", (req, res) -> new handler.UserHandler().registerHandler(req.body()));
 
+        Spark.post("/user", this::addUser);
         //This line initializes the server and can be removed once you have a functioning endpoint
         Spark.init();
 
@@ -27,4 +37,24 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    // hi this is a handler
+    private Object addUser(Request req, Response res) {
+        // create user that has all the info from request but this actually
+        // wont really work, you'll need to create probably a
+        // different kind of object w just username and password
+        // OH NO SIKE UR GOOD leave it as UserData.class
+        var user = new Gson().fromJson(req.body(), UserData.class);
+
+        // then use that user w all the right data to call this
+        // and it will return the response data and call it user
+        // but it'll end up being username and authtoken as long
+        // as it's successful
+        user = service.registerUser(user);
+
+        // make it pretty and returnnn success or failure message
+        // and all that goes w it
+        return new Gson().toJson(user);
+    }
+
 }
