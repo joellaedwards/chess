@@ -1,17 +1,19 @@
 package server;
 import com.google.gson.Gson;
 
+import dataaccess.*;
 import model.*;
 import service.*;
 import spark.*;
+import java.util.Map;
 
 
 public class Server {
-    private final UserService service;
+//    private final UserService service;
 
-    public Server(UserService service) {
-        this.service = service;
-    }
+//    public Server(UserService service) {
+//        this.service = service;
+//    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -50,7 +52,25 @@ public class Server {
         // and it will return the response data and call it user
         // but it'll end up being username and authtoken as long
         // as it's successful
-        var registeredInfo = service.registerUser(user);
+        DataAccess dataAccess = new InMemoryDataAccess();
+
+        try {
+            var registeredInfo = new UserService(dataAccess).registerUser(user);
+
+
+            if (registeredInfo != null) {
+                // success!
+                return new Gson().toJson(registeredInfo);
+            } else {
+                Map<String, String> messageMap = Map.of("message", "Error: already taken");
+                return new Gson().toJson(messageMap);
+            }
+        } catch (Error e) {
+            Map<String, String> messageMap = Map.of("message", "Error: bad request");
+            return new Gson().toJson(messageMap);
+        }
+
+
 
 //        if (registeredInfo instanceof AuthData) {
 //            return registeredInfo;
@@ -60,7 +80,6 @@ public class Server {
 
         // make it pretty and returnnn success or failure message
         // and all that goes w it
-        return new Gson().toJson(registeredInfo);
     }
 
 }

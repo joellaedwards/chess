@@ -18,12 +18,15 @@ public class UserService {
     // idk so its just void for now
     public AuthData registerUser(UserData user) {
         // get user. if get user is null do createUser and then createAuth
-        if (getUser(user.username()) == null) {
+        if (dataAccess.getUser(user.username()) == null) {
+            System.out.println("getUser returned null");
             dataAccess.addUser(user);
             return dataAccess.addAuth(user.username());
         }
-        // TODO create something here that's like hey u failed
+        // user already exists
         return null;
+
+        // TODO create something here that's like hey u failed
     }
 
 
@@ -32,12 +35,6 @@ public class UserService {
         return dataAccess.listUsers();
 
 
-    }
-
-
-    UserData getUser(String username) {
-
-        return null;
     }
 
 
