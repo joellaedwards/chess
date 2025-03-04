@@ -1,7 +1,9 @@
 package service;
 
 import dataaccess.DataAccess;
-import model.UserData;
+import model.*;
+
+import java.util.ArrayList;
 
 public class UserService {
 
@@ -14,13 +16,32 @@ public class UserService {
 
     // this should return the things how they should be but
     // idk so its just void for now
-    public UserData registerUser(UserData user) {
+    public AuthData registerUser(UserData user) {
         // get user. if get user is null do createUser and then createAuth
-        if (getUser(user) == null) {
-            // add user
+        if (getUser(user.username()) == null) {
+            dataAccess.addUser(user);
+            return dataAccess.addAuth(user.username());
         }
-
-        return dataAccess.addUser(user);
+        // TODO create something here that's like hey u failed
+        return null;
     }
+
+
+    public ArrayList<UserData> listUsers() {
+
+        return dataAccess.listUsers();
+
+
+    }
+
+
+    UserData getUser(String username) {
+
+        return null;
+    }
+
+
+
+
 
 }

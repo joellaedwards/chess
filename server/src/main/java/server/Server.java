@@ -1,7 +1,7 @@
 package server;
 import com.google.gson.Gson;
 
-import model.UserData;
+import model.*;
 import service.*;
 import spark.*;
 
@@ -25,7 +25,7 @@ public class Server {
         // path can have variables, designate that w a :
 //        Spark.post("/user", (req, res) -> new handler.UserHandler().registerHandler(req.body()));
 
-        Spark.post("/user", this::addUser);
+        Spark.post("/user", this::registerUser);
         //This line initializes the server and can be removed once you have a functioning endpoint
         Spark.init();
 
@@ -39,7 +39,7 @@ public class Server {
     }
 
     // hi this is a handler
-    private Object addUser(Request req, Response res) {
+    private Object registerUser(Request req, Response res) {
         // create user that has all the info from request but this actually
         // wont really work, you'll need to create probably a
         // different kind of object w just username and password
@@ -50,11 +50,17 @@ public class Server {
         // and it will return the response data and call it user
         // but it'll end up being username and authtoken as long
         // as it's successful
-        user = service.registerUser(user);
+        var registeredInfo = service.registerUser(user);
+
+//        if (registeredInfo instanceof AuthData) {
+//            return registeredInfo;
+//        }
+        // ELSE tbh i want the other things to just deal with this so then
+        // i can be like yeah else just return what we got here
 
         // make it pretty and returnnn success or failure message
         // and all that goes w it
-        return new Gson().toJson(user);
+        return new Gson().toJson(registeredInfo);
     }
 
 }
