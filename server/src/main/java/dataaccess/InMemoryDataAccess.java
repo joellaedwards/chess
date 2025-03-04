@@ -21,8 +21,10 @@ public class InMemoryDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) {
+        System.out.println("length of userList: " + users.size());
         for (UserData currUser : users) {
-            if (Objects.equals(currUser.username(), username)) {
+            System.out.println("currUser: " + currUser);
+            if (users.contains(currUser)) {
                 return currUser;
             }
         }
