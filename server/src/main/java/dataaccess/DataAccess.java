@@ -6,6 +6,8 @@ import java.util.ArrayList;
 // for now w no database
 
 public interface DataAccess {
+
+
     void addUser(UserData user);
     ArrayList<UserData> listUsers();
     UserData getUser(String username);

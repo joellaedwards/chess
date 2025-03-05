@@ -4,14 +4,13 @@ import model.*;
 import java.util.*;
 
 public class InMemoryDataAccess implements DataAccess {
-
     private final ArrayList<UserData> users = new ArrayList<>();
     private final ArrayList<AuthData> authList = new ArrayList<>();
-
 
     @Override
     public void addUser(UserData user) {
         users.add(user);
+        System.out.println("length after add: " + users.size());
     }
 
     @Override
@@ -21,10 +20,11 @@ public class InMemoryDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) {
-        System.out.println("length of userList: " + users.size());
+        System.out.println("looking for username: " + username);
         for (UserData currUser : users) {
-            System.out.println("currUser: " + currUser);
-            if (users.contains(currUser)) {
+            System.out.println("curr username: " + currUser.username());
+            if (Objects.equals(currUser.username(), username)) {
+                System.out.println("found! returning user");
                 return currUser;
             }
         }

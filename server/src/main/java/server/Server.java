@@ -41,6 +41,8 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+    DataAccess dataAccess = new InMemoryDataAccess();
+
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
@@ -50,13 +52,17 @@ public class Server {
         // OH NO SIKE UR GOOD leave it as UserData.class
         System.out.println("inside registerUser in the server");
         var user = new Gson().fromJson(req.body(), UserData.class);
+        if (user.username() == null || user.password() == null || user.email() == null) {
+            res.status(400);
+            Map<String, String> messageMap = Map.of("message", "Error: bad request");
+            return new Gson().toJson(messageMap);
+        }
 
         // then use that user w all the right data to call this
         // and it will return the response data and call it user
         // but it'll end up being username and authtoken as long
         // as it's successful
         System.out.println("calling new dataAccess obj");
-        DataAccess dataAccess = new InMemoryDataAccess();
 
         System.out.println("entering try catch");
         try {
@@ -67,16 +73,19 @@ public class Server {
             if (registeredInfo != null) {
                 // success!
                 System.out.println("success! not null");
+                res.status(200);
                 System.out.println("gson stuff: " + new Gson().toJson(registeredInfo));
                 return new Gson().toJson(registeredInfo);
             } else {
                 System.out.println("already taken");
+                res.status(403);
                 Map<String, String> messageMap = Map.of("message", "Error: already taken");
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
             System.out.println("catch uh oh");
-            Map<String, String> messageMap = Map.of("message", "Error: bad request");
+            res.status(500);
+            Map<String, String> messageMap = Map.of("message", "Error: " + e);
             return new Gson().toJson(messageMap);
         }
 
