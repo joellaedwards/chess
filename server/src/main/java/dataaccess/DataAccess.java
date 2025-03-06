@@ -12,5 +12,14 @@ public interface DataAccess {
     ArrayList<UserData> listUsers();
     UserData getUser(String username);
 
+
     AuthData addAuth(String username);
+//    ArrayList<AuthData> listAuth();
+
+
+
+
+    void clearUserList();
+    void clearAuthList();
+    void clearGameList();
 }

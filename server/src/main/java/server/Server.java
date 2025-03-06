@@ -21,14 +21,13 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        // /user is for registering
 
         // provide method, path, and functional interface method
         // path can have variables, designate that w a :
-//        Spark.post("/user", (req, res) -> new handler.UserHandler().registerHandler(req.body()));
 
         Spark.post("/user", this::registerUser);
-        System.out.println("called the register user. returned something idk what");
+        Spark.delete("/db", this::clearAll);
+
         System.out.println("port: " + Spark.port());
         //This line initializes the server and can be removed once you have a functioning endpoint
 //        Spark.init();
@@ -46,10 +45,6 @@ public class Server {
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
-        // create user that has all the info from request but this actually
-        // wont really work, you'll need to create probably a
-        // different kind of object w just username and password
-        // OH NO SIKE UR GOOD leave it as UserData.class
         System.out.println("inside registerUser in the server");
         var user = new Gson().fromJson(req.body(), UserData.class);
         if (user.username() == null || user.password() == null || user.email() == null) {
@@ -58,11 +53,6 @@ public class Server {
             return new Gson().toJson(messageMap);
         }
 
-        // then use that user w all the right data to call this
-        // and it will return the response data and call it user
-        // but it'll end up being username and authtoken as long
-        // as it's successful
-        System.out.println("calling new dataAccess obj");
 
         System.out.println("entering try catch");
         try {
@@ -88,17 +78,39 @@ public class Server {
             Map<String, String> messageMap = Map.of("message", "Error: " + e);
             return new Gson().toJson(messageMap);
         }
-
-
-
-//        if (registeredInfo instanceof AuthData) {
-//            return registeredInfo;
-//        }
-        // ELSE tbh i want the other things to just deal with this so then
-        // i can be like yeah else just return what we got here
-
-        // make it pretty and returnnn success or failure message
-        // and all that goes w it
     }
+
+
+
+    private Object clearAll(Request req, Response res) {
+        System.out.println("inside clearAll in the server");
+        // if clear return success else return 500
+
+
+
+        System.out.println("entering clear try catch");
+        try {
+            System.out.println("inside clear try");
+
+            new UserService(dataAccess).clearUsers();
+            new AuthService(dataAccess).clearAuth();
+            new GameService(dataAccess).clearGames();
+
+            res.status(200);
+            return new Gson().toJson("");
+
+        } catch (Error e) {
+            System.out.println("catch uh oh");
+            res.status(500);
+            Map<String, String> messageMap = Map.of("message", "Error: " + e);
+            return new Gson().toJson(messageMap);
+        }
+    }
+
+
+
+
+
+
 
 }

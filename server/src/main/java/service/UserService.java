@@ -29,6 +29,12 @@ public class UserService {
         // TODO create something here that's like hey u failed
     }
 
+    public void clearUsers() {
+        System.out.println("clearing users service");
+        dataAccess.clearUserList();
+
+    }
+
 
     public ArrayList<UserData> listUsers() {
 
