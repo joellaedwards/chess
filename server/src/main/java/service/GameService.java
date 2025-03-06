@@ -18,6 +18,13 @@ public class GameService {
         dataAccess.clearGameList();
     }
 
+//    // should return a gameID
+//    public int createGame(String gameName) {
+//
+//
+//
+//    }
+
 
 
 

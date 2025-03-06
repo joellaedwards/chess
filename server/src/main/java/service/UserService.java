@@ -4,6 +4,7 @@ import dataaccess.DataAccess;
 import model.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class UserService {
 
@@ -25,9 +26,28 @@ public class UserService {
         }
         // user already exists
         return null;
-
-        // TODO create something here that's like hey u failed
     }
+
+
+    public AuthData loginUser(UserData user) {
+        // get user. if get user is null do createUser and then createAuth
+
+        UserData foundUser = dataAccess.getUser(user.username());
+        System.out.println("foundUser: " + foundUser);
+
+        if (foundUser == null) {
+            System.out.println("user not found in login user returning null");
+            return null;
+        }
+
+        if (Objects.equals(foundUser.password(), user.password())) {
+            System.out.println("user found! password correct! login (create auth token)");
+            return dataAccess.addAuth(user.username());
+        }
+        // user already exists
+        return null;
+    }
+
 
     public void clearUsers() {
         System.out.println("clearing users service");

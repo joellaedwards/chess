@@ -34,10 +34,37 @@ public class UnitTests {
     }
 
     @Test
+    public void loginSuccess() {
+        UserData testUser = new UserData("myUsername", "myPassword", null);
+        DataAccess dataAccess = new InMemoryDataAccess();
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+
+        assertNotNull(loginInfo.authToken(), "UUID should not be null");
+        assertEquals("myUsername", loginInfo.username(), "Username should be 'myUsername");
+    }
+
+    @Test
+    public void loginWrongPassword() {
+        UserData testUser = new UserData("myUsername", "myPassword", null);
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        UserData testUser2 = new UserData("myUsername", "wrongPassword", null);
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser2);
+
+        assertNull(loginInfo);
+
+    }
+
+
+
+
+
+    @Test
     public void testClearSuccess() {
         UserData testUser = new UserData("myUsername", "myPassword", "myEmail");
         DataAccess dataAccess = new InMemoryDataAccess();
-        AuthData registeredInfo = new UserService(dataAccess).registerUser(testUser);
 
         UserData testUser2 = new UserData("newUser", "password", "email.com");
         new UserService(dataAccess).registerUser(testUser2);

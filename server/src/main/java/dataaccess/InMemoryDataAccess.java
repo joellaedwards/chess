@@ -29,6 +29,7 @@ public class InMemoryDataAccess implements DataAccess {
                 return currUser;
             }
         }
+        System.out.println("user not found ...");
         return null;
     }
 
