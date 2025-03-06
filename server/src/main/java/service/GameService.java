@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
+import model.AuthData;
 
 
 public class GameService {
@@ -9,6 +10,19 @@ public class GameService {
 
     public GameService(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
+    }
+
+
+    public int createGame(String authToken, String gameName) {
+        AuthData authFound = dataAccess.getAuth(authToken);
+        if (authFound != null) {
+            // authtoken found, valid user
+            dataAccess.deleteAuth(authFound);
+
+            return dataAccess.addGame(gameName);
+        }
+
+        return 0;
     }
 
 

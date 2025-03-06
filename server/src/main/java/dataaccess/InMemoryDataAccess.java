@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.*;
 import java.util.*;
 
@@ -7,6 +8,7 @@ public class InMemoryDataAccess implements DataAccess {
     private final ArrayList<UserData> userList = new ArrayList<>();
     private final ArrayList<AuthData> authList = new ArrayList<>();
     private final ArrayList<GameData> gameList = new ArrayList<>();
+    private int gameNum = 0;
 
     @Override
     public void addUser(UserData user) {
@@ -49,6 +51,16 @@ public class InMemoryDataAccess implements DataAccess {
         System.out.println("user not found ...");
         return null;
     }
+
+
+
+    public int addGame(String gameName) {
+        gameNum++;
+        GameData newGame = new GameData(gameNum, null, null, gameName, new ChessGame());
+        gameList.add(newGame);
+        return gameNum;
+    }
+
 
     public void deleteAuth(AuthData authObj) {
         authList.remove(authObj);
