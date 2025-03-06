@@ -37,6 +37,7 @@ public class UnitTests {
     public void loginSuccess() {
         UserData testUser = new UserData("myUsername", "myPassword", null);
         DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
 
         AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
 
@@ -57,14 +58,41 @@ public class UnitTests {
 
     }
 
+    @Test
+    public void logoutSuccess() {
+        UserData testUser = new UserData("myUsername", "myPassword", null);
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        boolean logoutReturn = new AuthService(dataAccess).logout(authToken);
+
+        assertTrue(logoutReturn);
+
+    }
 
 
+    @Test
+    public void logoutFail() {
+        UserData testUser = new UserData("myUsername", "myPassword", null);
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        String authToken = "1234567";
+        boolean logoutReturn = new AuthService(dataAccess).logout(authToken);
+
+        assertFalse(logoutReturn);
+
+    }
 
 
     @Test
     public void testClearSuccess() {
         UserData testUser = new UserData("myUsername", "myPassword", "myEmail");
         DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
 
         UserData testUser2 = new UserData("newUser", "password", "email.com");
         new UserService(dataAccess).registerUser(testUser2);

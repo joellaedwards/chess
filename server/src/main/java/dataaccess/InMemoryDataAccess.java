@@ -33,6 +33,27 @@ public class InMemoryDataAccess implements DataAccess {
         return null;
     }
 
+
+
+
+    @Override
+    public AuthData getAuth(String authToken) {
+        System.out.println("looking for auth: " + authToken);
+        for (AuthData currAuth : authList) {
+            System.out.println("curr token: " + currAuth.authToken());
+            if (Objects.equals(currAuth.authToken(), authToken)) {
+                System.out.println("found! returning user");
+                return currAuth;
+            }
+        }
+        System.out.println("user not found ...");
+        return null;
+    }
+
+    public void deleteAuth(AuthData authObj) {
+        authList.remove(authObj);
+    }
+
     @Override
     public AuthData addAuth(String username) {
         AuthData currAuth = new AuthData(UUID.randomUUID().toString(), username);

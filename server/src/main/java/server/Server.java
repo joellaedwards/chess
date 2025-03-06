@@ -27,6 +27,8 @@ public class Server {
 
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::loginUser);
+        Spark.delete("/session", this::logoutUser);
+
         Spark.delete("/db", this::clearAll);
 
 //        Spark.post("/game", this::createGame);
@@ -124,7 +126,37 @@ public class Server {
 
 
 
+    private Object logoutUser(Request req, Response res) {
+        System.out.println("inside logout in the server");
 
+        String authHeader = req.headers("Authorization");
+        System.out.println("authorization header: " + authHeader);
+
+
+
+        System.out.println("entering login try catch");
+        try {
+            System.out.println("inside try");
+            var logoutInfo = new AuthService(dataAccess).logout(authHeader);
+            System.out.println("logoutInfo: " + logoutInfo);
+
+            if (logoutInfo) {
+                System.out.println("status code 200");
+                res.status(200);
+                return new Gson().toJson(new Object());
+            } else {
+                System.out.println("unauthorized");
+                res.status(401);
+                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
+                return new Gson().toJson(messageMap);
+            }
+        } catch (Error e) {
+            System.out.println("catch uh oh");
+            res.status(500);
+            Map<String, String> messageMap = Map.of("message", "Error: " + e);
+            return new Gson().toJson(messageMap);
+        }
+    }
 
 
 

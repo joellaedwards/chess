@@ -13,6 +13,8 @@ public interface DataAccess {
     UserData getUser(String username);
 
 
+    AuthData getAuth(String authToken);
+    void deleteAuth(AuthData authObj);
     AuthData addAuth(String username);
 //    ArrayList<AuthData> listAuth();
 
