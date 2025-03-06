@@ -29,6 +29,7 @@ public class Server {
         Spark.post("/session", this::loginUser);
         Spark.delete("/session", this::logoutUser);
         Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
 
         Spark.delete("/db", this::clearAll);
 
@@ -205,6 +206,60 @@ public class Server {
 
 
 
+
+
+    private Object joinGame(Request req, Response res) {
+        System.out.println("inside createGame in the server");
+        String authHeader = req.headers("Authorization");
+
+        System.out.println("authorization header: " + authHeader);
+
+        String reqBody = req.body();
+        System.out.println("request Body: " + reqBody);
+
+        var joinData = new Gson().fromJson(req.body(), GameService.JoinGameObj.class);
+
+        System.out.println("teamcolor: " + joinData.playerColor);
+        System.out.println("gameid: " + joinData.gameID);
+        System.out.println("authheader: " + authHeader);
+
+        if (authHeader == null || joinData.playerColor == null || joinData.gameID == 0) {
+            res.status(400);
+            Map<String, String> messageMap = Map.of("message", "Error: bad request");
+            return new Gson().toJson(messageMap);
+        }
+
+
+        System.out.println("entering joinGame try catch");
+        try {
+            System.out.println("inside try");
+            int joinGameInfo = new GameService(dataAccess).joinGame(joinData, authHeader);
+            System.out.println("joinGame: " + joinGameInfo);
+
+            if (joinGameInfo == 1) {
+                // success!
+                System.out.println("success! not null");
+                res.status(200);
+                return new Gson().toJson(new Object());
+            } else if (joinGameInfo == 0) {
+                System.out.println("unauthorized");
+                res.status(401);
+                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
+                return new Gson().toJson(messageMap);
+            } else if (joinGameInfo == 2) {
+                System.out.println("already taken");
+                res.status(403);
+                Map<String, String> messageMap = Map.of("message", "Error: already taken");
+                return new Gson().toJson(messageMap);
+            }
+        } catch (Error e) {
+            System.out.println("catch uh oh");
+            res.status(500);
+            Map<String, String> messageMap = Map.of("message", "Error: " + e);
+            return new Gson().toJson(messageMap);
+        }
+        return null;
+    }
 
 
 

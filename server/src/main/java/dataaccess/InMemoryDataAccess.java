@@ -62,6 +62,33 @@ public class InMemoryDataAccess implements DataAccess {
     }
 
 
+    public GameData getGame(int gameId) {
+        for (GameData currGame : gameList) {
+            if (gameId == currGame.gameID()) {
+                return currGame;
+            }
+        }
+        return null;
+    }
+
+    public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username) {
+
+        if (teamColor == ChessGame.TeamColor.WHITE) {
+            if (game.whiteUsername() == null) {
+                game.setWhite(username);
+                return true;
+            }
+        }
+        if (teamColor == ChessGame.TeamColor.BLACK) {
+            if (game.blackUsername() == null) {
+                game.setBlack(username);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void deleteAuth(AuthData authObj) {
         authList.remove(authObj);
     }

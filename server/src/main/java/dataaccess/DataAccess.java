@@ -1,4 +1,5 @@
 package dataaccess;
+import chess.ChessGame;
 import model.*;
 import java.util.ArrayList;
 // idk maybe make a whole list of users and then also
@@ -24,4 +25,7 @@ public interface DataAccess {
     void clearUserList();
     void clearAuthList();
     void clearGameList();
+
+    GameData getGame(int gameId);
+    boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username);
 }

@@ -1,10 +1,12 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.DataAccess;
 import dataaccess.InMemoryDataAccess;
 import model.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
 
 import java.util.ArrayList;
 
@@ -119,6 +121,58 @@ public class UnitTests {
 
         assertEquals(0, gameId);
 
+    }
+
+
+
+    @Test
+    public void joinGameSuccess() {
+
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        GameService.JoinGameObj joinObj = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
+
+        System.out.println("trying to join game");
+        int result = new GameService(dataAccess).joinGame(joinObj, authToken);
+
+        assertEquals(1, result);
+
+    }
+
+
+    @Test
+    public void joinGameFail() {
+
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        GameService.JoinGameObj joinObj = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
+
+        GameService.JoinGameObj joinObj2 = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
+
+        System.out.println("trying to join game");
+        int result = new GameService(dataAccess).joinGame(joinObj2, authToken);
+
+        assertEquals(2, result);
     }
 
 
