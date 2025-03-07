@@ -41,7 +41,6 @@ public class GameService {
             // authtoken found, valid user
             return dataAccess.addGame(gameName);
         }
-
         return 0;
     }
 
@@ -49,27 +48,19 @@ public class GameService {
         AuthData authFound = dataAccess.getAuth(authToken);
         if (authFound != null) {
             //authToken found, valid user
-            System.out.println("passed null check");
             GameData gameToJoin = dataAccess.getGame(joinObj.gameID);
             if (gameToJoin == null) {
-                System.out.println("authorized but cant find game");
                 return 3;
             }
-            System.out.println("game id: " + gameToJoin);
-            System.out.println("username here: " + authFound.username());
             boolean success = dataAccess.joinGame(gameToJoin, joinObj.playerColor, authFound.username());
             if (success) {
-                System.out.println("success! returning 1");
                 return 1;
             }
             else {
-                System.out.println("color taken");
                 return 2;
             }
         }
-        System.out.println("not authorized");
         return 0;
-
     }
 
     public ArrayList<ListGameObj> listGames(String authToken) {
@@ -87,22 +78,8 @@ public class GameService {
         return null;
     }
 
-
-    // this should return the things how they should be but
-    // idk so its just void for now
     public void clearGames() {
         dataAccess.clearGameList();
     }
-
-//    // should return a gameID
-//    public int createGame(String gameName) {
-//
-//
-//
-//    }
-
-
-
-
 
 }

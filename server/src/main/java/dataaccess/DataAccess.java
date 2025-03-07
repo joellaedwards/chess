@@ -10,25 +10,22 @@ public interface DataAccess {
 
 
     void addUser(UserData user);
+    UserData getUser(String username);
     ArrayList<UserData> listUsers();
 
+    int addGame(String gameName);
+    GameData getGame(int gameId);
+    boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username);
     ArrayList<GameData> listGames();
 
-    UserData getUser(String username);
-
-
+    AuthData addAuth(String username);
     AuthData getAuth(String authToken);
     void deleteAuth(AuthData authObj);
-    AuthData addAuth(String username);
-//    ArrayList<AuthData> listAuth();
 
-    int addGame(String gameName);
 
 
     void clearUserList();
     void clearAuthList();
     void clearGameList();
 
-    GameData getGame(int gameId);
-    boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username);
 }

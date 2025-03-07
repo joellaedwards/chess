@@ -12,15 +12,9 @@ import java.util.Map;
 
 
 public class Server {
-//    private final UserService service;
-
-//    public Server(UserService service) {
-//        this.service = service;
-//    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
@@ -35,7 +29,6 @@ public class Server {
         Spark.get("/game", this::listGames);
         Spark.put("/game", this::joinGame);
         Spark.delete("/db", this::clearAll);
-
 
         System.out.println("port: " + Spark.port());
         //This line initializes the server and can be removed once you have a functioning endpoint
@@ -54,7 +47,6 @@ public class Server {
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
-        System.out.println("inside registerUser in the server");
         var user = new Gson().fromJson(req.body(), UserData.class);
         if (user.username() == null || user.password() == null || user.email() == null) {
             res.status(400);
@@ -65,9 +57,7 @@ public class Server {
 
         try {
             var registeredInfo = new UserService(dataAccess).registerUser(user);
-
             if (registeredInfo != null) {
-                // success!
                 res.status(200);
                 return new Gson().toJson(registeredInfo);
             } else {
@@ -84,21 +74,15 @@ public class Server {
         }
     }
 
-
-
     private Object loginUser(Request req, Response res) {
-
         var user = new Gson().fromJson(req.body(), UserData.class);
         if (user.username() == null || user.password() == null) {
             res.status(400);
             Map<String, String> messageMap = Map.of("message", "Error: bad request");
             return new Gson().toJson(messageMap);
         }
-
-
         try {
             var loginInfo = new UserService(dataAccess).loginUser(user);
-
             if (loginInfo != null) {
                 // success!
                 System.out.println("success! not null");
@@ -119,16 +103,10 @@ public class Server {
         }
     }
 
-
-
     private Object logoutUser(Request req, Response res) {
-
         String authHeader = req.headers("Authorization");
-
-
         try {
             var logoutInfo = new AuthService(dataAccess).logout(authHeader);
-
             if (logoutInfo) {
                 System.out.println("status code 200");
                 res.status(200);
@@ -147,17 +125,10 @@ public class Server {
         }
     }
 
-
-
-
-
-
     private Object listGames(Request req, Response res) {
         String authHeader = req.headers("Authorization");
-
         try {
             var gamesList = new GameService(dataAccess).listGames(authHeader);
-
             if (gamesList != null) {
                 System.out.println("status code 200");
                 res.status(200);
@@ -175,18 +146,10 @@ public class Server {
             Map<String, String> messageMap = Map.of("message", "Error: " + e);
             return new Gson().toJson(messageMap);
         }
-
-
     }
-
-
-
-
 
     private Object createGame(Request req, Response res) {
         String authHeader = req.headers("Authorization");
-
-
         var game = new Gson().fromJson(req.body(), GameData.class);
         String gameName = game.gameName();
         if (gameName == null || authHeader == null) {
@@ -194,8 +157,6 @@ public class Server {
             Map<String, String> messageMap = Map.of("message", "Error: bad request");
             return new Gson().toJson(messageMap);
         }
-
-
         try {
             int newGameInfo = new GameService(dataAccess).createGame(authHeader, gameName);
 
@@ -219,26 +180,14 @@ public class Server {
         }
     }
 
-
-
-
-
-
     private Object joinGame(Request req, Response res) {
         String authHeader = req.headers("Authorization");
-
-
         var joinData = new Gson().fromJson(req.body(), GameService.JoinGameObj.class);
-
-
-
         if (authHeader == null || joinData.playerColor == null || joinData.gameID == 0) {
             res.status(400);
             Map<String, String> messageMap = Map.of("message", "Error: bad request");
             return new Gson().toJson(messageMap);
         }
-
-
         System.out.println("entering joinGame try catch");
         try {
             System.out.println("inside try");
@@ -275,15 +224,8 @@ public class Server {
         return null;
     }
 
-
-
-
     private Object clearAll(Request req, Response res) {
         System.out.println("inside clearAll in the server");
-        // if clear return success else return 500
-
-
-
         System.out.println("entering clear try catch");
         try {
             System.out.println("inside clear try");
@@ -302,5 +244,4 @@ public class Server {
             return new Gson().toJson(messageMap);
         }
     }
-
 }
