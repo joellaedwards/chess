@@ -4,7 +4,8 @@ import dataaccess.DataAccess;
 import model.AuthData;
 
 
-public class AuthService {
+public class
+AuthService {
 
     private final DataAccess dataAccess;
 

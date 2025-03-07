@@ -34,7 +34,6 @@ public class Server {
         Spark.post("/game", this::createGame);
         Spark.get("/game", this::listGames);
         Spark.put("/game", this::joinGame);
-
         Spark.delete("/db", this::clearAll);
 
 
@@ -294,7 +293,7 @@ public class Server {
             new GameService(dataAccess).clearGames();
 
             res.status(200);
-            return new Gson().toJson("");
+            return new Gson().toJson(new Object());
 
         } catch (Error e) {
             System.out.println("catch uh oh");

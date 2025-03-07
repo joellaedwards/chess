@@ -73,10 +73,10 @@ public class GameService {
     }
 
     public ArrayList<ListGameObj> listGames(String authToken) {
-        dataAccess.getAuth(authToken);
+        AuthData authResult = dataAccess.getAuth(authToken);
         ArrayList<ListGameObj> returnGameList = new ArrayList<>();
 
-        if (authToken != null) {
+        if (authResult != null) {
             ArrayList<GameData> fullList = dataAccess.listGames();
             for (GameData game : fullList) {
                 ListGameObj currGame = new ListGameObj(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName());
