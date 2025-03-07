@@ -251,6 +251,11 @@ public class Server {
                 res.status(403);
                 Map<String, String> messageMap = Map.of("message", "Error: already taken");
                 return new Gson().toJson(messageMap);
+            } else if (joinGameInfo == 3) {
+                System.out.println("game not found");
+                res.status(400);
+                Map<String, String> messageMap = Map.of("message", "Error: bad request");
+                return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
             System.out.println("catch uh oh");

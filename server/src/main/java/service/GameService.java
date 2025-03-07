@@ -42,10 +42,12 @@ public class GameService {
             GameData gameToJoin = dataAccess.getGame(joinObj.gameID);
             if (gameToJoin == null) {
                 System.out.println("authorized but cant find game");
-                return 2;
+                return 3;
             }
             System.out.println("game id: " + gameToJoin);
-            if (dataAccess.joinGame(gameToJoin, joinObj.playerColor, authFound.username())) {
+            System.out.println("username here: " + authFound.username());
+            boolean success = dataAccess.joinGame(gameToJoin, joinObj.playerColor, authFound.username());
+            if (success) {
                 System.out.println("success! returning 1");
                 return 1;
             }

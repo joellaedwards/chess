@@ -172,7 +172,7 @@ public class UnitTests {
         System.out.println("trying to join game");
         int result = new GameService(dataAccess).joinGame(joinObj2, authToken);
 
-        assertEquals(2, result);
+        assertEquals(3, result);
     }
 
 

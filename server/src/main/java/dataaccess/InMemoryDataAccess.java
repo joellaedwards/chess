@@ -65,6 +65,8 @@ public class InMemoryDataAccess implements DataAccess {
     public GameData getGame(int gameId) {
         for (GameData currGame : gameList) {
             if (gameId == currGame.gameID()) {
+                System.out.println("returning game: " + currGame);
+                System.out.println("correct game black: " + currGame.blackUsername());
                 return currGame;
             }
         }
@@ -72,19 +74,26 @@ public class InMemoryDataAccess implements DataAccess {
     }
 
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username) {
-
+        System.out.println("username right inside joinGame: " + username);
         if (teamColor == ChessGame.TeamColor.WHITE) {
+            System.out.println("white username: " + game.whiteUsername());
             if (game.whiteUsername() == null) {
                 game.setWhite(username);
                 return true;
             }
         }
-        if (teamColor == ChessGame.TeamColor.BLACK) {
+        else if (teamColor == ChessGame.TeamColor.BLACK) {
+            System.out.println("username within check black: " + username);
+            System.out.println("black username: " + game.blackUsername());
             if (game.blackUsername() == null) {
-                game.setBlack(username);
+                gameList.remove(game);
+                game = game.setBlack(username);
+                gameList.add(game);
+                System.out.println("black username updated: " + game.blackUsername());
                 return true;
             }
         }
+        System.out.println("return false from join game cant take another color");
         return false;
     }
 
