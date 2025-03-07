@@ -6,8 +6,6 @@ import dataaccess.InMemoryDataAccess;
 import model.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-
-
 import java.util.ArrayList;
 
 public class UnitTests {
@@ -104,7 +102,6 @@ public class UnitTests {
 
         assertNotEquals(0, gameId);
 
-
     }
 
 
@@ -177,6 +174,48 @@ public class UnitTests {
 
 
     // TODO write listGames test
+
+    @Test
+    public void testListGamesPass() {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+        int gameId2 = new GameService(dataAccess).createGame(authToken, "newGame");
+
+        ArrayList<GameService.ListGameObj> listOfGames = new GameService(dataAccess).listGames(authToken);
+        ArrayList<GameService.ListGameObj> expectedList = new ArrayList<>();
+
+        expectedList.add(new GameService.ListGameObj(gameId, null, null, "myGame!"));
+        expectedList.add(new GameService.ListGameObj(gameId2, null, null, "newGame"));
+
+        for (int i = 0; i < expectedList.size(); ++i) {
+            assertEquals(expectedList.get(i).gameID, listOfGames.get(i).gameID);
+            assertEquals(expectedList.get(i).blackUsername, listOfGames.get(i).blackUsername);
+            assertEquals(expectedList.get(i).whiteUsername, listOfGames.get(i).whiteUsername);
+            assertEquals(expectedList.get(i).gameName, listOfGames.get(i).gameName);
+        }
+    }
+
+
+    @Test
+    public void testEmptyList() {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new InMemoryDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        ArrayList<GameService.ListGameObj> listOfGames = new GameService(dataAccess).listGames(authToken);
+
+        assert(listOfGames.isEmpty());
+    }
+
 
 
     @Test
