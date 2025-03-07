@@ -172,9 +172,6 @@ public class UnitTests {
         assertEquals(3, result);
     }
 
-
-    // TODO write listGames test
-
     @Test
     public void testListGamesPass() {
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");

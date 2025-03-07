@@ -1,4 +1,4 @@
-package chess.PieceMoves;
+package chess.piecemoves;
 
 import chess.*;
 
@@ -130,8 +130,6 @@ public class RookMoves {
             ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
             availableMoves.add(currMove);
         }
-        // TODO make that above a function and call it for every for loop. up down left right
-
 
         return availableMoves;
     }

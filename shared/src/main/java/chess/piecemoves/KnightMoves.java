@@ -1,4 +1,4 @@
-package chess.PieceMoves;
+package chess.piecemoves;
 import chess.*;
 import java.util.ArrayList;
 
@@ -11,7 +11,6 @@ public class KnightMoves {
 
     // ok yes its ChessBoard.getPiece and you pass in ChessPosition chessPosition (it's row then col oh and its one
     // based!
-    // TODO surely theres a way to do this w a for loop.
 
     // mm we're also gonna need to know the color of this piece
     // OH I KNOW ChessPiece.pieceColor  !!!!!
