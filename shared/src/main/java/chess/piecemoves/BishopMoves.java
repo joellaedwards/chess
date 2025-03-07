@@ -9,19 +9,19 @@ public class BishopMoves {
     public ArrayList<ChessMove> returnBishopMoves(ChessBoard board, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
         ArrayList<ChessMove> availableMoves = new ArrayList<>();
 
-        getMovesInDirection(board, startingPosition, 1, 1, myColor, availableMoves);
-        getMovesInDirection(board, startingPosition, 1, -1, myColor, availableMoves);
-        getMovesInDirection(board, startingPosition, -1, 1, myColor, availableMoves);
-        getMovesInDirection(board, startingPosition, -1, -1, myColor, availableMoves);
+        getMoves(board, startingPosition, 1, 1, myColor, availableMoves);
+        getMoves(board, startingPosition, 1, -1, myColor, availableMoves);
+        getMoves(board, startingPosition, -1, 1, myColor, availableMoves);
+        getMoves(board, startingPosition, -1, -1, myColor, availableMoves);
 
         return availableMoves;
     }
 
 
 
-    public void getMovesInDirection(ChessBoard board, ChessPosition startingPosition, int rowInc, int colInc, ChessGame.TeamColor myColor, ArrayList<ChessMove> availableMoves) {
-        int rowNum = startingPosition.getRow();
-        int colNum = startingPosition.getColumn();
+    public void getMoves(ChessBoard board, ChessPosition start, int rowInc, int colInc, ChessGame.TeamColor color, ArrayList<ChessMove> available) {
+        int rowNum = start.getRow();
+        int colNum = start.getColumn();
 
         // always add increment
 
@@ -31,34 +31,34 @@ public class BishopMoves {
             ChessPosition currPosition = new ChessPosition(rowNum, colNum);
             ChessPiece pieceAtCurrPosition = board.getPiece(currPosition);
             if (pieceAtCurrPosition != null) {
-                if (pieceAtCurrPosition.getTeamColor() == myColor) {
-                    if ((rowNum - rowInc) != startingPosition.getRow() && (colNum - colInc) != startingPosition.getColumn()) {
+                if (pieceAtCurrPosition.getTeamColor() == color) {
+                    if ((rowNum - rowInc) != start.getRow() && (colNum - colInc) != start.getColumn()) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum - rowInc, colNum - rowInc);
-                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-                        if (!availableMoves.contains(currMove)) {
-                            availableMoves.add(currMove);
-                        }
+                        ChessMove currMove = new ChessMove(start, backUpPosition, null);
+                        tryAddMove(currMove, available);
                     }
                     else {
                         break;
                     }
                 }
                 else {
-                    ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                    if (!availableMoves.contains(currMove)) {
-                        availableMoves.add(currMove);
-                    }
+                    ChessMove currMove = new ChessMove(start, currPosition, null);
+                    tryAddMove(currMove, available);
                 }
                 break;
 
             }
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            if (!availableMoves.contains(currMove)) {
-                availableMoves.add(currMove);
-            }
+            ChessMove currMove = new ChessMove(start, currPosition, null);
+            tryAddMove(currMove, available);
         }
 
 
+    }
+
+    public void tryAddMove(ChessMove move, ArrayList<ChessMove> available) {
+        if (!available.contains(move)) {
+            available.add(move);
+        }
     }
 
 }

@@ -175,7 +175,7 @@ public class ChessGame {
                         }
                     }
                     // if my king, save position
-                    else if (board.getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING && board.getPiece(currPosition).getTeamColor() == teamColor) {
+                    else if (board.getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING) {
                         kingPosition = new ChessPosition(currPosition);
                     }
                 }
@@ -206,14 +206,11 @@ public class ChessGame {
             for (int k = 1; k <= 8; ++k) {
                 ChessPosition currPosition = new ChessPosition(i, k);
                 ChessPiece currPiece = board.getPiece(currPosition);
-
-                if (currPiece != null) {
-                    if (currPiece.getTeamColor() == teamColor) {
+                if (currPiece != null && currPiece.getTeamColor() == teamColor) {
                         Collection<ChessMove> availableMoves = validMoves(currPosition);
                         if (!availableMoves.isEmpty()) {
                             return false;
                         }
-                    }
                 }
             }
         }
