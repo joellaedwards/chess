@@ -11,6 +11,9 @@ public interface DataAccess {
 
     void addUser(UserData user);
     ArrayList<UserData> listUsers();
+
+    ArrayList<GameData> listGames();
+
     UserData getUser(String username);
 
 

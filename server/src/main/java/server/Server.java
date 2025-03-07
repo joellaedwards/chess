@@ -5,6 +5,9 @@ import dataaccess.*;
 import model.*;
 import service.*;
 import spark.*;
+import service.GameService;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -29,6 +32,7 @@ public class Server {
         Spark.post("/session", this::loginUser);
         Spark.delete("/session", this::logoutUser);
         Spark.post("/game", this::createGame);
+        Spark.get("/game", this::listGames);
         Spark.put("/game", this::joinGame);
 
         Spark.delete("/db", this::clearAll);
@@ -60,17 +64,12 @@ public class Server {
         }
 
 
-        System.out.println("entering try catch");
         try {
-            System.out.println("inside try");
             var registeredInfo = new UserService(dataAccess).registerUser(user);
-            System.out.println("registeredInfo: " + registeredInfo);
 
             if (registeredInfo != null) {
                 // success!
-                System.out.println("success! not null");
                 res.status(200);
-                System.out.println("gson stuff: " + new Gson().toJson(registeredInfo));
                 return new Gson().toJson(registeredInfo);
             } else {
                 System.out.println("already taken");
@@ -89,7 +88,6 @@ public class Server {
 
 
     private Object loginUser(Request req, Response res) {
-        System.out.println("inside loginUser in the server");
 
         var user = new Gson().fromJson(req.body(), UserData.class);
         if (user.username() == null || user.password() == null) {
@@ -99,11 +97,8 @@ public class Server {
         }
 
 
-        System.out.println("entering login try catch");
         try {
-            System.out.println("inside try");
             var loginInfo = new UserService(dataAccess).loginUser(user);
-            System.out.println("loginInfo: " + loginInfo);
 
             if (loginInfo != null) {
                 // success!
@@ -128,18 +123,12 @@ public class Server {
 
 
     private Object logoutUser(Request req, Response res) {
-        System.out.println("inside logout in the server");
 
         String authHeader = req.headers("Authorization");
-        System.out.println("authorization header: " + authHeader);
 
 
-
-        System.out.println("entering login try catch");
         try {
-            System.out.println("inside try");
             var logoutInfo = new AuthService(dataAccess).logout(authHeader);
-            System.out.println("logoutInfo: " + logoutInfo);
 
             if (logoutInfo) {
                 System.out.println("status code 200");
@@ -161,11 +150,42 @@ public class Server {
 
 
 
-    private Object createGame(Request req, Response res) {
-        System.out.println("inside createGame in the server");
+
+
+
+    private Object listGames(Request req, Response res) {
         String authHeader = req.headers("Authorization");
 
-        System.out.println("authorization header: " + authHeader);
+        try {
+            var gamesList = new GameService(dataAccess).listGames(authHeader);
+
+            if (gamesList != null) {
+                System.out.println("status code 200");
+                res.status(200);
+                Map<String, ArrayList<GameService.ListGameObj>> messageMap = Map.of("games", gamesList);
+                return new Gson().toJson(messageMap);
+            } else {
+                System.out.println("unauthorized");
+                res.status(401);
+                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
+                return new Gson().toJson(messageMap);
+            }
+        } catch (Error e) {
+            System.out.println("catch uh oh");
+            res.status(500);
+            Map<String, String> messageMap = Map.of("message", "Error: " + e);
+            return new Gson().toJson(messageMap);
+        }
+
+
+    }
+
+
+
+
+
+    private Object createGame(Request req, Response res) {
+        String authHeader = req.headers("Authorization");
 
 
         var game = new Gson().fromJson(req.body(), GameData.class);
@@ -177,11 +197,8 @@ public class Server {
         }
 
 
-        System.out.println("entering createGame try catch");
         try {
-            System.out.println("inside try");
             int newGameInfo = new GameService(dataAccess).createGame(authHeader, gameName);
-            System.out.println("newGameInfo: " + newGameInfo);
 
             if (newGameInfo != 0) {
                 // success!
@@ -209,19 +226,12 @@ public class Server {
 
 
     private Object joinGame(Request req, Response res) {
-        System.out.println("inside createGame in the server");
         String authHeader = req.headers("Authorization");
 
-        System.out.println("authorization header: " + authHeader);
-
-        String reqBody = req.body();
-        System.out.println("request Body: " + reqBody);
 
         var joinData = new Gson().fromJson(req.body(), GameService.JoinGameObj.class);
 
-        System.out.println("teamcolor: " + joinData.playerColor);
-        System.out.println("gameid: " + joinData.gameID);
-        System.out.println("authheader: " + authHeader);
+
 
         if (authHeader == null || joinData.playerColor == null || joinData.gameID == 0) {
             res.status(400);

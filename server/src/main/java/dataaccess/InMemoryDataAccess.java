@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.*;
+
 import java.util.*;
 
 public class InMemoryDataAccess implements DataAccess {
@@ -22,12 +23,14 @@ public class InMemoryDataAccess implements DataAccess {
     }
 
     @Override
+    public ArrayList<GameData> listGames() {
+        return gameList;
+    }
+
+    @Override
     public UserData getUser(String username) {
-        System.out.println("looking for username: " + username);
         for (UserData currUser : userList) {
-            System.out.println("curr username: " + currUser.username());
             if (Objects.equals(currUser.username(), username)) {
-                System.out.println("found! returning user");
                 return currUser;
             }
         }
@@ -40,15 +43,13 @@ public class InMemoryDataAccess implements DataAccess {
 
     @Override
     public AuthData getAuth(String authToken) {
-        System.out.println("looking for auth: " + authToken);
         for (AuthData currAuth : authList) {
-            System.out.println("curr token: " + currAuth.authToken());
             if (Objects.equals(currAuth.authToken(), authToken)) {
                 System.out.println("found! returning user");
                 return currAuth;
             }
         }
-        System.out.println("user not found ...");
+        System.out.println("auth not found ...");
         return null;
     }
 
@@ -78,18 +79,28 @@ public class InMemoryDataAccess implements DataAccess {
         if (teamColor == ChessGame.TeamColor.WHITE) {
             System.out.println("white username: " + game.whiteUsername());
             if (game.whiteUsername() == null) {
-                game.setWhite(username);
+                gameList.remove(game);
+                game = game.setWhite(username);
+                gameList.add(game);
                 return true;
             }
         }
         else if (teamColor == ChessGame.TeamColor.BLACK) {
-            System.out.println("username within check black: " + username);
             System.out.println("black username: " + game.blackUsername());
             if (game.blackUsername() == null) {
+
+//                int index = gameList.indexOf(game);
+//                if (index != -1) {
+//                    game = game.setBlack(username);
+//                    System.out.println("black after update " + game.blackUsername());
+//                    gameList.set(index, game);
+//                    return true;
+//                }
+
                 gameList.remove(game);
                 game = game.setBlack(username);
+                System.out.println("black after update: " + game.blackUsername());
                 gameList.add(game);
-                System.out.println("black username updated: " + game.blackUsername());
                 return true;
             }
         }
