@@ -1,5 +1,6 @@
 package chess.piecemoves;
 import chess.*;
+
 import java.util.ArrayList;
 
 public class KnightMoves {
@@ -17,80 +18,98 @@ public class KnightMoves {
 
     public ArrayList<ChessMove> returnKnightMoves(ChessBoard board, ChessPosition startingPosition, ChessGame.TeamColor myColor) {
         ArrayList<ChessMove> availableMoves = new ArrayList<>();
-        int startingRow = startingPosition.getRow();
-        int startingCol = startingPosition.getColumn();
-        int rowNum;
-        int colNum;
 
-        rowNum = startingRow + 2;
-        colNum = startingCol + 1;
-        ChessPosition currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+        getMovesInDirection(board, startingPosition, 2, 1, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, 1, 2, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, -1, 2, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, -2, 1, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, -2, -1, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, -1, -2, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, 1, -2, myColor, availableMoves);
+        getMovesInDirection(board, startingPosition, 2, -1, myColor, availableMoves);
 
-        rowNum = startingRow + 1;
-        colNum = startingCol + 2;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow + 2;
+//        colNum = startingCol + 1;
+//        ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
+//
+//        rowNum = startingRow + 1;
+//        colNum = startingCol + 2;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow - 1;
-        colNum = startingCol + 2;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow - 1;
+//        colNum = startingCol + 2;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow - 2;
-        colNum = startingCol + 1;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow - 2;
+//        colNum = startingCol + 1;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow - 2;
-        colNum = startingCol - 1;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow - 2;
+//        colNum = startingCol - 1;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow - 1;
-        colNum = startingCol - 2;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow - 1;
+//        colNum = startingCol - 2;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow + 1;
-        colNum = startingCol - 2;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow + 1;
+//        colNum = startingCol - 2;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
-        rowNum = startingRow + 2;
-        colNum = startingCol - 1;
-        currPosition = new ChessPosition(rowNum, colNum);
-        if (isAcceptableMove(board, currPosition, myColor)) {
-            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-            availableMoves.add(currMove);
-        }
+//        rowNum = startingRow + 2;
+//        colNum = startingCol - 1;
+//        currPosition = new ChessPosition(rowNum, colNum);
+//        if (isAcceptableMove(board, currPosition, myColor)) {
+//            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+//            availableMoves.add(currMove);
+//        }
 
         return availableMoves;
     }
 
 
-    public boolean isAcceptableMove(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
+    public void getMovesInDirection(ChessBoard board, ChessPosition startingPosition, int rowInc, int colInc, ChessGame.TeamColor myColor, ArrayList<ChessMove> availableMoves) {
+        int rowNum = startingPosition.getRow() + rowInc;
+        int colNum = startingPosition.getColumn() + colInc;
+        ChessPosition currPosition = new ChessPosition(rowNum, colNum);
+        if (onBoard(board, currPosition, myColor)) {
+            ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
+            if (!availableMoves.contains(currMove)) {
+                availableMoves.add(currMove);
+            }
+        }
+    }
+
+
+    static boolean onBoard(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
         if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
             return false;
         }

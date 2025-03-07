@@ -196,24 +196,28 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         // see if its in check
         if (isInCheck(teamColor)) {
-            for (int i = 1; i <= 8; ++i) {
-                for (int k = 1; k <= 8; ++k) {
-                    ChessPosition currPosition = new ChessPosition(i, k);
-                    ChessPiece currPiece = board.getPiece(currPosition);
+            return getOutOfCheck(teamColor);
+        }
+        return false;
+    }
 
-                    if (currPiece != null) {
-                        if (currPiece.getTeamColor() == teamColor) {
-                            Collection<ChessMove> availableMoves = validMoves(currPosition);
-                            if (!availableMoves.isEmpty()) {
-                                return false;
-                            }
+    private boolean getOutOfCheck(TeamColor teamColor) {
+        for (int i = 1; i <= 8; ++i) {
+            for (int k = 1; k <= 8; ++k) {
+                ChessPosition currPosition = new ChessPosition(i, k);
+                ChessPiece currPiece = board.getPiece(currPosition);
+
+                if (currPiece != null) {
+                    if (currPiece.getTeamColor() == teamColor) {
+                        Collection<ChessMove> availableMoves = validMoves(currPosition);
+                        if (!availableMoves.isEmpty()) {
+                            return false;
                         }
                     }
                 }
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -225,22 +229,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
-            for (int i = 1; i <= 8; ++i) {
-                for (int k = 1; k <= 8; ++k) {
-                    ChessPosition currPosition = new ChessPosition(i, k);
-                    ChessPiece currPiece = board.getPiece(currPosition);
-
-                    if (currPiece != null) {
-                        if (currPiece.getTeamColor() == teamColor) {
-                            Collection<ChessMove> availableMoves = validMoves(currPosition);
-                            if (!availableMoves.isEmpty()) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
+            return getOutOfCheck(teamColor);
         }
         return false;
     }

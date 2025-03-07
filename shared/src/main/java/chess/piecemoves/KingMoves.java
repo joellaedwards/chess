@@ -3,6 +3,8 @@ package chess.piecemoves;
 import chess.*;
 import java.util.ArrayList;
 
+import static chess.piecemoves.KnightMoves.onBoard;
+
 //Kings may move 1 square in any direction (including diagonal) to either a position occupied by an enemy piece (capturing the enemy piece), or to an unoccupied position. A player is not allowed to make any move that would allow the opponent to capture their King. If your King is in danger of being captured on your turn, you must
 //make a move that removes your King from immediate danger.
 
@@ -74,15 +76,7 @@ public class KingMoves {
 
 
     public boolean isAcceptableMove(ChessBoard board, ChessPosition position, ChessGame.TeamColor myColor) {
-        if (position.getRow() < 1 || position.getRow() > 8 || position.getColumn() < 1 || position.getColumn() > 8) {
-            return false;
-        }
-        ChessGame.TeamColor otherPieceColor = null;
-        ChessPiece pieceAtNewPosition = board.getPiece(position);
-        if (pieceAtNewPosition != null) {
-            otherPieceColor = pieceAtNewPosition.getTeamColor();
-        }
-        return otherPieceColor != myColor;
+        return onBoard(board, position, myColor);
     }
 
 
