@@ -54,7 +54,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     if (rowNum + 1 <= 8 && (rowNum + 1) != startingRow) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum + 1, colNum);
-                        tryAddMove(startingPosition, backUpPosition, availableMoves);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            availableMoves.add(currMove);
+                        }
                     }
                     else {
                         break;
@@ -81,7 +84,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     if (colNum - 1 >= 1 && (colNum - 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum, colNum - 1);
-                        tryAddMove(startingPosition, backUpPosition, availableMoves);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            availableMoves.add(currMove);
+                        }
                     }
                     else {
                         break;
@@ -106,7 +112,10 @@ public class RookMoves {
                 if (pieceAtCurrPosition.getTeamColor() == myColor) {
                     if (colNum + 1 <= 8 && (colNum + 1) != startingCol) {
                         ChessPosition backUpPosition = new ChessPosition(rowNum, colNum + 1);
-                        tryAddMove(startingPosition, backUpPosition, availableMoves);
+                        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
+                        if (!availableMoves.contains(currMove)) {
+                            availableMoves.add(currMove);
+                        }
                     }
                     else {
                         break;
@@ -123,15 +132,6 @@ public class RookMoves {
         }
 
         return availableMoves;
-    }
-
-
-
-    public void tryAddMove(ChessPosition startingPosition, ChessPosition backUpPosition, ArrayList<ChessMove> availableMoves) {
-        ChessMove currMove = new ChessMove(startingPosition, backUpPosition, null);
-        if (!availableMoves.contains(currMove)) {
-            availableMoves.add(currMove);
-        }
     }
 
 }
