@@ -16,13 +16,13 @@ import java.util.Objects;
 
 public class ChessMove {
 
-    private ChessPosition startPosition;
+    private ChessPosition start;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
-        this.startPosition = startPosition;
+        this.start = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
     }
@@ -31,7 +31,7 @@ public class ChessMove {
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return startPosition;
+        return start;
     }
 
     /**
@@ -60,18 +60,19 @@ public class ChessMove {
         if (!(o instanceof ChessMove chessMove)) {
             return false;
         }
-        return Objects.equals(startPosition, chessMove.startPosition) && Objects.equals(endPosition, chessMove.endPosition) && promotionPiece == chessMove.promotionPiece;
+        return Objects.equals(start, chessMove.start) && Objects.equals(endPosition, chessMove.endPosition)
+                && promotionPiece == chessMove.promotionPiece;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startPosition, endPosition, promotionPiece);
+        return Objects.hash(start, endPosition, promotionPiece);
     }
 
     @Override
     public String toString() {
         return "ChessMove{" +
-                "startPosition=" + startPosition +
+                "startPosition=" + start +
                 ", endPosition=" + endPosition +
                 ", promotionPiece=" + promotionPiece +
                 '}';
