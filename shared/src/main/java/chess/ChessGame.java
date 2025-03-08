@@ -166,18 +166,20 @@ public class ChessGame {
             for (int k = 1; k <= 8; ++k) {
                 ChessPosition currPosition = new ChessPosition(i, k);
                 ChessPiece currPiece = board.getPiece(currPosition);
-                if (currPiece == null) continue;
+                if (currPiece == null) {
+                    continue;
+                }
 
                     // if the opp color, add to nextTurnMoves
-                if (board.getPiece(currPosition).getTeamColor() != teamColor) {
-                    for (ChessMove move : board.getPiece(currPosition).pieceMoves(board, currPosition)) {
-                        nextTurnMoves.add(move.getEndPosition());
+                    if (board.getPiece(currPosition).getTeamColor() != teamColor) {
+                        for (ChessMove move : board.getPiece(currPosition).pieceMoves(board, currPosition)) {
+                            nextTurnMoves.add(move.getEndPosition());
+                        }
                     }
-                }
-                // if my king, save position
-                else if (board.getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING) {
-                    kingPosition = new ChessPosition(currPosition);
-                }
+                    // if my king, save position
+                    else if (board.getPiece(currPosition).getPieceType() == ChessPiece.PieceType.KING) {
+                        kingPosition = new ChessPosition(currPosition);
+                    }
             }
         }
 

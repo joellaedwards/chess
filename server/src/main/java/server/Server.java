@@ -87,10 +87,7 @@ public class Server {
                 System.out.println("gson stuff: " + new Gson().toJson(loginInfo));
                 return new Gson().toJson(loginInfo);
             } else {
-                System.out.println("already taken");
-                res.status(401);
-                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
-                return new Gson().toJson(messageMap);
+                return dealWithUnauthorized(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -106,10 +103,7 @@ public class Server {
                 res.status(200);
                 return new Gson().toJson(new Object());
             } else {
-                System.out.println("unauthorized");
-                res.status(401);
-                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
-                return new Gson().toJson(messageMap);
+                return dealWithUnauthorized(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -126,10 +120,7 @@ public class Server {
                 Map<String, ArrayList<GameService.ListGameObj>> messageMap = Map.of("games", gamesList);
                 return new Gson().toJson(messageMap);
             } else {
-                System.out.println("unauthorized");
-                res.status(401);
-                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
-                return new Gson().toJson(messageMap);
+                return dealWithUnauthorized(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -185,10 +176,7 @@ public class Server {
                 res.status(200);
                 return new Gson().toJson(new Object());
             } else if (joinGameInfo == 0) {
-                System.out.println("unauthorized");
-                res.status(401);
-                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
-                return new Gson().toJson(messageMap);
+                return dealWithUnauthorized(res);
             } else if (joinGameInfo == 2) {
                 System.out.println("already taken");
                 res.status(403);
@@ -228,6 +216,13 @@ public class Server {
         System.out.println("catch uh oh");
         res.status(500);
         Map<String, String> messageMap = Map.of("message", "Error: " + e);
+        return new Gson().toJson(messageMap);
+    }
+
+    private Object dealWithUnauthorized(Response res) {
+        System.out.println("unauthorized");
+        res.status(401);
+        Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
         return new Gson().toJson(messageMap);
     }
 }
