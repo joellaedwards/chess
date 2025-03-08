@@ -20,17 +20,10 @@ public class PawnMoves {
                 ChessPosition currPosition = new ChessPosition(4, startingColumn);
                 if (isAcceptableMove(currPosition, startingPosition) && isAcceptableMove(oneUp,
                         startingPosition) && !isOccupied(board, currPosition) && !isOccupied(board, oneUp)) {
-                    ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(currPosition, myColor)) {
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
+                        promotePiece(startingPosition, currPosition, availableMoves);
                     } else {
+                        ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                         availableMoves.add(currMove);
                     }
                 }
@@ -43,17 +36,10 @@ public class PawnMoves {
                 ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
                 if (pieceAtDiagonal != null) {
                     if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                        ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                         if (canBePromoted(diagonalPosition, myColor)) {
-                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.ROOK);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.KNIGHT);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.BISHOP);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, diagonalPosition, ChessPiece.PieceType.QUEEN);
-                            availableMoves.add(currMove);
+                            promotePiece(startingPosition, diagonalPosition, availableMoves);
                         } else {
+                            ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                             availableMoves.add(currMove);
                         }
                     }
@@ -64,17 +50,10 @@ public class PawnMoves {
                 ChessPiece otherPiece = board.getPiece(otherDiagonal);
                 if (otherPiece != null) {
                     if (otherPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                        ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                         if (canBePromoted(otherDiagonal, myColor)) {
-                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.ROOK);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.KNIGHT);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.BISHOP);
-                            availableMoves.add(currMove);
-                            currMove = new ChessMove(startingPosition, otherDiagonal, ChessPiece.PieceType.QUEEN);
-                            availableMoves.add(currMove);
+                            promotePiece(startingPosition, otherDiagonal, availableMoves);
                         } else {
+                            ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                             availableMoves.add(currMove);
                         }
                     }
@@ -84,11 +63,10 @@ public class PawnMoves {
             // just go up one
             ChessPosition currPosition = new ChessPosition(startingRow + 1, startingColumn);
             if (isAcceptableMove(currPosition, startingPosition) && !isOccupied(board, currPosition)) {
-                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                 if (canBePromoted(currPosition, myColor)) {
-                    promotePiece(currMove, startingPosition, currPosition, availableMoves);
-
+                    promotePiece(startingPosition, currPosition, availableMoves);
                 } else {
+                    ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     availableMoves.add(currMove);
                 }
             }
@@ -103,17 +81,10 @@ public class PawnMoves {
                 if (isAcceptableMove(currPosition, startingPosition) && isAcceptableMove(
                         downJustOne, startingPosition) && !isOccupied(board, downJustOne) &&
                         !isOccupied(board, currPosition)) {
-                    ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     if (canBePromoted(currPosition, myColor)) {
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.BISHOP);
-                        availableMoves.add(currMove);
-                        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.QUEEN);
-                        availableMoves.add(currMove);
+                        promotePiece(startingPosition, currPosition, availableMoves);
                     } else {
+                        ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                         availableMoves.add(currMove);
                     }
                 }
@@ -126,10 +97,10 @@ public class PawnMoves {
                 ChessPiece pieceAtDiagonal = board.getPiece(diagonalPosition);
                 if (pieceAtDiagonal != null) {
                     if (pieceAtDiagonal.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                        ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                         if (canBePromoted(diagonalPosition, myColor)) {
-                            promotePiece(currMove, startingPosition, diagonalPosition, availableMoves);
+                            promotePiece(startingPosition, diagonalPosition, availableMoves);
                         } else {
+                            ChessMove currMove = new ChessMove(startingPosition, diagonalPosition, null);
                             availableMoves.add(currMove);
                         }
                     }
@@ -141,10 +112,10 @@ public class PawnMoves {
                 ChessPiece otherPiece = board.getPiece(otherDiagonal);
                 if (otherPiece != null) {
                     if (otherPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                        ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                         if (canBePromoted(otherDiagonal, myColor)) {
-                            promotePiece(currMove, startingPosition, otherDiagonal, availableMoves);
+                            promotePiece(startingPosition, otherDiagonal, availableMoves);
                         } else {
+                            ChessMove currMove = new ChessMove(startingPosition, otherDiagonal, null);
                             availableMoves.add(currMove);
                         }
                     }
@@ -154,10 +125,10 @@ public class PawnMoves {
             // just go down one
             ChessPosition currPosition = new ChessPosition(startingRow - 1, startingColumn);
             if (isAcceptableMove(currPosition, startingPosition) && !isOccupied(board, currPosition)) {
-                ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                 if (canBePromoted(currPosition, myColor)) {
-                    promotePiece(currMove, startingPosition, currPosition, availableMoves);
+                    promotePiece(startingPosition, currPosition, availableMoves);
                 } else {
+                    ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
                     availableMoves.add(currMove);
                 }
             }
@@ -191,26 +162,19 @@ public class PawnMoves {
                               ChessGame.TeamColor color, ArrayList<ChessMove> available) {
         if (isAcceptableMove(one, start) && !isOccupied(board, one) &&
                 isAcceptableMove(position, start) && !isOccupied(board, one)) {
-                ChessMove currMove = new ChessMove(start, position, null);
                 if (canBePromoted(position, color)) {
-                    currMove = new ChessMove(start, position, ChessPiece.PieceType.ROOK);
-                    available.add(currMove);
-                    currMove = new ChessMove(start, position, ChessPiece.PieceType.KNIGHT);
-                    available.add(currMove);
-                    currMove = new ChessMove(start, position, ChessPiece.PieceType.BISHOP);
-                    available.add(currMove);
-                    currMove = new ChessMove(start, position, ChessPiece.PieceType.QUEEN);
-                    available.add(currMove);
+                    promotePiece(start, position, available);
                 }
                 else {
+                    ChessMove currMove = new ChessMove(start, position, null);
                     available.add(currMove);
                 }
             }
     }
 
-    public void promotePiece(ChessMove currMove, ChessPosition startingPosition, ChessPosition currPosition,
+    public void promotePiece(ChessPosition startingPosition, ChessPosition currPosition,
                              ArrayList<ChessMove> availableMoves) {
-        currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
+        ChessMove currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.ROOK);
         availableMoves.add(currMove);
         currMove = new ChessMove(startingPosition, currPosition, ChessPiece.PieceType.KNIGHT);
         availableMoves.add(currMove);
