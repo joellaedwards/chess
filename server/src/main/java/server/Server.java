@@ -67,10 +67,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
     }
 
@@ -96,10 +93,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
     }
 
@@ -118,10 +112,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
     }
 
@@ -141,10 +132,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
     }
 
@@ -173,10 +161,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
     }
 
@@ -216,10 +201,7 @@ public class Server {
                 return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
         return null;
     }
@@ -238,10 +220,14 @@ public class Server {
             return new Gson().toJson(new Object());
 
         } catch (Error e) {
-            System.out.println("catch uh oh");
-            res.status(500);
-            Map<String, String> messageMap = Map.of("message", "Error: " + e);
-            return new Gson().toJson(messageMap);
+            return dealWithUnknownError(res, e);
         }
+    }
+
+    private Object dealWithUnknownError(Response res, Error e) {
+        System.out.println("catch uh oh");
+        res.status(500);
+        Map<String, String> messageMap = Map.of("message", "Error: " + e);
+        return new Gson().toJson(messageMap);
     }
 }
