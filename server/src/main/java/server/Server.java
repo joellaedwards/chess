@@ -61,7 +61,10 @@ public class Server {
                 res.status(200);
                 return new Gson().toJson(registeredInfo);
             } else {
-                return alreadyTaken(res);
+                System.out.println("already taken");
+                res.status(403);
+                Map<String, String> messageMap = Map.of("message", "Error: already taken");
+                return new Gson().toJson(messageMap);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -143,7 +146,7 @@ public class Server {
                 Map<String, Integer> messageMap = Map.of("gameID", newGameInfo);
                 return new Gson().toJson(messageMap);
             } else {
-                return alreadyTaken(res);
+                return dealWithUnauthorized(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
