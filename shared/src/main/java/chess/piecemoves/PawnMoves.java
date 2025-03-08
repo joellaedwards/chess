@@ -18,15 +18,8 @@ public class PawnMoves {
             if (startingRow == 2) {
                 ChessPosition oneUp = new ChessPosition(3, startingColumn);
                 ChessPosition currPosition = new ChessPosition(4, startingColumn);
-                if (isAcceptableMove(currPosition, startingPosition) && isAcceptableMove(oneUp,
-                        startingPosition) && !isOccupied(board, currPosition) && !isOccupied(board, oneUp)) {
-                    if (canBePromoted(currPosition, myColor)) {
-                        promotePiece(startingPosition, currPosition, availableMoves);
-                    } else {
-                        ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                        availableMoves.add(currMove);
-                    }
-                }
+
+                canMoveTwo(board, currPosition, oneUp, startingPosition, myColor, availableMoves);
             }
 
 
@@ -78,16 +71,7 @@ public class PawnMoves {
             if (startingRow == 7) {
                 ChessPosition downJustOne = new ChessPosition(6, startingColumn);
                 ChessPosition currPosition = new ChessPosition(5, startingColumn);
-                if (isAcceptableMove(currPosition, startingPosition) && isAcceptableMove(
-                        downJustOne, startingPosition) && !isOccupied(board, downJustOne) &&
-                        !isOccupied(board, currPosition)) {
-                    if (canBePromoted(currPosition, myColor)) {
-                        promotePiece(startingPosition, currPosition, availableMoves);
-                    } else {
-                        ChessMove currMove = new ChessMove(startingPosition, currPosition, null);
-                        availableMoves.add(currMove);
-                    }
-                }
+                canMoveTwo(board, currPosition, downJustOne, startingPosition, myColor, availableMoves);
             }
 
 
@@ -160,16 +144,15 @@ public class PawnMoves {
 
     public void canMoveTwo(ChessBoard board, ChessPosition position, ChessPosition one, ChessPosition start,
                               ChessGame.TeamColor color, ArrayList<ChessMove> available) {
-        if (isAcceptableMove(one, start) && !isOccupied(board, one) &&
-                isAcceptableMove(position, start) && !isOccupied(board, one)) {
-                if (canBePromoted(position, color)) {
-                    promotePiece(start, position, available);
-                }
-                else {
-                    ChessMove currMove = new ChessMove(start, position, null);
-                    available.add(currMove);
-                }
+        if (isAcceptableMove(position, start) && isAcceptableMove(one,
+                start) && !isOccupied(board, position) && !isOccupied(board, one)) {
+            if (canBePromoted(position, color)) {
+                promotePiece(start, position, available);
+            } else {
+                ChessMove currMove = new ChessMove(start, position, null);
+                available.add(currMove);
             }
+        }
     }
 
     public void promotePiece(ChessPosition startingPosition, ChessPosition currPosition,
