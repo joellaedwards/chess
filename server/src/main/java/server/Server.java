@@ -61,10 +61,7 @@ public class Server {
                 res.status(200);
                 return new Gson().toJson(registeredInfo);
             } else {
-                System.out.println("already taken");
-                res.status(403);
-                Map<String, String> messageMap = Map.of("message", "Error: already taken");
-                return new Gson().toJson(messageMap);
+                return alreadyTaken(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
