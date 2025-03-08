@@ -61,10 +61,7 @@ public class Server {
                 res.status(200);
                 return new Gson().toJson(registeredInfo);
             } else {
-                System.out.println("already taken");
-                res.status(403);
-                Map<String, String> messageMap = Map.of("message", "Error: already taken");
-                return new Gson().toJson(messageMap);
+                return alreadyTaken(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -146,10 +143,7 @@ public class Server {
                 Map<String, Integer> messageMap = Map.of("gameID", newGameInfo);
                 return new Gson().toJson(messageMap);
             } else {
-                System.out.println("already taken");
-                res.status(401);
-                Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
-                return new Gson().toJson(messageMap);
+                return alreadyTaken(res);
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
@@ -178,10 +172,7 @@ public class Server {
             } else if (joinGameInfo == 0) {
                 return dealWithUnauthorized(res);
             } else if (joinGameInfo == 2) {
-                System.out.println("already taken");
-                res.status(403);
-                Map<String, String> messageMap = Map.of("message", "Error: already taken");
-                return new Gson().toJson(messageMap);
+                return alreadyTaken(res);
             } else if (joinGameInfo == 3) {
                 System.out.println("game not found");
                 res.status(400);
@@ -223,6 +214,13 @@ public class Server {
         System.out.println("unauthorized");
         res.status(401);
         Map<String, String> messageMap = Map.of("message", "Error: unauthorized");
+        return new Gson().toJson(messageMap);
+    }
+
+    private Object alreadyTaken(Response res) {
+        System.out.println("already taken");
+        res.status(403);
+        Map<String, String> messageMap = Map.of("message", "Error: already taken");
         return new Gson().toJson(messageMap);
     }
 }
