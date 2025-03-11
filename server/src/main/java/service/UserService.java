@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
 import model.*;
 
 import java.util.ArrayList;
@@ -14,12 +15,13 @@ public class UserService {
         this.dataAccess = dataAccess;
     }
 
-    public AuthData registerUser(UserData user) {
+    public AuthData registerUser(UserData user) throws DataAccessException {
         if (dataAccess.getUser(user.username()) == null) {
             dataAccess.addUser(user);
             return dataAccess.addAuth(user.username());
         }
         // user already exists
+
         return null;
     }
 

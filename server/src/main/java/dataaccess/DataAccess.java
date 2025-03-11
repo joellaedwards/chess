@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public interface DataAccess {
 
 
-    void addUser(UserData user);
+    void addUser(UserData user) throws DataAccessException;
     UserData getUser(String username);
     ArrayList<UserData> listUsers();
 

@@ -13,6 +13,9 @@ import java.util.Map;
 
 public class Server {
 
+    public Server() throws DataAccessException {
+    }
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
@@ -42,8 +45,8 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-    DataAccess dataAccess = new InMemoryDataAccess();
-
+//    DataAccess dataAccess = new InMemoryDataAccess();
+    DataAccess dataAccess = new MySqlDataAccess();
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
@@ -65,6 +68,8 @@ public class Server {
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
