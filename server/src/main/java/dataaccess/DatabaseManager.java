@@ -42,10 +42,12 @@ public class DatabaseManager {
             System.out.println("creating database!");
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
+            conn.setAutoCommit(true);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
+            System.out.println("error creating database");
             throw new DataAccessException(e.getMessage());
         }
     }
@@ -66,6 +68,7 @@ public class DatabaseManager {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             conn.setCatalog(DATABASE_NAME);
+            conn.setAutoCommit(true);
             return conn;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());

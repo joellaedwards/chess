@@ -158,20 +158,20 @@ public class MySqlDataAccess implements DataAccess {
             `blackUsername` varchar(256),
             `gameName` varchar(256) NOT NULL,
             `ChessGame` JSON NOT NULL,
-            PRIMARY KEY (`gameID`) )
+            UNIQUE (`gameID`) )
 """,
             """
             CREATE TABLE IF NOT EXISTS authTable (
             `authToken` varchar(256) NOT NULL,
             `username` varchar(256) NOT NULL,
-            PRIMARY KEY (`username`) )
+            UNIQUE (`username`) )
 """,
             """
             CREATE TABLE IF NOT EXISTS userTable (
             `username` varchar(256) NOT NULL,
             `password` varchar(256) NOT NULL,
             `email` varchar(256) NOT NULL,
-            PRIMARY KEY (`username`) )
+            UNIQUE (`username`) )
 """
 
     };
