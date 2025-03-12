@@ -8,6 +8,7 @@ import model.UserData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -132,15 +133,48 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public void clearUserList(){
+        System.out.println("in clear user list");
+        var query = "TRUNCATE TABLE usertable";
 
+        try (var conn = DatabaseManager.getConnection()) {
+            Statement stmt = conn.createStatement();
+
+            var response = stmt.executeUpdate(query);
+            System.out.println("num rows deleted: " + response);
+
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
     @Override
     public void clearAuthList(){
+        System.out.println("in clear auth list");
+        var query = "TRUNCATE TABLE authtable";
 
+        try (var conn = DatabaseManager.getConnection()) {
+            Statement stmt = conn.createStatement();
+
+            var response = stmt.executeUpdate(query);
+            System.out.println("num rows deleted: " + response);
+
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
     @Override
     public void clearGameList(){
+        System.out.println("in clear game list");
+        var query = "TRUNCATE TABLE gametable";
 
+        try (var conn = DatabaseManager.getConnection()) {
+            Statement stmt = conn.createStatement();
+
+            var response = stmt.executeUpdate(query);
+            System.out.println("num rows deleted: " + response);
+
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

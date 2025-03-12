@@ -239,8 +239,12 @@ public class UnitTests {
     @Test
     public void testRegisterUserSuccessSql() throws Exception {
 
-        UserData testUser = new UserData("newUser2", "myPassword", "myEmail");
         DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).clearUsers();
+        new AuthService(dataAccess).clearAuth();
+        new GameService(dataAccess).clearGames();
+
+        UserData testUser = new UserData("newUser2", "myPassword", "myEmail");
         AuthData registeredInfo = new UserService(dataAccess).registerUser(testUser);
 
         UserData foundUser = dataAccess.getUser("newUser2");
@@ -248,6 +252,51 @@ public class UnitTests {
         assertEquals(foundUser.username(), "newUser2", "usernames match up!");
         assertNotNull(registeredInfo.authToken(), "UUID should not be null");
         assertEquals("newUser2", registeredInfo.username(), "Username should be 'newUser1");
+    }
+
+
+        @Test
+    public void testRegisterUserSqlFail() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).clearUsers();
+        new AuthService(dataAccess).clearAuth();
+        new GameService(dataAccess).clearGames();
+
+        UserData testUser = new UserData("myUsername", "myPassword", "myEmail");
+        new UserService(dataAccess).registerUser(testUser);
+
+        UserData testUser2 = new UserData("myUsername", "myPassword", "myEmail");
+        AuthData registeredInfo = new UserService(dataAccess).registerUser(testUser2);
+
+        assertNull(registeredInfo);
+    }
+
+
+
+        @Test
+    public void testClearSqlSuccess() throws Exception {
+
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).clearUsers();
+        new AuthService(dataAccess).clearAuth();
+        new GameService(dataAccess).clearGames();
+
+
+        UserData testUser = new UserData("newww1", "myPassword", "myEmail");
+        new UserService(dataAccess).registerUser(testUser);
+
+        UserData testUser2 = new UserData("newww1", "password", "email.com");
+        new UserService(dataAccess).registerUser(testUser2);
+
+        new UserService(dataAccess).clearUsers();
+        UserData foundUser = dataAccess.getUser("newww1");
+
+        assertNull(foundUser);
+            // add same user again should work
+//        AuthData registeredInfo = new UserService(dataAccess).registerUser(testUser);
+
+//        assertNotNull(registeredInfo.authToken(), "UUID should not be null");
+//        assertEquals("new2314", registeredInfo.username(), "Username should be 'new2314");
     }
 
 }

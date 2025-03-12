@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Server {
 
-    public Server() throws DataAccessException {
+    public Server() {
     }
 
     public int run(int desiredPort) {
@@ -46,7 +46,15 @@ public class Server {
         Spark.awaitStop();
     }
 //    DataAccess dataAccess = new InMemoryDataAccess();
-    DataAccess dataAccess = new MySqlDataAccess();
+    DataAccess dataAccess;
+
+    {
+        try {
+            dataAccess = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
