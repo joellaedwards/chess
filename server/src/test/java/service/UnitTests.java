@@ -299,7 +299,44 @@ public class UnitTests {
 
     }
 
-        @Test
+
+
+
+    @Test
+    public void logoutSqlSuccess() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "thisemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        boolean logoutReturn = new AuthService(dataAccess).logout(authToken);
+
+        assertTrue(logoutReturn);
+
+    }
+
+
+    @Test
+    public void logoutSqlFail() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "thisemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        String authToken = "1234567";
+        boolean logoutReturn = new AuthService(dataAccess).logout(authToken);
+
+        assertFalse(logoutReturn);
+
+    }
+
+
+
+
+
+
+    @Test
     public void testClearSqlSuccess() throws Exception {
 
         DataAccess dataAccess = new MySqlDataAccess();

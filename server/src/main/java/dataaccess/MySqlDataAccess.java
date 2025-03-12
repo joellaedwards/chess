@@ -125,12 +125,48 @@ public class MySqlDataAccess implements DataAccess {
 
 
     @Override
-    public AuthData getAuth(String authToken) {
+    public AuthData getAuth(String givenAuthToken) {
+        System.out.println("in getauth...");
+
+        var query = "SELECT authToken, username FROM authtable WHERE authToken=?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(query);
+
+            stm.setString(1, givenAuthToken);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next() && rs.getString("username") != null) {
+                System.out.println("returning something");
+                System.out.println("username: " + rs.getString("username"));
+                return new AuthData(rs.getString("authToken"), rs.getString("username"));
+            }
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("get user didnt work");
+            throw new RuntimeException(e);
+        }
+        System.out.println("returning null from getUser");
         return null;
+
+
     }
+
+
+
     @Override
     public void deleteAuth(AuthData authObj){
+        System.out.println("in clear user list");
+        var query = "DELETE FROM authTable WHERE authToken=?";
 
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, authObj.authToken());
+            stmt.executeUpdate();
+
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
