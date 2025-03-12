@@ -24,7 +24,7 @@ public class MySqlDataAccess implements DataAccess {
         System.out.println("creating mysqldataaccess");
         configureDatabase();
     }
-    int gameNum = 0;
+//    int gameNum = 0;
 
     // TODO these should be implementations
     @Override
@@ -84,27 +84,34 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public int addGame(String gameName){
         System.out.println("inserting game..");
-        gameNum++;
+        int gameNum = -1;
 
-        var query = "INSERT INTO gametable (gameID, whiteUsername, blackUsername, gameName, ChessGame) VALUES (?, ?, ?, ?, ?)";
+        var query = "INSERT INTO gametable (whiteUsername, blackUsername, gameName, ChessGame) VALUES (?, ?, ?, ?)";
 
         try (var conn = DatabaseManager.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(query);{
+            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);{
 
                 // Convert ChessGame object to JSON
                 ChessGame chessGame = new ChessGame();
                 Gson gson = new Gson();
                 String chessGameJson = gson.toJson(chessGame);
 
-                stmt.setString(1, String.valueOf(gameNum));
+                stmt.setString(1, null);
                 stmt.setString(2, null);
-                stmt.setString(3, null);
-                stmt.setString(4, gameName);
-                stmt.setString(5, chessGameJson);
+                stmt.setString(3, gameName);
+                stmt.setString(4, chessGameJson);
 
-                var response = stmt.executeUpdate();
+                int rowsInserted = stmt.executeUpdate();
 
-                System.out.println("num rows affected: " + response);
+                if (rowsInserted > 0) {
+                    try (ResultSet rs = stmt.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            gameNum = rs.getInt(1);
+                        }
+                    }
+                }
+
+                // get gameId and return that
                 return gameNum;
             }
         } catch (SQLException | DataAccessException e) {
@@ -124,12 +131,44 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public GameData getGame(int gameId){
+        System.out.println("in getgame...");
+        var query = "SELECT gameID, whiteUsername, blackUsername, gameName, ChessGame FROM gametable WHERE gameID=?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(query);
+
+            stm.setInt(1, gameId);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next() && rs.getString("gameID") != null) {
+                System.out.println("returning something");
+                System.out.println("gameName: " + rs.getString("gameName"));
+                return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"),
+                        rs.getString("blackUsername"), rs.getString("gameName"), (ChessGame) rs.getObject("ChessGame"));
+            }
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("get game didnt work");
+            throw new RuntimeException(e);
+        }
+
+
         return null;
     }
+
+
+
+
     @Override
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username){
         return true;
+
+
+
     }
+
+
+
+
     @Override
     public ArrayList<GameData> listGames(){
         return null;

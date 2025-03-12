@@ -364,6 +364,29 @@ public class UnitTests {
     }
 
 
+    @Test
+    public void getGameSqlTest() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        GameData myGameData = dataAccess.getGame(gameId);
+
+        System.out.println("gamedata: " + myGameData.gameID());
+        System.out.println("gamename: " + myGameData.gameName());
+
+
+        assertNotEquals(0, gameId);
+
+
+    }
+
+
 
 
 
