@@ -203,8 +203,11 @@ public class TestSqlDataAccess {
 
     @Test
     public void testListGamesSqlPass() throws Exception {
+
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");
         DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearGameList();
+
         new UserService(dataAccess).registerUser(testUser);
 
         AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);

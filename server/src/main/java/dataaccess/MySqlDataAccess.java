@@ -164,39 +164,31 @@ public class MySqlDataAccess implements DataAccess {
             if (game.whiteUsername() == null) {
                 // if whiteUsername is open, update it
                 var query = "UPDATE gametable SET whiteUsername = ? WHERE gameID = ?";
-
-                try (var conn = DatabaseManager.getConnection()) {
-                    PreparedStatement stmt = conn.prepareStatement(query);
-
-                    stmt.setString(1, username);
-                    stmt.setInt(2, game.gameID());
-                    stmt.executeUpdate();
-                    return true;
-                } catch (SQLException | DataAccessException e) {
-                    throw new RuntimeException(e);
-                }
+                return updateColorUsername(game, username, query);
             }
         }
         else if (teamColor == ChessGame.TeamColor.BLACK) {
             if (game.blackUsername() == null) {
                 // if blackUsername is open, update it
                 var query = "UPDATE gametable SET blackUsername = ? WHERE gameID = ?";
-
-                try (var conn = DatabaseManager.getConnection()) {
-                    PreparedStatement stmt = conn.prepareStatement(query);
-
-                    stmt.setString(1, username);
-                    stmt.setInt(2, game.gameID());
-                    stmt.executeUpdate();
-                    return true;
-                } catch (SQLException | DataAccessException e) {
-                    throw new RuntimeException(e);
-                }
+                return updateColorUsername(game, username, query);
             }
         }
         return false;
     }
 
+    private boolean updateColorUsername(GameData game, String username, String query) {
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setString(1, username);
+            stmt.setInt(2, game.gameID());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     @Override
@@ -213,7 +205,9 @@ public class MySqlDataAccess implements DataAccess {
                 String chessGameString = rs.getString("ChessGame");
                 Gson gson = new Gson();
                 ChessGame chessGame = gson.fromJson(chessGameString, ChessGame.class);
-                GameData currGameData = new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), chessGame);
+                GameData currGameData = new GameData(rs.getInt("gameID"),
+                        rs.getString("whiteUsername"), rs.getString("blackUsername"),
+                        rs.getString("gameName"), chessGame);
                 gameList.add(currGameData);
             }
 
