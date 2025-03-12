@@ -2,9 +2,9 @@ package service;
 
 import dataaccess.DataAccess;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class UserService {
     private final DataAccess dataAccess;
@@ -35,8 +35,10 @@ public class UserService {
             System.out.println("no user found");
             return null;
         }
-        System.out.println("found user password: " + foundUser.password());
-        if (Objects.equals(foundUser.password(), user.password())) {
+
+        var hashedPassword = foundUser.password();
+
+        if (BCrypt.checkpw(user.password(), hashedPassword)) {
             System.out.println("adding auth");
             return dataAccess.addAuth(user.username());
         }

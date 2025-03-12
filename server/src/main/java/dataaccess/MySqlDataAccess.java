@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,11 +33,13 @@ public class MySqlDataAccess implements DataAccess {
         System.out.println("inserting user...");
         var query = "INSERT INTO usertable (username, password, email) VALUES (?, ?, ?)";
 
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+
         try (var conn = DatabaseManager.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);{
 
                 stmt.setString(1, user.username());
-                stmt.setString(2, user.password());
+                stmt.setString(2, hashedPassword);
                 stmt.setString(3, user.email());
 
                 var response = stmt.executeUpdate();
