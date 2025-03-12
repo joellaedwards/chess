@@ -1,6 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -23,6 +24,7 @@ public class MySqlDataAccess implements DataAccess {
         System.out.println("creating mysqldataaccess");
         configureDatabase();
     }
+    int gameNum = 0;
 
     // TODO these should be implementations
     @Override
@@ -81,8 +83,45 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public int addGame(String gameName){
-        return 0;
+        System.out.println("inserting game..");
+        gameNum++;
+
+        var query = "INSERT INTO gametable (gameID, whiteUsername, blackUsername, gameName, ChessGame) VALUES (?, ?, ?, ?, ?)";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);{
+
+                // Convert ChessGame object to JSON
+                ChessGame chessGame = new ChessGame();
+                Gson gson = new Gson();
+                String chessGameJson = gson.toJson(chessGame);
+
+                stmt.setString(1, String.valueOf(gameNum));
+                stmt.setString(2, null);
+                stmt.setString(3, null);
+                stmt.setString(4, gameName);
+                stmt.setString(5, chessGameJson);
+
+                var response = stmt.executeUpdate();
+
+                System.out.println("num rows affected: " + response);
+                return gameNum;
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    //    public int addGame(String gameName) {
+//        gameNum++;
+//        GameData newGame = new GameData(gameNum, null, null, gameName, new ChessGame());
+//        gameList.add(newGame);
+//        return gameNum;
+//    }
+
+
+
+
     @Override
     public GameData getGame(int gameId){
         return null;
@@ -200,6 +239,7 @@ public class MySqlDataAccess implements DataAccess {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public void clearGameList(){
         System.out.println("in clear game list");

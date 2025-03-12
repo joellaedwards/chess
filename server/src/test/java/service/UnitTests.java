@@ -332,6 +332,37 @@ public class UnitTests {
     }
 
 
+    @Test
+    public void createGamePass() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        assertNotEquals(0, gameId);
+
+    }
+
+
+    @Test
+    public void createGameFail() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        new UserService(dataAccess).loginUser(testUser);
+        String authToken = "12345";
+
+        var gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        assertEquals(0, gameId);
+
+    }
+
 
 
 
