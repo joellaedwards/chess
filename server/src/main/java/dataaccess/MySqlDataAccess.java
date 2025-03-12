@@ -5,8 +5,13 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
+
+
 // idk maybe make a whole list of users and then also
 // a list of authObjects etc just to keep track
 // for now w no database
@@ -21,12 +26,51 @@ public class MySqlDataAccess implements DataAccess {
     // TODO these should be implementations
     @Override
     public void addUser(UserData user) {
+        System.out.println("inserting user...");
+        var query = "INSERT INTO usertable (username, password, email) VALUES (?, ?, ?)";
 
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);{
+
+                stmt.setString(1, user.username());
+                stmt.setString(2, user.password());
+                stmt.setString(3, user.email());
+
+                var response = stmt.executeUpdate();
+
+                System.out.println("num rows affected: " + response);
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
+
     @Override
     public UserData getUser(String username) {
+
+        System.out.println("in getuser...");
+
+        var query = "SELECT username, password, email FROM usertable WHERE username=?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(query);
+
+            stm.setString(1, username);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next() && rs.getString("username") != null) {
+                System.out.println("returning something");
+                System.out.println("username: " + rs.getString("username"));
+                return new UserData(rs.getString("username"), rs.getString("password"), rs.getString("email"));
+            }
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("get user didnt work");
+            throw new RuntimeException(e);
+        }
+        System.out.println("returning null from getUser");
         return null;
     }
+
     @Override
     public ArrayList<UserData> listUsers() {
         return null;
@@ -48,10 +92,34 @@ public class MySqlDataAccess implements DataAccess {
         return null;
     }
 
+
+
     @Override
     public AuthData addAuth(String username){
-        return null;
+        System.out.println("inserting auth...");
+        AuthData currAuth = new AuthData(UUID.randomUUID().toString(), username);
+        var query = "INSERT INTO authtable (authtoken, username) VALUES (?, ?)";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);{
+
+                stmt.setString(1, currAuth.authToken());
+                stmt.setString(2, currAuth.username());
+
+                var response = stmt.executeUpdate();
+
+                System.out.println("num rows affected: " + response);
+                return currAuth;
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
+
+
+
     @Override
     public AuthData getAuth(String authToken) {
         return null;

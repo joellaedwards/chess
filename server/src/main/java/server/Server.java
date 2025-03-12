@@ -50,6 +50,7 @@ public class Server {
 
     // hi this is a handler
     private Object registerUser(Request req, Response res) {
+        System.out.println("register user handler");
         var user = new Gson().fromJson(req.body(), UserData.class);
         if (user.username() == null || user.password() == null || user.email() == null) {
             res.status(400);
@@ -68,7 +69,7 @@ public class Server {
             }
         } catch (Error e) {
             return dealWithUnknownError(res, e);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
