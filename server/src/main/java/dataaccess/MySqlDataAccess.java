@@ -27,7 +27,6 @@ public class MySqlDataAccess implements DataAccess {
     }
 //    int gameNum = 0;
 
-    // TODO these should be implementations
     @Override
     public void addUser(UserData user) {
         System.out.println("inserting user...");
@@ -106,11 +105,12 @@ public class MySqlDataAccess implements DataAccess {
 
                 int rowsInserted = stmt.executeUpdate();
 
-                if (rowsInserted > 0) {
-                    try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        if (rs.next()) {
-                            gameNum = rs.getInt(1);
-                        }
+                if (rowsInserted <= 0) {
+                    return -1;
+                }
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        gameNum = rs.getInt(1);
                     }
                 }
 
@@ -121,14 +121,6 @@ public class MySqlDataAccess implements DataAccess {
             throw new RuntimeException(e);
         }
     }
-
-    //    public int addGame(String gameName) {
-//        gameNum++;
-//        GameData newGame = new GameData(gameNum, null, null, gameName, new ChessGame());
-//        gameList.add(newGame);
-//        return gameNum;
-//    }
-
 
 
 
