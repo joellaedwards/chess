@@ -206,7 +206,28 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public ArrayList<GameData> listGames(){
-        return null;
+        ArrayList<GameData> gameList = new ArrayList<>();
+
+        var query = "SELECT * FROM gametable";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(query);
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                String chessGameString = rs.getString("ChessGame");
+                Gson gson = new Gson();
+                ChessGame chessGame = gson.fromJson(chessGameString, ChessGame.class);
+                GameData currGameData = new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), chessGame);
+                gameList.add(currGameData);
+            }
+
+            return gameList;
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("get user didnt work");
+            throw new RuntimeException(e);
+        }
+
     }
 
 

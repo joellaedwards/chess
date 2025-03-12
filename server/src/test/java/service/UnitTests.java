@@ -333,7 +333,7 @@ public class UnitTests {
 
 
     @Test
-    public void createGamePass() throws Exception {
+    public void createSqlGamePass() throws Exception {
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");
         DataAccess dataAccess = new MySqlDataAccess();
         new UserService(dataAccess).registerUser(testUser);
@@ -349,7 +349,7 @@ public class UnitTests {
 
 
     @Test
-    public void createGameFail() throws Exception {
+    public void createSqlGameFail() throws Exception {
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");
         DataAccess dataAccess = new MySqlDataAccess();
         new UserService(dataAccess).registerUser(testUser);
@@ -392,7 +392,7 @@ public class UnitTests {
 
 
     @Test
-    public void joinGameFail() throws Exception {
+    public void joinGameSqlFail() throws Exception {
 
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");
         DataAccess dataAccess = new MySqlDataAccess();
@@ -421,7 +421,46 @@ public class UnitTests {
 
 
 
+    @Test
+    public void testListGamesSqlPass() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
 
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+        int gameId2 = new GameService(dataAccess).createGame(authToken, "newGame");
+
+        ArrayList<GameService.ListGameObj> listOfGames = new GameService(dataAccess).listGames(authToken);
+        ArrayList<GameService.ListGameObj> expectedList = new ArrayList<>();
+
+        expectedList.add(new GameService.ListGameObj(gameId, null, null, "myGame!"));
+        expectedList.add(new GameService.ListGameObj(gameId2, null, null, "newGame"));
+
+        for (int i = 0; i < expectedList.size(); ++i) {
+            assertEquals(expectedList.get(i).gameID, listOfGames.get(i).gameID);
+            assertEquals(expectedList.get(i).blackUsername, listOfGames.get(i).blackUsername);
+            assertEquals(expectedList.get(i).whiteUsername, listOfGames.get(i).whiteUsername);
+            assertEquals(expectedList.get(i).gameName, listOfGames.get(i).gameName);
+        }
+    }
+
+
+    @Test
+    public void testEmptySqlList() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        ArrayList<GameService.ListGameObj> listOfGames = new GameService(dataAccess).listGames(authToken);
+
+        assert(listOfGames.isEmpty());
+    }
 
 
     @Test
