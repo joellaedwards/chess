@@ -364,8 +364,11 @@ public class UnitTests {
     }
 
 
+
+
     @Test
-    public void getGameSqlTest() throws Exception {
+    public void joinGameSqlSuccess() throws Exception {
+
         UserData testUser = new UserData("myUsername", "myPassword", "myemail");
         DataAccess dataAccess = new MySqlDataAccess();
         new UserService(dataAccess).registerUser(testUser);
@@ -375,16 +378,47 @@ public class UnitTests {
 
         int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
 
-        GameData myGameData = dataAccess.getGame(gameId);
+        GameService.JoinGameObj joinObj = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
 
-        System.out.println("gamedata: " + myGameData.gameID());
-        System.out.println("gamename: " + myGameData.gameName());
+        System.out.println("trying to join game");
+        int result = new GameService(dataAccess).joinGame(joinObj, authToken);
 
-
-        assertNotEquals(0, gameId);
-
+        assertEquals(1, result);
 
     }
+
+
+
+    @Test
+    public void joinGameFail() throws Exception {
+
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+        String authToken = loginInfo.authToken();
+
+        int gameId = new GameService(dataAccess).createGame(authToken, "myGame!");
+
+        GameService.JoinGameObj joinObj = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
+
+        GameService.JoinGameObj joinObj2 = new GameService.JoinGameObj();
+        joinObj.gameID = gameId;
+        joinObj.playerColor = ChessGame.TeamColor.BLACK;
+
+        System.out.println("trying to join game");
+        int result = new GameService(dataAccess).joinGame(joinObj2, authToken);
+
+        assertEquals(3, result);
+    }
+
+
+
 
 
 

@@ -143,8 +143,13 @@ public class MySqlDataAccess implements DataAccess {
             if (rs.next() && rs.getString("gameID") != null) {
                 System.out.println("returning something");
                 System.out.println("gameName: " + rs.getString("gameName"));
+
+                String chessGameString = rs.getString("ChessGame");
+                Gson gson = new Gson();
+                ChessGame chessGame = gson.fromJson(chessGameString, ChessGame.class);
+
                 return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"),
-                        rs.getString("blackUsername"), rs.getString("gameName"), (ChessGame) rs.getObject("ChessGame"));
+                        rs.getString("blackUsername"), rs.getString("gameName"), chessGame);
             }
         } catch (SQLException | DataAccessException e) {
             System.out.println("get game didnt work");
@@ -160,12 +165,42 @@ public class MySqlDataAccess implements DataAccess {
 
     @Override
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username){
-        return true;
+        if (teamColor == ChessGame.TeamColor.WHITE) {
+            if (game.whiteUsername() == null) {
+                // if whiteUsername is open, update it
+                var query = "UPDATE gametable SET whiteUsername = ? WHERE gameID = ?";
 
+                try (var conn = DatabaseManager.getConnection()) {
+                    PreparedStatement stmt = conn.prepareStatement(query);
 
+                    stmt.setString(1, username);
+                    stmt.setInt(2, game.gameID());
+                    stmt.executeUpdate();
+                    return true;
+                } catch (SQLException | DataAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        else if (teamColor == ChessGame.TeamColor.BLACK) {
+            if (game.blackUsername() == null) {
+                // if blackUsername is open, update it
+                var query = "UPDATE gametable SET blackUsername = ? WHERE gameID = ?";
 
+                try (var conn = DatabaseManager.getConnection()) {
+                    PreparedStatement stmt = conn.prepareStatement(query);
+
+                    stmt.setString(1, username);
+                    stmt.setInt(2, game.gameID());
+                    stmt.executeUpdate();
+                    return true;
+                } catch (SQLException | DataAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return false;
     }
-
 
 
 
@@ -234,7 +269,7 @@ public class MySqlDataAccess implements DataAccess {
     @Override
     public void deleteAuth(AuthData authObj){
         System.out.println("in clear user list");
-        var query = "DELETE FROM authTable WHERE authToken=?";
+        var query = "DELETE FROM authtable WHERE authToken=?";
 
         try (var conn = DatabaseManager.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);
