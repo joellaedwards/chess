@@ -76,6 +76,9 @@ public class MySqlDataAccess implements DataAccess {
     public ArrayList<UserData> listUsers() {
         return null;
     }
+
+
+
     @Override
     public int addGame(String gameName){
         return 0;
@@ -198,7 +201,7 @@ public class MySqlDataAccess implements DataAccess {
             CREATE TABLE IF NOT EXISTS authTable (
             `authToken` varchar(256) NOT NULL,
             `username` varchar(256) NOT NULL,
-            UNIQUE (`username`) )
+            UNIQUE (`authToken`) )
 """,
             """
             CREATE TABLE IF NOT EXISTS userTable (

@@ -273,6 +273,32 @@ public class UnitTests {
 
 
 
+
+    @Test
+    public void loginSqlSuccess() throws Exception {
+        UserData testUser = new UserData("newUser", "myPassword", "email.com");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser);
+
+        assertNotNull(loginInfo.authToken(), "UUID should not be null");
+        assertEquals("newUser", loginInfo.username(), "Username should be 'myUsername");
+    }
+
+    @Test
+    public void loginSqlWrongPassword() throws Exception {
+        UserData testUser = new UserData("myUsername", "myPassword", "myemail");
+        DataAccess dataAccess = new MySqlDataAccess();
+        new UserService(dataAccess).registerUser(testUser);
+
+        UserData testUser2 = new UserData("myUsername", "wrongPassword", "myemail");
+        AuthData loginInfo = new UserService(dataAccess).loginUser(testUser2);
+
+        assertNull(loginInfo);
+
+    }
+
         @Test
     public void testClearSqlSuccess() throws Exception {
 
@@ -293,10 +319,7 @@ public class UnitTests {
 
         assertNull(foundUser);
             // add same user again should work
-//        AuthData registeredInfo = new UserService(dataAccess).registerUser(testUser);
 
-//        assertNotNull(registeredInfo.authToken(), "UUID should not be null");
-//        assertEquals("new2314", registeredInfo.username(), "Username should be 'new2314");
     }
 
 }

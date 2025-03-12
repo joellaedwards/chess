@@ -29,11 +29,15 @@ public class UserService {
     }
 
     public AuthData loginUser(UserData user) {
+        System.out.println("in loginUser");
         UserData foundUser = dataAccess.getUser(user.username());
         if (foundUser == null) {
+            System.out.println("no user found");
             return null;
         }
+        System.out.println("found user password: " + foundUser.password());
         if (Objects.equals(foundUser.password(), user.password())) {
+            System.out.println("adding auth");
             return dataAccess.addAuth(user.username());
         }
         return null;
