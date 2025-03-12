@@ -369,7 +369,7 @@ public class MySqlDataAccess implements DataAccess {
             UNIQUE (`gameID`) )
 """,
             """
-            CREATE TABLE IF NOT EXISTS authTable (
+            CREATE TABLE IF NOT EXISTS authtable (
             `authToken` varchar(256) NOT NULL,
             `username` varchar(256) NOT NULL,
             UNIQUE (`authToken`) )
