@@ -360,7 +360,7 @@ public class MySqlDataAccess implements DataAccess {
             // game ChessGame
 
             """
-            CREATE TABLE IF NOT EXISTS gameTable (
+            CREATE TABLE IF NOT EXISTS gametable (
             `gameID` int NOT NULL AUTO_INCREMENT,
             `whiteUsername` varchar(256),
             `blackUsername` varchar(256),
@@ -375,7 +375,7 @@ public class MySqlDataAccess implements DataAccess {
             UNIQUE (`authToken`) )
 """,
             """
-            CREATE TABLE IF NOT EXISTS userTable (
+            CREATE TABLE IF NOT EXISTS usertable (
             `username` varchar(256) NOT NULL,
             `password` varchar(256) NOT NULL,
             `email` varchar(256) NOT NULL,
