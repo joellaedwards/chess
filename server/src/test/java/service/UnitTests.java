@@ -1,4 +1,4 @@
-//package service;
+package service;
 //
 //import chess.ChessGame;
 //import dataaccess.DataAccess;
