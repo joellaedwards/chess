@@ -21,6 +21,7 @@ public class TestSqlDataAccess {
     @Test
     public void testAddUserGood() throws Exception {
         DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearUserList();
         UserData testUser = new UserData("newUser2", "myPassword", "myEmail");
 
         dataAccess.addUser(testUser);
@@ -34,10 +35,10 @@ public class TestSqlDataAccess {
     public void testAddUserFail() throws Exception {
         DataAccess dataAccess = new MySqlDataAccess();
 
-        UserData testUser = new UserData("newUser2", null, "myEmail");
-
+        UserData testUser = new UserData("newUser2", "mypassword", "myEmail");
+//        dataAccess.addUser(testUser);
         Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            dataAccess.addUser(new UserData("newUser2", "password", "email@example.com"));
+            dataAccess.addUser(new UserData("newUser2", "mypassword", "myEmail"));
         });
 
     }
