@@ -49,8 +49,4 @@ public class UserService {
         dataAccess.clearUserList();
     }
 
-    public ArrayList<UserData> listUsers() {
-        return dataAccess.listUsers();
-    }
-
 }

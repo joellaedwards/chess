@@ -11,7 +11,6 @@ public interface DataAccess {
 
     void addUser(UserData user) throws Exception;
     UserData getUser(String username);
-    ArrayList<UserData> listUsers();
 
     int addGame(String gameName);
     GameData getGame(int gameId);

@@ -27,11 +27,6 @@ public class InMemoryDataAccess implements DataAccess {
         return null;
     }
 
-    @Override
-    public ArrayList<UserData> listUsers() {
-        return userList;
-    }
-
     // game functions
     public int addGame(String gameName) {
         gameNum++;

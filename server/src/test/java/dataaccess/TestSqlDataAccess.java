@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -67,6 +68,33 @@ public class TestSqlDataAccess {
         UserData foundUser = dataAccess.getUser("randomUsername");
 
         assertNull(foundUser);
+
+    }
+
+
+    @Test
+    public void testAddGameGood() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearGameList();
+
+        int gameNum = dataAccess.addGame("newGame");
+
+        assertEquals(1, gameNum);
+
+    }
+
+    @Test
+    public void testAddBadGame() throws Exception {
+
+        DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearGameList();
+
+        int gameNum = dataAccess.addGame("newGame");
+
+        int newGameNum = dataAccess.addGame("newGame");
+
+        assertEquals(2, newGameNum);
+
 
     }
 

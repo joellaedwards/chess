@@ -76,11 +76,6 @@ public class MySqlDataAccess implements DataAccess {
         return null;
     }
 
-    @Override
-    public ArrayList<UserData> listUsers() {
-        return null;
-    }
-
 
 
     @Override
@@ -118,7 +113,7 @@ public class MySqlDataAccess implements DataAccess {
                 return gameNum;
             }
         } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException(e);
+            return -1;
         }
     }
 
