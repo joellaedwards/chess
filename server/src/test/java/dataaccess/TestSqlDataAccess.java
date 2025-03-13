@@ -34,9 +34,10 @@ public class TestSqlDataAccess {
     @Test
     public void testAddUserFail() throws Exception {
         DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearUserList();
 
         UserData testUser = new UserData("newUser2", "mypassword", "myEmail");
-//        dataAccess.addUser(testUser);
+        dataAccess.addUser(testUser);
         Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
             dataAccess.addUser(new UserData("newUser2", "mypassword", "myEmail"));
         });
