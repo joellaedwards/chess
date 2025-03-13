@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import service.AuthService;
 import service.GameService;
@@ -15,6 +16,59 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestSqlDataAccess {
 
     // MySQL tests
+
+    @Test
+    public void testAddUserGood() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+        UserData testUser = new UserData("newUser2", "myPassword", "myEmail");
+
+        dataAccess.addUser(testUser);
+        UserData foundUser = dataAccess.getUser("newUser2");
+
+
+        assertEquals(foundUser.username(), "newUser2");
+    }
+
+    @Test
+    public void testAddUserFail() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+
+        UserData testUser = new UserData("newUser2", null, "myEmail");
+
+        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
+            dataAccess.addUser(new UserData("newUser2", "password", "email@example.com"));
+        });
+
+    }
+
+    @Test
+    public void testGetUserGood() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearUserList();
+
+        UserData testUser = new UserData("newUser2", "password", "myEmail");
+        dataAccess.addUser(testUser);
+
+        UserData foundUser = dataAccess.getUser("newUser2");
+
+        assertEquals(foundUser.username(), "newUser2");
+        assertEquals(foundUser.email(), "myEmail");
+
+    }
+
+    @Test
+    public void testGetUserFail() throws Exception {
+        DataAccess dataAccess = new MySqlDataAccess();
+        dataAccess.clearUserList();
+
+        UserData testUser = new UserData("newUser2", "password", "myEmail");
+        dataAccess.addUser(testUser);
+
+        UserData foundUser = dataAccess.getUser("randomUsername");
+
+        assertNull(foundUser);
+
+    }
 
     @Test
     public void testRegisterUserSuccessSql() throws Exception {
