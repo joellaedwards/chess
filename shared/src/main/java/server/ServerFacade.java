@@ -81,11 +81,16 @@ public class ServerFacade {
     }
 
     public int joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {
-        var path = "game";
+        var path = "/game";
 
         joinObj newJoin = new joinObj(joinObj, authToken);
 
         return this.makeRequest("PUT", path, newJoin, int.class);
+    }
+
+    public void clearAll() throws ResponseException {
+        var path = "/db";
+        this.makeRequest("PUT", path, null, null);
     }
 
 
