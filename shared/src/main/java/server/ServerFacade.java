@@ -90,7 +90,7 @@ public class ServerFacade {
 
     public void clearAll() throws ResponseException {
         var path = "/db";
-        this.makeRequest("PUT", path, null, null);
+        this.makeRequest("DELETE", path, null, null);
     }
 
 

@@ -15,11 +15,12 @@ public class ServerFacadeTests {
     private static ServerFacade facade;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws ResponseException {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
         facade = new ServerFacade("http://localhost:" + port);
+        facade.clearAll();
     }
 
     @AfterAll
@@ -40,8 +41,20 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void registerUserPass() throws ResponseException {
+    public void clearAll() throws ResponseException {
 
+        UserData myUser = new UserData("name8", "password2", "email@gmail.com");
+        facade.registerUser(myUser);
+
+        facade.clearAll();
+
+        AuthData returnedData = facade.registerUser(myUser);
+        assertEquals(returnedData.username(), "name8");
+
+    }
+
+    @Test
+    public void registerUserPass() throws ResponseException {
         UserData myUser = new UserData("name4", "password2", "email@gmail.com");
 
         AuthData returnedData = facade.registerUser(myUser);
