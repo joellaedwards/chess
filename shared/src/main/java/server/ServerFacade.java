@@ -10,6 +10,9 @@ import model.UserData;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class ServerFacade {
@@ -55,29 +58,30 @@ public class ServerFacade {
 
         public AuthData registerUser(UserData user) throws ResponseException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, AuthData.class);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
     public AuthData loginUser(UserData user) throws ResponseException {
         var path = "/session";
-        return this.makeRequest("POST", path, user, AuthData.class);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
-    public boolean logoutUser(String authToken) throws ResponseException {
+    public Object logoutUser(String authToken) throws ResponseException {
         var path = "/session";
-        return this.makeRequest("DELETE", path, authToken, boolean.class);
+        System.out.println("authtoken hereee: " + authToken);
+        return this.makeRequest("DELETE", path, null, Object.class, authToken);
     }
 
     public int createGame(String authToken, String gameName) throws ResponseException {
         var path = "/game";
         // TODO check this with the two params
         createObj newCreate = new createObj(authToken, gameName);
-        return this.makeRequest("POST", path, newCreate, int.class);
+        return this.makeRequest("POST", path, newCreate, int.class, null);
     }
 
     public ArrayList listGames(String authToken) throws ResponseException {
         var path = "/game";
-        return this.makeRequest("GET", path, authToken, ArrayList.class);
+        return this.makeRequest("GET", path, authToken, ArrayList.class, null);
     }
 
     public int joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {
@@ -85,25 +89,36 @@ public class ServerFacade {
 
         joinObj newJoin = new joinObj(joinObj, authToken);
 
-        return this.makeRequest("PUT", path, newJoin, int.class);
+        return this.makeRequest("PUT", path, newJoin, int.class, null);
     }
 
     public void clearAll() throws ResponseException {
         var path = "/db";
-        this.makeRequest("DELETE", path, null, null);
+        this.makeRequest("DELETE", path, null, null, null);
     }
 
 
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws ResponseException {
+        System.out.println("making request");
+        System.out.println("autoken in makerequest " + request);
         try {
+
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
+            if (authToken != null && !authToken.isEmpty()) {
+                http.setRequestProperty("Authorization", authToken);  // "Bearer" is used for OAuth2, but it can be different depending on your server setup
+                System.out.println("Authorization header set: " + authToken);
+            }
+
             writeBody(request, http);
+            System.out.println("request after writeBody: " + request);
             http.connect();
+            System.out.println("after connect: " + request);
+            System.out.println("full http: " + http);
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (ResponseException ex) {
@@ -116,11 +131,14 @@ public class ServerFacade {
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
+            System.out.println("auth token in write body: " + request);
             http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);
+            System.out.println("reqData: " + reqData);
             try (OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
             }
+            System.out.println("httpurlconection: " + http);
         }
     }
 
@@ -138,15 +156,28 @@ public class ServerFacade {
     }
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
+        System.out.println("in read body");
         T response = null;
         if (http.getContentLength() < 0) {
+            System.out.println("passed first if");
             try (InputStream respBody = http.getInputStream()) {
+                System.out.println("trying!");
+                System.out.println("respBody: " + respBody);
                 InputStreamReader reader = new InputStreamReader(respBody);
                 if (responseClass != null) {
+                    System.out.println("responseClass not null");
+                    System.out.println("reader: " + reader);
+//                    BufferedReader bufferedReader = new BufferedReader(reader);
+
+//                    String responseBody = bufferedReader.lines().collect(Collectors.joining());
+//                    System.out.println("raw reader: " + responseBody);
+//                    System.out.println("responseClass: " + responseClass);
                     response = new Gson().fromJson(reader, responseClass);
+                    System.out.println("response here: ");
                 }
             }
         }
+        System.out.println("response in readBody: " + response);
         return response;
     }
 

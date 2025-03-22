@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
+import model.*;
+
+import java.util.Arrays;
 
 
 public class ChessClient {
@@ -19,6 +22,30 @@ public class ChessClient {
     }
 
 
+    public String eval(String input) throws ResponseException {
+        var tokens = input.toLowerCase().split(" ");
+        var cmd = (tokens.length > 0) ? tokens[0] : "help";
+        var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+        return switch (cmd) {
+            case "register" -> register(params);
+            default -> help();
+        };
+    }
+
+    public String register(String... params) throws ResponseException {
+        if (params.length >= 3) {
+            UserData user = new UserData(params[0], params[1], params[2]);
+            AuthData auth = server.registerUser(user);
+            if (auth != null) {
+                state = State.SIGNEDIN;
+            }
+
+            // do something here register and also idk if that's the
+            // righ num of params
+        }
+        System.out.println("not enough params in register in ChessClient");
+        return null;
+    }
 
     public String help() {
         if (state == State.SIGNEDOUT) {

@@ -246,6 +246,8 @@ public class MySqlDataAccess implements DataAccess {
     public AuthData getAuth(String givenAuthToken) {
         System.out.println("in getauth...");
 
+        System.out.println("looking for authtoken: " + givenAuthToken);
+
         var query = "SELECT authToken, username FROM authtable WHERE authToken=?";
 
         try (var conn = DatabaseManager.getConnection()) {
@@ -253,17 +255,17 @@ public class MySqlDataAccess implements DataAccess {
 
             stm.setString(1, givenAuthToken);
             ResultSet rs = stm.executeQuery();
-
-            if (rs.next() && rs.getString("username") != null) {
+            System.out.println("query executed..");
+            if (rs.next()) {
                 System.out.println("returning something");
                 System.out.println("username: " + rs.getString("username"));
                 return new AuthData(rs.getString("authToken"), rs.getString("username"));
             }
         } catch (SQLException | DataAccessException e) {
-            System.out.println("get user didnt work");
+            System.out.println("get auth didnt work");
             throw new RuntimeException(e);
         }
-        System.out.println("returning null from getUser");
+        System.out.println("returning null from getauth");
         return null;
 
 

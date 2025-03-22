@@ -108,6 +108,8 @@ public class Server {
     private Object logoutUser(Request req, Response res) {
         String authHeader = req.headers("Authorization");
         try {
+            System.out.println("calling logout from server");
+            System.out.println("authToken in server: " + authHeader);
             var logoutInfo = new AuthService(dataAccess).logout(authHeader);
             if (logoutInfo) {
                 System.out.println("status code 200");
