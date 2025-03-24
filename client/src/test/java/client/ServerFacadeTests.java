@@ -135,6 +135,30 @@ public class ServerFacadeTests {
         assertNull(loginInfo);
     }
 
+    @Test
+    public void createGamePass() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
+
+        Object createdGame = facade.createGame(returnedData.authToken(), "myGame");
+        System.out.println("createdGame: " + createdGame);
+        assertNotNull(createdGame);
+    }
+
+    @Test
+    public void createGameFail() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
+
+        Object createdGame = facade.createGame(returnedData.authToken(), "myGame");
+
+        createdGame = facade.createGame("1234", "newGame");
+        System.out.println("createdGame: " + createdGame);
+        assertNull(createdGame);
+    }
+
 
 
 

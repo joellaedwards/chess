@@ -1,11 +1,12 @@
 package ui;
 
-import com.google.gson.Gson;
+import chess.ChessGame;
 import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
-import model.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -23,7 +24,7 @@ public class ChessClient {
     }
 
 
-    public String eval(String input) throws ResponseException {
+    public Object eval(String input) throws ResponseException {
         System.out.println("input: " + input);
         var tokens = input.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
@@ -40,6 +41,7 @@ public class ChessClient {
             return switch (cmd) {
                 case "logout" -> logout();
                 case "create" -> createGame(params);
+                case "list" -> listGames();
                 case "quit" -> quit();
                 default -> help();
             };
@@ -47,22 +49,34 @@ public class ChessClient {
     }
 
 
+    public String listGames() throws ResponseException {
+        System.out.println("in listgames in chessclient");
+        ArrayList gameList = (ArrayList) server.listGames(currAuthToken);
+        if (gameList != null) {
+            ArrayList<String> stringList = new ArrayList<>();
+            for (int i = 0; i < gameList.size(); ++i) {
+                ServerFacade.ListGameObj currGame = (ServerFacade.ListGameObj) gameList.get(i);
+                String stringToAdd = (i + 1) + currGame.gameName + currGame.blackUsername + currGame.whiteUsername;
+                stringList.add(stringToAdd);
+            }
+            return String.valueOf(stringList);
+        }
+        return "no games";
+    }
+
 
     public String createGame(String... params) throws ResponseException {
         System.out.println("in creategame in chess client");
         System.out.println("params length: " + params.length);
         if (params.length >= 1) {
             System.out.println("params at 1: " + params[1]);
-            try {
-                Object returnedGame = server.createGame(currAuthToken, params[1]);
-                System.out.println("returned game: " + returnedGame.toString());
-                return "success";
-            } catch (ResponseException ex) {
-                return "something went wrong: " + ex;
+            Object returnedGame = server.createGame(currAuthToken, params[1]);
+            if (returnedGame != null) {
+                System.out.println("returned game: " + returnedGame);
+                return "success in creategame";
             }
         }
-
-        return "something went wrong in create game!";
+        return "something went wrong in create game";
     }
 
     public String logout() throws ResponseException {

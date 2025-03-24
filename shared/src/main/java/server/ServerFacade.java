@@ -11,9 +11,6 @@ import model.UserData;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class ServerFacade {
@@ -24,14 +21,6 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public static class createObj {
-        public String authToken;
-        public String gameName;
-        public createObj(String authToken, String gameName) {
-            this.authToken = authToken;
-            this.gameName = gameName;
-        }
-    }
     public static class ListGameObj {
         public int gameID;
         public String whiteUsername;
@@ -90,17 +79,24 @@ public class ServerFacade {
 
     public Object createGame(String authToken, String gameName) throws ResponseException {
         var path = "/game";
-        // TODO check this with the two params
         System.out.println("in checkgame serverfacade");
-
         GameData gameData = new GameData(0, null, null, gameName, null);
-
-        return this.makeRequest("POST", path, gameData, Object.class, authToken);
+        try {
+            return this.makeRequest("POST", path, gameData, Object.class, authToken);
+        } catch (ResponseException ex) {
+            System.out.println("Response exception in createGame: " + ex);
+            return null;
+        }
     }
 
-    public ArrayList listGames(String authToken) throws ResponseException {
+    public Object listGames(String authToken) throws ResponseException {
         var path = "/game";
-        return this.makeRequest("GET", path, authToken, ArrayList.class, null);
+        try {
+            return this.makeRequest("GET", path, authToken, Object.class, null);
+        } catch (ResponseException ex) {
+            System.out.println("ResponseException in listGames: " + ex);
+            return null;
+        }
     }
 
     public int joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {

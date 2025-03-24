@@ -25,7 +25,7 @@ public class Repl {
 
             try {
                 System.out.println("Line: " + line);
-                result = client.eval(line);
+                result = (String) client.eval(line);
                 System.out.println("results: " + result);
 
             } catch (ResponseException e) {
