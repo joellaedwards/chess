@@ -36,6 +36,7 @@ public class GameService {
     }
 
     public int createGame(String authToken, String gameName) {
+        System.out.println("in create game in gameservice");
         AuthData authFound = dataAccess.getAuth(authToken);
         if (authFound != null) {
             // authtoken found, valid user

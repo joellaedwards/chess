@@ -39,6 +39,7 @@ public class ChessClient {
         else {
             return switch (cmd) {
                 case "logout" -> logout();
+                case "create" -> createGame(params);
                 case "quit" -> quit();
                 default -> help();
             };
@@ -46,12 +47,29 @@ public class ChessClient {
     }
 
 
+
+    public String createGame(String... params) throws ResponseException {
+        System.out.println("in creategame in chess client");
+        System.out.println("params length: " + params.length);
+        if (params.length >= 1) {
+            System.out.println("params at 1: " + params[1]);
+            Object returnedGame = server.createGame(currAuthToken, params[1]);
+            System.out.println("returned game: " + returnedGame.toString());
+            if (returnedGame != null) {
+                return "success!";
+            }
+        }
+
+        return "something went wrong in create game!";
+    }
+
     public String logout() throws ResponseException {
         System.out.println("in logout in chessclient");
         if (currAuthToken != null) {
             if (server.logoutUser(currAuthToken) != null) {
                 System.out.println("logged out wohoo!");
                 state = State.SIGNEDOUT;
+                currAuthToken = null;
                 return "successfully logged out!";
             }
         }
@@ -86,6 +104,7 @@ public class ChessClient {
             AuthData auth = server.loginUser(user);
             if (auth != null) {
                 state = State.SIGNEDIN;
+                currAuthToken = auth.authToken();
                 System.out.println("logged in!");
                 return "success";
             }
