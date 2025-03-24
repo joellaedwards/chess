@@ -14,6 +14,7 @@ public class ChessClient {
     private final ServerFacade server;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
+    private String currAuthToken = null;
 
 
     public ChessClient(String serverUrl) {
@@ -25,18 +26,39 @@ public class ChessClient {
     public String eval(String input) throws ResponseException {
         System.out.println("input: " + input);
         var tokens = input.toLowerCase().split(" ");
-        System.out.println("Toekns length: " + tokens.length);
-        for (var token : tokens) {
-            System.out.println("token here: " + token);
-        }
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-        return switch (cmd) {
-            case "register" -> register(params);
-            case "login" -> login(params);
-            default -> help();
-        };
+        if (state == State.SIGNEDOUT) {
+            return switch (cmd) {
+                case "register" -> register(params);
+                case "login" -> login(params);
+                case "quit" -> quit();
+                default -> help();
+            };
+        }
+        else {
+            return switch (cmd) {
+                case "logout" -> logout();
+                case "quit" -> quit();
+                default -> help();
+            };
+        }
     }
+
+
+    public String logout() throws ResponseException {
+        System.out.println("in logout in chessclient");
+        if (currAuthToken != null) {
+            if (server.logoutUser(currAuthToken) != null) {
+                System.out.println("logged out wohoo!");
+                state = State.SIGNEDOUT;
+                return "successfully logged out!";
+            }
+        }
+
+        return "something went wrong. try logging out again";
+    }
+
 
     public String register(String... params) throws ResponseException {
         System.out.println("register within chessClient!!");
@@ -44,12 +66,14 @@ public class ChessClient {
             UserData user = new UserData(params[0], params[1], params[2]);
             AuthData auth = server.registerUser(user);
             if (auth != null) {
+                currAuthToken = auth.authToken();
                 state = State.SIGNEDIN;
                 System.out.println("registered and signed in!!");
                 return "success";
             }
         }
         else {
+            currAuthToken = null;
             return "make sure to enter username email and password";
         }
         return null;
@@ -67,6 +91,10 @@ public class ChessClient {
             }
         }
         return "please enter a valid username and password";
+    }
+
+    public String quit() {
+        return "quit";
     }
 
     public String help() {
@@ -87,11 +115,11 @@ public class ChessClient {
         }
         else if (state == State.SIGNEDIN) {
             return """
+                    
                     - Logout
                     - Create Game <GameName>
                     - List Games
                     - Play Game <Game Number> <Color>
-                    
                     - Help
                     """;
         }

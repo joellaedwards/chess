@@ -100,8 +100,8 @@ public class ServerFacade {
 
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String authToken) throws ResponseException {
-        System.out.println("making request");
-        System.out.println("autoken in makerequest " + request);
+//        System.out.println("making request");
+//        System.out.println("autoken in makerequest " + request);
         try {
 
             URL url = (new URI(serverUrl + path)).toURL();
@@ -111,14 +111,14 @@ public class ServerFacade {
 
             if (authToken != null && !authToken.isEmpty()) {
                 http.setRequestProperty("Authorization", authToken);  // "Bearer" is used for OAuth2, but it can be different depending on your server setup
-                System.out.println("Authorization header set: " + authToken);
+//                System.out.println("Authorization header set: " + authToken);
             }
 
             writeBody(request, http);
-            System.out.println("request after writeBody: " + request);
+//            System.out.println("request after writeBody: " + request);
             http.connect();
-            System.out.println("after connect: " + request);
-            System.out.println("full http: " + http);
+//            System.out.println("after connect: " + request);
+//            System.out.println("full http: " + http);
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (ResponseException ex) {
@@ -131,14 +131,14 @@ public class ServerFacade {
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
-            System.out.println("auth token in write body: " + request);
+//            System.out.println("auth token in write body: " + request);
             http.addRequestProperty("Content-Type", "application/json");
             String reqData = new Gson().toJson(request);
-            System.out.println("reqData: " + reqData);
+//            System.out.println("reqData: " + reqData);
             try (OutputStream reqBody = http.getOutputStream()) {
                 reqBody.write(reqData.getBytes());
             }
-            System.out.println("httpurlconection: " + http);
+//            System.out.println("httpurlconection: " + http);
         }
     }
 
@@ -156,17 +156,17 @@ public class ServerFacade {
     }
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
-        System.out.println("in read body");
+//        System.out.println("in read body");
         T response = null;
         if (http.getContentLength() < 0) {
-            System.out.println("passed first if");
+//            System.out.println("passed first if");
             try (InputStream respBody = http.getInputStream()) {
-                System.out.println("trying!");
-                System.out.println("respBody: " + respBody);
+//                System.out.println("trying!");
+//                System.out.println("respBody: " + respBody);
                 InputStreamReader reader = new InputStreamReader(respBody);
                 if (responseClass != null) {
-                    System.out.println("responseClass not null");
-                    System.out.println("reader: " + reader);
+//                    System.out.println("responseClass not null");
+//                    System.out.println("reader: " + reader);
 //                    BufferedReader bufferedReader = new BufferedReader(reader);
 
 //                    String responseBody = bufferedReader.lines().collect(Collectors.joining());
@@ -177,7 +177,7 @@ public class ServerFacade {
                 }
             }
         }
-        System.out.println("response in readBody: " + response);
+//        System.out.println("response in readBody: " + response);
         return response;
     }
 
