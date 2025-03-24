@@ -84,20 +84,19 @@ public class ChessClient {
         System.out.println("register within chessClient!!");
         if (params.length >= 3) {
             UserData user = new UserData(params[0], params[1], params[2]);
-            Object auth = server.registerUser(user);
+            AuthData auth = server.registerUser(user);
             if (auth != null) {
-                AuthData authObj = (AuthData) auth;
-                currAuthToken = authObj.authToken();
+                currAuthToken = auth.authToken();
                 state = State.SIGNEDIN;
                 System.out.println("registered and signed in!!");
                 return "success";
             }
+            return "User already registered.";
         }
         else {
             currAuthToken = null;
             return "make sure to enter username email and password";
         }
-        return null;
     }
 
     public String login(String... params) throws ResponseException {

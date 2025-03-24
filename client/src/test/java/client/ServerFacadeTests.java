@@ -50,7 +50,7 @@ public class ServerFacadeTests {
 
         facade.clearAll();
 
-        AuthData returnedData = (AuthData) facade.registerUser(myUser);
+        AuthData returnedData = facade.registerUser(myUser);
         assertEquals(returnedData.username(), "name8");
 
     }
@@ -61,7 +61,7 @@ public class ServerFacadeTests {
 
         UserData myUser = new UserData("name4", "password2", "email@gmail.com");
 
-        AuthData returnedData = (AuthData) facade.registerUser(myUser);
+        AuthData returnedData = facade.registerUser(myUser);
         System.out.println("returnedData: " + returnedData.toString());
         assertNotNull(returnedData.authToken());
 
@@ -75,7 +75,7 @@ public class ServerFacadeTests {
         facade.registerUser(myUser);
         Object returnedData = facade.registerUser(myUser);
         System.out.println(returnedData);
-        assertEquals("User already registered.", returnedData);
+        assertNull(returnedData);
     }
 
 
@@ -84,7 +84,7 @@ public class ServerFacadeTests {
         facade.clearAll();
 
         UserData testUser = new UserData("newUser", "myPassword", "email.com");
-        AuthData registerInfo = (AuthData) facade.registerUser(testUser);
+        AuthData registerInfo = facade.registerUser(testUser);
 
         System.out.println("register info: " + registerInfo.toString());
         System.out.println("authtoken: " + registerInfo.authToken());
@@ -96,32 +96,45 @@ public class ServerFacadeTests {
 
 
 
-//    @Test
-//    public void logoutUserPass() throws ResponseException {
-//        facade.clearAll();
-//
-//        UserData testUser = new UserData("myUsername", "myPassword", "thisemail");
-//        AuthData loginInfo = facade.loginUser(testUser);
-//
-//        String authToken = loginInfo.authToken();
-//
-//        boolean logoutReturn = facade.logoutUser(authToken);
-//
-//        assertTrue(logoutReturn);
-//
-//    }
+    @Test
+    public void logoutFail() throws ResponseException {
+        facade.clearAll();
+        UserData testUser = new UserData("myUsername", "myPassword", "thisemail");
+        facade.loginUser(testUser);
 
-//    @Test
-//    public void registerUserFail() throws ResponseException {
-//        facade.clearAll();
-//
-//        UserData myUser = new UserData("name8", "password2", "email@gmail.com");
-//        facade.registerUser(myUser);
-//
-//        AuthData returnedData = facade.registerUser(myUser);
-//        assertNull(returnedData);
-//
-//    }
+        String authToken = "123";
+
+        Object logoutReturn = facade.logoutUser(authToken);
+        assertNull(logoutReturn);
+    }
+
+
+    @Test
+    public void loginUserPass() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
+
+        facade.logoutUser(returnedData.authToken());
+        AuthData loginInfo = facade.loginUser(myUser);
+
+        assertNotNull(loginInfo.authToken(), "UUID should not be null");
+        assertEquals("name4", loginInfo.username(), "Username should be 'myUsername");
+    }
+
+    @Test
+    public void loginUserFail() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
+
+        UserData wrongUser = new UserData("name4", "wrongpassword", null);
+        facade.logoutUser(returnedData.authToken());
+        AuthData loginInfo = facade.loginUser(wrongUser);
+
+        assertNull(loginInfo);
+    }
+
 
 
 

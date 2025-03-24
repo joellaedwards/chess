@@ -57,24 +57,35 @@ public class ServerFacade {
         }
     }
 
-        public Object registerUser(UserData user) throws ResponseException {
+        public AuthData registerUser(UserData user) throws ResponseException {
         var path = "/user";
         try {
             return this.makeRequest("POST", path, user, AuthData.class, null);
         } catch (ResponseException ex) {
-            return "User already registered.";
+            System.out.println("ResponseException: " + ex);
+            return null;
         }
     }
 
     public AuthData loginUser(UserData user) throws ResponseException {
         var path = "/session";
-        return this.makeRequest("POST", path, user, AuthData.class, null);
+        try {
+            return this.makeRequest("POST", path, user, AuthData.class, null);
+        } catch (ResponseException ex) {
+            System.out.println("ResponseException: " + ex);
+            return null;
+        }
     }
 
     public Object logoutUser(String authToken) throws ResponseException {
         var path = "/session";
         System.out.println("authtoken hereee: " + authToken);
-        return this.makeRequest("DELETE", path, null, Object.class, authToken);
+        try {
+            return this.makeRequest("DELETE", path, null, Object.class, authToken);
+        } catch (ResponseException ex) {
+            System.out.println("ResponseException: " + ex);
+            return null;
+        }
     }
 
     public Object createGame(String authToken, String gameName) throws ResponseException {
