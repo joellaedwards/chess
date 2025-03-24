@@ -53,10 +53,12 @@ public class ChessClient {
         System.out.println("params length: " + params.length);
         if (params.length >= 1) {
             System.out.println("params at 1: " + params[1]);
-            Object returnedGame = server.createGame(currAuthToken, params[1]);
-            System.out.println("returned game: " + returnedGame.toString());
-            if (returnedGame != null) {
-                return "success!";
+            try {
+                Object returnedGame = server.createGame(currAuthToken, params[1]);
+                System.out.println("returned game: " + returnedGame.toString());
+                return "success";
+            } catch (ResponseException ex) {
+                return "something went wrong: " + ex;
             }
         }
 
@@ -82,9 +84,10 @@ public class ChessClient {
         System.out.println("register within chessClient!!");
         if (params.length >= 3) {
             UserData user = new UserData(params[0], params[1], params[2]);
-            AuthData auth = server.registerUser(user);
+            Object auth = server.registerUser(user);
             if (auth != null) {
-                currAuthToken = auth.authToken();
+                AuthData authObj = (AuthData) auth;
+                currAuthToken = authObj.authToken();
                 state = State.SIGNEDIN;
                 System.out.println("registered and signed in!!");
                 return "success";

@@ -50,7 +50,7 @@ public class ServerFacadeTests {
 
         facade.clearAll();
 
-        AuthData returnedData = facade.registerUser(myUser);
+        AuthData returnedData = (AuthData) facade.registerUser(myUser);
         assertEquals(returnedData.username(), "name8");
 
     }
@@ -61,11 +61,21 @@ public class ServerFacadeTests {
 
         UserData myUser = new UserData("name4", "password2", "email@gmail.com");
 
-        AuthData returnedData = facade.registerUser(myUser);
+        AuthData returnedData = (AuthData) facade.registerUser(myUser);
         System.out.println("returnedData: " + returnedData.toString());
         assertNotNull(returnedData.authToken());
 
         assertEquals(returnedData.username(), "name4");
+    }
+
+    @Test
+    public void registerUserFail() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        facade.registerUser(myUser);
+        Object returnedData = facade.registerUser(myUser);
+        System.out.println(returnedData);
+        assertEquals("User already registered.", returnedData);
     }
 
 
@@ -74,7 +84,7 @@ public class ServerFacadeTests {
         facade.clearAll();
 
         UserData testUser = new UserData("newUser", "myPassword", "email.com");
-        AuthData registerInfo = facade.registerUser(testUser);
+        AuthData registerInfo = (AuthData) facade.registerUser(testUser);
 
         System.out.println("register info: " + registerInfo.toString());
         System.out.println("authtoken: " + registerInfo.authToken());
