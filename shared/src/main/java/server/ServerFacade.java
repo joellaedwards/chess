@@ -84,7 +84,6 @@ public class ServerFacade {
 
     public Object joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {
         var path = "/game";
-        // TODO check what this returns in the server fr
 
         try {
 //            System.out.println("trying makerequest in joingame");
@@ -112,7 +111,8 @@ public class ServerFacade {
             http.setDoOutput(true);
 
             if (authToken != null && !authToken.isEmpty()) {
-                http.setRequestProperty("Authorization", authToken);  // "Bearer" is used for OAuth2, but it can be different depending on your server setup
+                http.setRequestProperty("Authorization", authToken);
+                // "Bearer" is used for OAuth2, but it can be different depending on your server setup
 //                System.out.println("Authorization header set: " + authToken);
             }
 

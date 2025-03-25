@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ServerFacadeTests {
-// TODO add unit tests!
     private static Server server;
     private static ServerFacade facade;
 
@@ -181,7 +180,8 @@ public class ServerFacadeTests {
             for (Object game : treeMap.get("games")) {
                 if (game instanceof LinkedTreeMap<?, ?>) {
                     LinkedTreeMap<String, String> gameInfo = (LinkedTreeMap<String, String>) game;
-                    String stringToAdd = i + ".   " + gameInfo.get("gameName") + ",   " + gameInfo.get("whiteUsername") + ",   " + gameInfo.get("blackUsername");
+                    String stringToAdd = i + ".   " + gameInfo.get("gameName") +
+                            ",   " + gameInfo.get("whiteUsername") + ",   " + gameInfo.get("blackUsername");
                     ++i;
                     stringList.add(stringToAdd);
                 }

@@ -91,7 +91,6 @@ public class ChessClient {
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
 //            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
-                // TODO make this show the board :)
                 return "Game joined!";
             }
             return "Please enter a valid game number.";

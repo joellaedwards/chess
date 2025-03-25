@@ -41,119 +41,122 @@ public class Repl {
     }
 
 
+    private void printWhiteBoard() {
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
+        );
+
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
+                + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLUE + "  R  "
+                + SET_BG_COLOR_BLACK + "  N  "
+                + SET_BG_COLOR_LIGHT_GREY + "  B  "
+                + SET_BG_COLOR_BLACK + "  Q  "
+                + SET_BG_COLOR_LIGHT_GREY + "  K  "
+                + SET_BG_COLOR_BLACK + "  B  "
+                + SET_BG_COLOR_LIGHT_GREY + "  N  "
+                + SET_BG_COLOR_BLACK + "  R  "
+                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  7  "
+                + SET_BG_COLOR_BLACK + SET_TEXT_COLOR_BLUE + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  7  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  6  "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_DARK_GREY + "  6  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  5  "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_DARK_GREY + "  5  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  4  "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_DARK_GREY + "  4  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  3  "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_BLACK + "     "
+                + SET_BG_COLOR_LIGHT_GREY + "     "
+                + SET_BG_COLOR_DARK_GREY + "  3  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  2  "
+                + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_RED + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_LIGHT_GREY + "  P  "
+                + SET_BG_COLOR_BLACK + "  P  "
+                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  2  "
+                + RESET_BG_COLOR
+        );
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
+                + SET_BG_COLOR_BLACK + SET_TEXT_COLOR_RED + "  R  "
+                + SET_BG_COLOR_LIGHT_GREY + "  N  "
+                + SET_BG_COLOR_BLACK + "  B  "
+                + SET_BG_COLOR_LIGHT_GREY + "  Q  "
+                + SET_BG_COLOR_BLACK + "  K  "
+                + SET_BG_COLOR_LIGHT_GREY + "  B  "
+                + SET_BG_COLOR_BLACK + "  N  "
+                + SET_BG_COLOR_LIGHT_GREY + "  R  "
+                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
+                + RESET_BG_COLOR
+        );
+
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
+        );
+
+    }
+
     private void printPrompt() {
 
         String textColor = SET_TEXT_COLOR_RED;
 
         if (result.contains("white") || result.contains("observing")) {
-
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                    + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-            );
-
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
-                    + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLUE + "  R  "
-                    + SET_BG_COLOR_BLACK + "  N  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  B  "
-                    + SET_BG_COLOR_BLACK + "  Q  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  K  "
-                    + SET_BG_COLOR_BLACK + "  B  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  N  "
-                    + SET_BG_COLOR_BLACK + "  R  "
-                    + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  7  "
-                    + SET_BG_COLOR_BLACK + SET_TEXT_COLOR_BLUE + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  7  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  6  "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_DARK_GREY + "  6  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  5  "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_DARK_GREY + "  5  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  4  "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_DARK_GREY + "  4  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  3  "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_BLACK + "     "
-                    + SET_BG_COLOR_LIGHT_GREY + "     "
-                    + SET_BG_COLOR_DARK_GREY + "  3  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  2  "
-                    + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_RED + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  P  "
-                    + SET_BG_COLOR_BLACK + "  P  "
-                    + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  2  "
-                    + RESET_BG_COLOR
-            );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
-                    + SET_BG_COLOR_BLACK + SET_TEXT_COLOR_RED + "  R  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  N  "
-                    + SET_BG_COLOR_BLACK + "  B  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  Q  "
-                    + SET_BG_COLOR_BLACK + "  K  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  B  "
-                    + SET_BG_COLOR_BLACK + "  N  "
-                    + SET_BG_COLOR_LIGHT_GREY + "  R  "
-                    + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
-                    + RESET_BG_COLOR
-            );
-
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                    + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-            );
-
-
+            printWhiteBoard();
         }
+
         else if (result.contains("joined")) {
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
@@ -255,13 +258,9 @@ public class Repl {
                     + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
                     + RESET_BG_COLOR
             );
-
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
             );
-
-
-
         }
         else if (result.contains("invalid") || result.contains("Please") ||
                 result.contains("valid") || result.contains("already") || result.contains("authorized")) {
@@ -276,8 +275,6 @@ public class Repl {
             textColor = SET_TEXT_COLOR_WHITE;
             System.out.print("\n" + RESET_BG_COLOR + textColor + result);
         }
-
-
         if (ChessClient.state == SIGNEDOUT) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[LOGGED OUT] >>> ");
         }
@@ -285,5 +282,4 @@ public class Repl {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[LOGGED IN] >>> ");
         }
     }
-
 }
