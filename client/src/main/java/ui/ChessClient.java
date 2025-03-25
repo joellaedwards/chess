@@ -45,11 +45,14 @@ public class ChessClient {
                 case "list" -> listGames();
                 case "quit" -> quit();
                 case "play" -> playGame(params);
+                case "observe" -> observeGame(params);
                 case "clear" -> clearAll();
                 default -> help();
             };
         }
     }
+
+
 
     public String clearAll() throws ResponseException {
 //        System.out.println("clearing...");
@@ -57,6 +60,14 @@ public class ChessClient {
         state = State.SIGNEDOUT;
         server.clearAll();
         return "reset!";
+    }
+
+    public String observeGame(String... params) {
+        if (params.length >=2 ) {
+            int id = Integer.parseInt(params[1]);
+            return "Obsering game.";
+        }
+        return "Please enter a valid game number.";
     }
 
     public String playGame(String... params) throws ResponseException {
@@ -201,6 +212,7 @@ public class ChessClient {
                     - Create Game <GameName>
                     - List Games
                     - Play Game <Game Number> <Color>
+                    - Observe Game <Game Number>
                     - Help
                     """;
         }
