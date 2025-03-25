@@ -20,12 +20,6 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-    public static class ListGameObj {
-        public int gameID;
-        public String whiteUsername;
-        public String blackUsername;
-        public String gameName;
-    }
 
     public static class JoinGameObj {
         public ChessGame.TeamColor playerColor;
@@ -33,15 +27,6 @@ public class ServerFacade {
         public JoinGameObj(ChessGame.TeamColor playerColor, int gameID) {
             this.playerColor = playerColor;
             this.gameID = gameID;
-        }
-    }
-
-    public static class joinObj {
-        public JoinGameObj joinGameObj;
-        public String authToken;
-        public joinObj(JoinGameObj joinGameObj, String authToken) {
-            this.joinGameObj = joinGameObj;
-            this.authToken = authToken;
         }
     }
 
@@ -186,19 +171,11 @@ public class ServerFacade {
                 System.out.println("respBody: " + respBody);
                 InputStreamReader reader = new InputStreamReader(respBody);
                 if (responseClass != null) {
-//                    System.out.println("responseClass not null");
-//                    System.out.println("reader: " + reader);
-//                    BufferedReader bufferedReader = new BufferedReader(reader);
-
-//                    String responseBody = bufferedReader.lines().collect(Collectors.joining());
-//                    System.out.println("raw reader: " + responseBody);
-//                    System.out.println("responseClass: " + responseClass);
                     response = new Gson().fromJson(reader, responseClass);
                     System.out.println("response here: ");
                 }
             }
         }
-//        System.out.println("response in readBody: " + response);
         return response;
     }
 

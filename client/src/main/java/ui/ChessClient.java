@@ -45,11 +45,19 @@ public class ChessClient {
                 case "list" -> listGames();
                 case "quit" -> quit();
                 case "play" -> playGame(params);
+                case "clear" -> clearAll();
                 default -> help();
             };
         }
     }
 
+    public String clearAll() throws ResponseException {
+        System.out.println("clearing...");
+        server.logoutUser(currAuthToken);
+        state = State.SIGNEDOUT;
+        server.clearAll();
+        return "reset!";
+    }
 
     public String playGame(String... params) throws ResponseException {
         System.out.println("in playgame");
@@ -67,18 +75,19 @@ public class ChessClient {
                 myColor = ChessGame.TeamColor.BLACK;
             }
             else {
-                return "please enter a valid color";
+                return "Please enter a valid color";
             }
             ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
-
+            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
+                // TODO make this show the board :)
                 return "success!";
             }
-            return "game not joined";
+            return "Please enter a valid game number.";
             // TODO handle if the color is already taken
         }
-        return "game not joined 2";
+        return "Please enter a game number and the color you wish to play as.";
     }
 
 
@@ -92,13 +101,15 @@ public class ChessClient {
             int i = 1;
             for (Object game : treeMap.get("games")) {
                 if (game instanceof LinkedTreeMap<?, ?>) {
-                    LinkedTreeMap<String, String> LinkedTreeMap;
                     LinkedTreeMap<String, String> gameInfo = (LinkedTreeMap<String, String>) game;
                     String stringToAdd = i + ".   " + gameInfo.get("gameName") + ",   " + gameInfo.get("whiteUsername")
                             + ",   " + gameInfo.get("blackUsername");
                     ++i;
                     fullList.append(stringToAdd).append('\n');
                 }
+            }
+            if (fullList.isEmpty()) {
+                return "No games found.";
             }
             return fullList.toString();
         }
@@ -109,15 +120,16 @@ public class ChessClient {
     public String createGame(String... params) throws ResponseException {
         System.out.println("in creategame in chess client");
         System.out.println("params length: " + params.length);
-        if (params.length >= 1) {
+        if (params.length >= 2) {
             System.out.println("params at 1: " + params[1]);
             Object returnedGame = server.createGame(currAuthToken, params[1]);
             if (returnedGame != null) {
                 System.out.println("returned game: " + returnedGame);
                 return "success in creategame";
             }
+            return "You are not authorized to create a new game.";
         }
-        return "something went wrong in create game";
+        return "Please enter a name for your new game.";
     }
 
     public String logout() {
@@ -131,7 +143,7 @@ public class ChessClient {
             }
         }
 
-        return "something went wrong. try logging out again";
+        return "Something went wrong. Try logging out again";
     }
 
 
@@ -150,7 +162,7 @@ public class ChessClient {
         }
         else {
             currAuthToken = null;
-            return "make sure to enter username email and password";
+            return "Make sure to enter a valid username, password, and email.";
         }
     }
 
@@ -167,7 +179,7 @@ public class ChessClient {
                 return "success";
             }
         }
-        return "please enter a valid username and password";
+        return "Please enter a valid username and password";
     }
 
     public String quit() {
