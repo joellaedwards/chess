@@ -114,7 +114,7 @@ public class Repl {
 
         String textColor = SET_TEXT_COLOR_RED;
 
-        if (result.contains("white") || result.contains("observing")) {
+        if (result.contains("white") || result.contains("Observing")) {
             printWhiteBoard();
         }
 

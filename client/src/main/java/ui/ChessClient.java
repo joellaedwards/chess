@@ -65,9 +65,9 @@ public class ChessClient {
     public String observeGame(String... params) {
         if (params.length >=2 ) {
             int id = Integer.parseInt(params[1]);
-            return "Obsering game.";
+            return "Observing game.";
         }
-        return "Please enter a valid game number.";
+        return "Please enter a valid game number and unassigned color.";
     }
 
     public String playGame(String... params) throws ResponseException {
@@ -91,7 +91,7 @@ public class ChessClient {
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
 //            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
-                return "Game joined!";
+                return "Game joined as " + color.toLowerCase();
             }
             return "Please enter a valid game number.";
         }
