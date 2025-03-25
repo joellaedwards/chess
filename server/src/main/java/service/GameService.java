@@ -46,15 +46,19 @@ public class GameService {
     }
 
     public int joinGame(JoinGameObj joinObj, String authToken) {
+        System.out.println("in joingame in gameservice");
         AuthData authFound = dataAccess.getAuth(authToken);
         if (authFound != null) {
+            System.out.println("authFound!");
             //authToken found, valid user
             GameData gameToJoin = dataAccess.getGame(joinObj.gameID);
             if (gameToJoin == null) {
+                System.out.println("no game to join.");
                 return 3;
             }
             boolean success = dataAccess.joinGame(gameToJoin, joinObj.playerColor, authFound.username());
             if (success) {
+                System.out.println("wohoo we did it in gameservice");
                 return 1;
             }
             else {

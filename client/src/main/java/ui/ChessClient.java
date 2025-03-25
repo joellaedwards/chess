@@ -8,6 +8,7 @@ import server.ServerFacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class ChessClient {
@@ -58,12 +59,15 @@ public class ChessClient {
             String color = params[2];
             System.out.println("color: " + color);
             ChessGame.TeamColor myColor;
-            if (color == "WHITE") {
+            if (Objects.equals(color, "white")) {
                 myColor = ChessGame.TeamColor.WHITE;
             }
-            else {
+            else if (Objects.equals(color, "black")){
                 System.out.println("color black");
                 myColor = ChessGame.TeamColor.BLACK;
+            }
+            else {
+                return "please enter a valid color";
             }
             ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
             Object joinInfo = server.joinGame(joinObj, currAuthToken);

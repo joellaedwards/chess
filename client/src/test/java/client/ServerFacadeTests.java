@@ -1,7 +1,6 @@
 package client;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import exception.ResponseException;
 import model.*;
@@ -223,14 +222,45 @@ public class ServerFacadeTests {
         AuthData returnedData = facade.registerUser(myUser);
 
         Object createdGame = facade.createGame(returnedData.authToken(), "myGame");
-
         System.out.println("createdgame: " + createdGame);
 
         ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(ChessGame.TeamColor.WHITE, 1);
         facade.joinGame(joinObj, returnedData.authToken());
+
+
+        facade.logoutUser(returnedData.authToken());
+        UserData myUser2 = new UserData("name5", "pass", "email");
+        facade.registerUser(myUser2);
+
         Object joined2 = facade.joinGame(joinObj, returnedData.authToken());
 
         assertNull(joined2);
     }
+
+
+    @Test
+    public void playGamePass2() throws ResponseException {
+        facade.clearAll();
+
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
+
+        Object createdGame = facade.createGame(returnedData.authToken(), "myGame");
+        System.out.println("createdgame: " + createdGame);
+
+        ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(ChessGame.TeamColor.WHITE, 1);
+        facade.joinGame(joinObj, returnedData.authToken());
+
+
+        facade.logoutUser(returnedData.authToken());
+        UserData myUser2 = new UserData("name5", "pass", "email");
+        ServerFacade.JoinGameObj join2 = new ServerFacade.JoinGameObj(ChessGame.TeamColor.BLACK, 1);
+        returnedData = facade.registerUser(myUser2);
+
+        Object joined2 = facade.joinGame(join2, returnedData.authToken());
+
+        LinkedTreeMap<?, ?> expected = new LinkedTreeMap<>();
+
+        assertEquals(expected, joined2);    }
 
 }
