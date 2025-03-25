@@ -15,7 +15,7 @@ public class ChessClient {
     private String username = null;
     private final ServerFacade server;
     private final String serverUrl;
-    private State state = State.SIGNEDOUT;
+    public static State state = State.SIGNEDOUT;
     private String currAuthToken = null;
 
 
@@ -26,7 +26,7 @@ public class ChessClient {
 
 
     public Object eval(String input) throws ResponseException {
-        System.out.println("input: " + input);
+//        System.out.println("input: " + input);
         var tokens = input.toLowerCase().split(" ");
         var cmd = (tokens.length > 0) ? tokens[0] : "help";
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
@@ -52,7 +52,7 @@ public class ChessClient {
     }
 
     public String clearAll() throws ResponseException {
-        System.out.println("clearing...");
+//        System.out.println("clearing...");
         server.logoutUser(currAuthToken);
         state = State.SIGNEDOUT;
         server.clearAll();
@@ -60,32 +60,30 @@ public class ChessClient {
     }
 
     public String playGame(String... params) throws ResponseException {
-        System.out.println("in playgame");
-        System.out.println("num params: " + params.length);
+//        System.out.println("in playgame");
+//        System.out.println("num params: " + params.length);
         if (params.length >= 3) {
             int id = Integer.parseInt(params[1]);
             String color = params[2];
-            System.out.println("color: " + color);
+//            System.out.println("color: " + color);
             ChessGame.TeamColor myColor;
             if (Objects.equals(color, "white")) {
                 myColor = ChessGame.TeamColor.WHITE;
             }
             else if (Objects.equals(color, "black")){
-                System.out.println("color black");
                 myColor = ChessGame.TeamColor.BLACK;
             }
             else {
-                return "Please enter a valid color";
+                return "Please enter a valid color. Black or White.";
             }
             ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
-            System.out.println("joinInfo: " + joinInfo);
+//            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
                 // TODO make this show the board :)
-                return "success!";
+                return "Game joined!";
             }
             return "Please enter a valid game number.";
-            // TODO handle if the color is already taken
         }
         return "Please enter a game number and the color you wish to play as.";
     }
@@ -118,14 +116,14 @@ public class ChessClient {
 
 
     public String createGame(String... params) throws ResponseException {
-        System.out.println("in creategame in chess client");
-        System.out.println("params length: " + params.length);
+//        System.out.println("in creategame in chess client");
+//        System.out.println("params length: " + params.length);
         if (params.length >= 2) {
-            System.out.println("params at 1: " + params[1]);
+//            System.out.println("params at 1: " + params[1]);
             Object returnedGame = server.createGame(currAuthToken, params[1]);
             if (returnedGame != null) {
-                System.out.println("returned game: " + returnedGame);
-                return "success in creategame";
+//                System.out.println("returned game: " + returnedGame);
+                return "Game created!";
             }
             return "You are not authorized to create a new game.";
         }
@@ -133,32 +131,31 @@ public class ChessClient {
     }
 
     public String logout() {
-        System.out.println("in logout in chessclient");
+//        System.out.println("in logout in chessclient");
         if (currAuthToken != null) {
             if (server.logoutUser(currAuthToken) != null) {
-                System.out.println("logged out wohoo!");
                 state = State.SIGNEDOUT;
                 currAuthToken = null;
-                return "successfully logged out!";
+                return "Successfully logged out!";
             }
         }
 
-        return "Something went wrong. Try logging out again";
+        return "Something went wrong. Please try logging out again";
     }
 
 
     public String register(String... params) {
-        System.out.println("register within chessClient!!");
+//        System.out.println("register within chessClient!!");
         if (params.length >= 3) {
             UserData user = new UserData(params[0], params[1], params[2]);
             AuthData auth = server.registerUser(user);
             if (auth != null) {
                 currAuthToken = auth.authToken();
                 state = State.SIGNEDIN;
-                System.out.println("registered and signed in!!");
-                return "success";
+//                System.out.println("Registered and signed in");
+                return "Registered and signed in. Welcome to chess!";
             }
-            return "User already registered.";
+            return "User already registered. Login with username and password.";
         }
         else {
             currAuthToken = null;
@@ -167,7 +164,7 @@ public class ChessClient {
     }
 
     public String login(String... params) {
-        System.out.println("login within chessClient!");
+//        System.out.println("login within chessClient!");
         if (params.length >= 2) {
             UserData user = new UserData(params[0], params[1], null);
             AuthData auth = server.loginUser(user);
@@ -175,11 +172,11 @@ public class ChessClient {
                 state = State.SIGNEDIN;
                 username = user.username();
                 currAuthToken = auth.authToken();
-                System.out.println("logged in!");
-                return "success";
+//                System.out.println("logged in!");
+                return "Logged in!";
             }
         }
-        return "Please enter a valid username and password";
+        return "Please enter a valid username and password.";
     }
 
     public String quit() {
@@ -189,18 +186,13 @@ public class ChessClient {
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
+                    
                     - Register <username> <password> <email>
                     - Login <username> <password>
-                    - Quit playing chess
                     - Help
+                    - Quit
                     """;
-            // Help - Displays text informing user what actions to take
 
-            // Quit exists program
-
-            // Register - prompts user to input registration info. if success
-            // client should be logged in and go to postlogin UI
-            //
         }
         else if (state == State.SIGNEDIN) {
             return """
@@ -212,11 +204,8 @@ public class ChessClient {
                     - Help
                     """;
         }
-        return """
-                omg youre signed in yay!
-                """;
+
+        return "Something went really wrong. Check the state.";
     }
-
-
 
 }
