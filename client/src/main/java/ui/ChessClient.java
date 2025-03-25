@@ -1,11 +1,10 @@
 package ui;
 
-import chess.ChessGame;
+import com.google.gson.internal.LinkedTreeMap;
 import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,18 +49,26 @@ public class ChessClient {
 
 
     public String listGames() throws ResponseException {
-        System.out.println("in listgames in chessclient");
-        ArrayList gameList = (ArrayList) server.listGames(currAuthToken);
-        if (gameList != null) {
-            ArrayList<String> stringList = new ArrayList<>();
-            for (int i = 0; i < gameList.size(); ++i) {
-                ServerFacade.ListGameObj currGame = (ServerFacade.ListGameObj) gameList.get(i);
-                String stringToAdd = (i + 1) + currGame.gameName + currGame.blackUsername + currGame.whiteUsername;
-                stringList.add(stringToAdd);
+
+        Object listOfGames = server.listGames(currAuthToken);
+
+        if (listOfGames instanceof LinkedTreeMap<?, ?>) {
+            LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
+            StringBuilder fullList = new StringBuilder();
+            int i = 1;
+            for (Object game : treeMap.get("games")) {
+                if (game instanceof LinkedTreeMap<?, ?>) {
+                    LinkedTreeMap<String, String> LinkedTreeMap;
+                    LinkedTreeMap<String, String> gameInfo = (LinkedTreeMap<String, String>) game;
+                    String stringToAdd = i + ".   " + gameInfo.get("gameName") + ",   " + gameInfo.get("whiteUsername")
+                            + ",   " + gameInfo.get("blackUsername");
+                    ++i;
+                    fullList.append(stringToAdd).append('\n');
+                }
             }
-            return String.valueOf(stringList);
+            return fullList.toString();
         }
-        return "no games";
+        return null;
     }
 
 
@@ -79,7 +86,7 @@ public class ChessClient {
         return "something went wrong in create game";
     }
 
-    public String logout() throws ResponseException {
+    public String logout() {
         System.out.println("in logout in chessclient");
         if (currAuthToken != null) {
             if (server.logoutUser(currAuthToken) != null) {
@@ -94,7 +101,7 @@ public class ChessClient {
     }
 
 
-    public String register(String... params) throws ResponseException {
+    public String register(String... params) {
         System.out.println("register within chessClient!!");
         if (params.length >= 3) {
             UserData user = new UserData(params[0], params[1], params[2]);
@@ -113,13 +120,14 @@ public class ChessClient {
         }
     }
 
-    public String login(String... params) throws ResponseException {
+    public String login(String... params) {
         System.out.println("login within chessClient!");
         if (params.length >= 2) {
             UserData user = new UserData(params[0], params[1], null);
             AuthData auth = server.loginUser(user);
             if (auth != null) {
                 state = State.SIGNEDIN;
+                username = user.username();
                 currAuthToken = auth.authToken();
                 System.out.println("logged in!");
                 return "success";

@@ -1,17 +1,14 @@
 package client;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
-import dataaccess.DataAccess;
-import dataaccess.MySqlDataAccess;
 import exception.ResponseException;
 import model.*;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.ServerFacade;
-import service.AuthService;
-import service.UserService;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -160,6 +157,41 @@ public class ServerFacadeTests {
     }
 
 
+    @Test
+    public void listGamePass() throws ResponseException {
+        facade.clearAll();
+        UserData myUser = new UserData("name4", "password2", "email@gmail.com");
+        AuthData returnedData = facade.registerUser(myUser);
 
+        Object createdGame = facade.createGame(returnedData.authToken(), "myGame");
+        createdGame = facade.createGame(returnedData.authToken(), "newGame");
+        createdGame = facade.createGame(returnedData.authToken(), "game3");
+
+        Object listOfGames = facade.listGames(returnedData.authToken());
+
+        ArrayList<String> stringList = new ArrayList<>();
+
+
+        if (listOfGames instanceof LinkedTreeMap<?, ?>) {
+            LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
+            stringList = new ArrayList<>();
+            Set keySet = ((LinkedTreeMap<?, ?>) listOfGames).keySet();
+            int i = 1;
+            for (Object game : treeMap.get("games")) {
+                if (game instanceof LinkedTreeMap<?, ?>) {
+                    LinkedTreeMap<String, String> gameInfo = (LinkedTreeMap<String, String>) game;
+                    String stringToAdd = i + ".   " + gameInfo.get("gameName") + ",   " + gameInfo.get("whiteUsername") + ",   " + gameInfo.get("blackUsername");
+                    ++i;
+                    stringList.add(stringToAdd);
+                }
+
+            }
+            System.out.println("printing stringlist:");
+            for (String s : stringList) {
+                System.out.println(s);
+            }
+            assertEquals(3, stringList.size());
+        }
+    }
 
 }

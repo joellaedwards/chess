@@ -17,7 +17,7 @@ public class Repl {
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        String line = "";
+        String line;
         while (!result.equals("quit")) {
             printPrompt();
             line = scanner.nextLine();
@@ -26,12 +26,12 @@ public class Repl {
             try {
                 System.out.println("Line: " + line);
                 result = (String) client.eval(line);
-                System.out.println("results: " + result);
+                System.out.println("results: \n" + result);
 
             } catch (ResponseException e) {
                 var msg = e.toString();
                 System.out.print(msg);
-//                throw new RuntimeException(e);
+                throw new RuntimeException(e);
             }
 
         }

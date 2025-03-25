@@ -10,7 +10,6 @@ import model.UserData;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 
 public class ServerFacade {
@@ -46,7 +45,7 @@ public class ServerFacade {
         }
     }
 
-        public AuthData registerUser(UserData user) throws ResponseException {
+        public AuthData registerUser(UserData user) {
         var path = "/user";
         try {
             return this.makeRequest("POST", path, user, AuthData.class, null);
@@ -56,7 +55,7 @@ public class ServerFacade {
         }
     }
 
-    public AuthData loginUser(UserData user) throws ResponseException {
+    public AuthData loginUser(UserData user) {
         var path = "/session";
         try {
             return this.makeRequest("POST", path, user, AuthData.class, null);
@@ -66,7 +65,7 @@ public class ServerFacade {
         }
     }
 
-    public Object logoutUser(String authToken) throws ResponseException {
+    public Object logoutUser(String authToken) {
         var path = "/session";
         System.out.println("authtoken hereee: " + authToken);
         try {
@@ -92,7 +91,7 @@ public class ServerFacade {
     public Object listGames(String authToken) throws ResponseException {
         var path = "/game";
         try {
-            return this.makeRequest("GET", path, authToken, Object.class, null);
+            return this.makeRequest("GET", path, null, Object.class, authToken);
         } catch (ResponseException ex) {
             System.out.println("ResponseException in listGames: " + ex);
             return null;
