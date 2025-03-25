@@ -63,19 +63,19 @@ public class ChessClient {
     }
 
     public String observeGame(String... params) {
-        if (params.length >=2 ) {
-            int id = Integer.parseInt(params[1]);
+        if (params.length >= 1 ) {
+            int id = Integer.parseInt(params[0]);
             return "Observing game.";
         }
-        return "Please enter a valid game number and unassigned color.";
+        return "Please enter a valid game number.";
     }
 
     public String playGame(String... params) throws ResponseException {
 //        System.out.println("in playgame");
 //        System.out.println("num params: " + params.length);
-        if (params.length >= 3) {
-            int id = Integer.parseInt(params[1]);
-            String color = params[2];
+        if (params.length >= 2) {
+            int id = Integer.parseInt(params[0]);
+            String color = params[1];
 //            System.out.println("color: " + color);
             ChessGame.TeamColor myColor;
             if (Objects.equals(color, "white")) {
@@ -93,7 +93,7 @@ public class ChessClient {
             if (joinInfo != null) {
                 return "Game joined as " + color.toLowerCase();
             }
-            return "Please enter a valid game number.";
+            return "Please enter a valid game number and unassigned color.";
         }
         return "Please enter a game number and the color you wish to play as.";
     }
@@ -128,9 +128,9 @@ public class ChessClient {
     public String createGame(String... params) throws ResponseException {
 //        System.out.println("in creategame in chess client");
 //        System.out.println("params length: " + params.length);
-        if (params.length >= 2) {
+        if (params.length >= 1) {
 //            System.out.println("params at 1: " + params[1]);
-            Object returnedGame = server.createGame(currAuthToken, params[1]);
+            Object returnedGame = server.createGame(currAuthToken, params[0]);
             if (returnedGame != null) {
 //                System.out.println("returned game: " + returnedGame);
                 return "Game created!";
@@ -183,7 +183,7 @@ public class ChessClient {
                 username = user.username();
                 currAuthToken = auth.authToken();
 //                System.out.println("logged in!");
-                return "Logged in!";
+                return "Logged in! Type 'help' for options.";
             }
         }
         return "Please enter a valid username and password.";
@@ -208,11 +208,11 @@ public class ChessClient {
             return """
                     
                     - Logout
-                    - Create Game <GameName>
-                    - List Games
-                    - Play Game <Game Number> <Color>
-                    - Observe Game <Game Number>
-                    - Help
+                    - Create <GameName> - create new game
+                    - List - list all games
+                    - Play <Game Number> <Color> - play game
+                    - Observe <Game Number> - observe a game
+                    - Help - list options
                     """;
         }
 
