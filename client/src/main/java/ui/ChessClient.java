@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import com.google.gson.internal.LinkedTreeMap;
 import model.*;
 import exception.ResponseException;
@@ -42,9 +43,37 @@ public class ChessClient {
                 case "create" -> createGame(params);
                 case "list" -> listGames();
                 case "quit" -> quit();
+                case "play" -> playGame(params);
                 default -> help();
             };
         }
+    }
+
+
+    public String playGame(String... params) throws ResponseException {
+        System.out.println("in playgame");
+        System.out.println("num params: " + params.length);
+        if (params.length >= 3) {
+            int id = Integer.parseInt(params[1]);
+            String color = params[2];
+            System.out.println("color: " + color);
+            ChessGame.TeamColor myColor;
+            if (color == "WHITE") {
+                myColor = ChessGame.TeamColor.WHITE;
+            }
+            else {
+                myColor = ChessGame.TeamColor.BLACK;
+            }
+            ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
+            Object joinInfo = server.joinGame(joinObj, currAuthToken);
+
+            if (joinInfo != null) {
+                return "success!";
+            }
+
+        }
+        System.out.println("playGame returning null");
+        return null;
     }
 
 

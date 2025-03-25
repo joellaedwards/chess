@@ -98,12 +98,17 @@ public class ServerFacade {
         }
     }
 
-    public int joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {
+    public Object joinGame(JoinGameObj joinObj, String authToken) throws ResponseException {
         var path = "/game";
         // TODO check what this returns in the server fr
-        joinObj newJoin = new joinObj(joinObj, authToken);
 
-        return this.makeRequest("PUT", path, newJoin, int.class, null);
+        try {
+            System.out.println("trying makerequest in joingame");
+            return this.makeRequest("PUT", path, joinObj, Object.class, authToken);
+        } catch (ResponseException ex) {
+            System.out.println("ResponseException in joinGame: " + ex);
+            return null;
+        }
     }
 
     public void clearAll() throws ResponseException {
