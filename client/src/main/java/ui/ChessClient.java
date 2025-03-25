@@ -6,7 +6,6 @@ import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -76,7 +75,7 @@ public class ChessClient {
             if (listOfGames instanceof LinkedTreeMap<?,?>) {
                 LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
                 ArrayList<Object> onlyGames = treeMap.get("games");
-                if (onlyGames.size() >= id) {
+                if (onlyGames.size() >= id && id >= 1) {
                     return "Observing game.";
                 }
             }

@@ -43,7 +43,8 @@ public class Repl {
 
     private void printWhiteBoard() {
         System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     ");
+                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
+                + RESET_BG_COLOR);
         System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
                 + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_BLUE + "  R  "  + SET_BG_COLOR_BLACK + "  N  "
                 + SET_BG_COLOR_LIGHT_GREY + "  B  " + SET_BG_COLOR_BLACK + "  Q  "
@@ -91,7 +92,7 @@ public class Repl {
                 + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  2  "
                 + RESET_BG_COLOR
         );
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  1  "
                 + SET_BG_COLOR_BLACK + SET_TEXT_COLOR_RED + "  R  "
                 + SET_BG_COLOR_LIGHT_GREY + "  N  "
                 + SET_BG_COLOR_BLACK + "  B  "
@@ -100,13 +101,12 @@ public class Repl {
                 + SET_BG_COLOR_LIGHT_GREY + "  B  "
                 + SET_BG_COLOR_BLACK + "  N  "
                 + SET_BG_COLOR_LIGHT_GREY + "  R  "
-                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
-                + RESET_BG_COLOR
-        );
+                + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  1  "
+                + RESET_BG_COLOR);
 
         System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
                 + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-        );
+                + RESET_BG_COLOR);
 
     }
 
@@ -120,7 +120,8 @@ public class Repl {
 
         else if (result.contains("joined")) {
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
-                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     ");
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  1  "
                     + SET_BG_COLOR_LIGHT_GREY + SET_TEXT_COLOR_RED + "  R  " + SET_BG_COLOR_BLACK + "  N  "
                     + SET_BG_COLOR_LIGHT_GREY + "  B  " + SET_BG_COLOR_BLACK + "  K  "
@@ -176,9 +177,9 @@ public class Repl {
                     + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  8  "
                     + RESET_BG_COLOR
             );
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                    + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-            );
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
         }
         else if (result.contains("invalid") || result.contains("Please") ||
                 result.contains("valid") || result.contains("already") || result.contains("authorized")) {
