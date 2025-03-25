@@ -62,6 +62,7 @@ public class ChessClient {
                 myColor = ChessGame.TeamColor.WHITE;
             }
             else {
+                System.out.println("color black");
                 myColor = ChessGame.TeamColor.BLACK;
             }
             ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
@@ -70,10 +71,10 @@ public class ChessClient {
             if (joinInfo != null) {
                 return "success!";
             }
-
+            return "game not joined";
+            // TODO handle if the color is already taken
         }
-        System.out.println("playGame returning null");
-        return null;
+        return "game not joined 2";
     }
 
 
