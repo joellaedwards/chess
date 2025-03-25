@@ -6,6 +6,7 @@ import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -62,19 +63,38 @@ public class ChessClient {
         return "reset!";
     }
 
-    public String observeGame(String... params) {
-        if (params.length >= 1 ) {
-            int id = Integer.parseInt(params[0]);
-            return "Observing game.";
+    public String observeGame(String... params) throws ResponseException {
+        int id = 0;
+        if (params.length == 1 ) {
+            try {
+                id = Integer.parseInt(params[0]);
+            } catch (NumberFormatException ex) {
+                return "Please enter a number value for game number.";
+            }
+
+            Object listOfGames = server.listGames(currAuthToken);
+            if (listOfGames instanceof LinkedTreeMap<?,?>) {
+                LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
+                ArrayList<Object> onlyGames = treeMap.get("games");
+                if (onlyGames.size() >= id) {
+                    return "Observing game.";
+                }
+            }
         }
-        return "Please enter a valid game number.";
+        return "Please enter a 'observe' and a valid game number.";
+
     }
 
     public String playGame(String... params) throws ResponseException {
 //        System.out.println("in playgame");
 //        System.out.println("num params: " + params.length);
-        if (params.length >= 2) {
-            int id = Integer.parseInt(params[0]);
+        int id = 0;
+        if (params.length == 2) {
+            try {
+                id = Integer.parseInt(params[0]);
+            } catch (NumberFormatException ex) {
+                return "Please enter a number value for game number.";
+            }
             String color = params[1];
 //            System.out.println("color: " + color);
             ChessGame.TeamColor myColor;
@@ -128,8 +148,8 @@ public class ChessClient {
     public String createGame(String... params) throws ResponseException {
 //        System.out.println("in creategame in chess client");
 //        System.out.println("params length: " + params.length);
-        if (params.length >= 1) {
-//            System.out.println("params at 1: " + params[1]);
+        if (params.length == 1) {
+//            System.out.println("params at 0: " + params[0]);
             Object returnedGame = server.createGame(currAuthToken, params[0]);
             if (returnedGame != null) {
 //                System.out.println("returned game: " + returnedGame);
@@ -156,7 +176,7 @@ public class ChessClient {
 
     public String register(String... params) {
 //        System.out.println("register within chessClient!!");
-        if (params.length >= 3) {
+        if (params.length == 3) {
             UserData user = new UserData(params[0], params[1], params[2]);
             AuthData auth = server.registerUser(user);
             if (auth != null) {
