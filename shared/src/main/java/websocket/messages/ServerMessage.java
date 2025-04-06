@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
-    String serverMessage;
+    String message;
     String game;
 
     public enum ServerMessageType {
@@ -21,9 +21,10 @@ public class ServerMessage {
         NOTIFICATION
     }
 
-    public ServerMessage(ServerMessageType type, String game) {
+    public ServerMessage(ServerMessageType type, String game, String message) {
         this.serverMessageType = type;
         this.game = game;
+        this.message = message;
     }
 
     public ServerMessageType getServerMessageType() {

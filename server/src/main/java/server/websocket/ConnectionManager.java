@@ -48,17 +48,23 @@ public class ConnectionManager {
                     System.out.println("checking conn: " + c.authToken);
                         if(c.session.isOpen()) {
 
-//                            if (c.authToken != exceptAuthToken) {
-//                                System.out.println("send notification");
-//                                // return notification to others
-//                            }
-//                            else {
-                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "123");
+                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                                System.out.println("send notification");
+                                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                        null, "someone just joined ur game!");
+                                var notifJson = new Gson().toJson(notification);
+                                System.out.println(notifJson);
+
+                                c.session.getRemote().sendString(notifJson);
+                                // return notification to others
+                            }
+                            else {
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "123", null);
                                 System.out.println("sending message to authToken: " + c.authToken);
                                 var jsonString = new Gson().toJson(loadMessage);
                                 System.out.println(jsonString);
                                 c.session.getRemote().sendString(jsonString);
-//                            }
+                            }
                         }
 //                    if (!Objects.equals(c.authToken, exceptAuthToken)) {
 //                        System.out.println("sending message to authToken: " + c.authToken);
