@@ -7,6 +7,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import org.eclipse.jetty.websocket.api.Session;
+import server.Server;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -46,12 +47,8 @@ public class WebSocketHandler {
     private void connect(int gameId, String authToken, Session session) throws IOException {
         System.out.println("inside connect");
         connections.add(gameId, authToken, session);
-        Map<String, String> messageMap = Map.of("message", "bestie just got added! wohoo!");
-        //        var message = String.format("%s is in the game", authToken);
         System.out.println("should be loading game now..");
-//        System.out.println("length of connections: " + connections.);
-        var notification = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "wohoo! in game!");
-        connections.broadcast(gameId, notification, authToken);
+        connections.broadcast(gameId,authToken);
 
         // connect to the game in the whole huge listOfChessGames list
         // that corresponds in one way or another to the gameId

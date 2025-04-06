@@ -31,7 +31,7 @@ public class ConnectionManager {
         sessionMap.remove(gameId);
     }
 
-    public void broadcast(int gameId, ServerMessage message, String exceptAuthToken) throws IOException {
+    public void broadcast(int gameId, String exceptAuthToken) throws IOException {
         System.out.println("inside broadcast");
         System.out.println("length of sessionMap: " + sessionMap.values());
         ArrayList<Integer> removeList = new ArrayList<>();
@@ -47,10 +47,18 @@ public class ConnectionManager {
                 for (var c : currConnections) {
                     System.out.println("checking conn: " + c.authToken);
                         if(c.session.isOpen()) {
-                            System.out.println("sending message to authToken: " + c.authToken);
-                            var jsonString = new Gson().toJson(message);
-//                        c.session.getRemote().sendString(jsonString);
-                            c.send(jsonString);
+
+//                            if (c.authToken != exceptAuthToken) {
+//                                System.out.println("send notification");
+//                                // return notification to others
+//                            }
+//                            else {
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "123");
+                                System.out.println("sending message to authToken: " + c.authToken);
+                                var jsonString = new Gson().toJson(loadMessage);
+                                System.out.println(jsonString);
+                                c.session.getRemote().sendString(jsonString);
+//                            }
                         }
 //                    if (!Objects.equals(c.authToken, exceptAuthToken)) {
 //                        System.out.println("sending message to authToken: " + c.authToken);
