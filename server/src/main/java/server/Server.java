@@ -3,6 +3,7 @@ import com.google.gson.Gson;
 
 import dataaccess.*;
 import model.*;
+import server.websocket.WebSocketHandler;
 import service.*;
 import spark.*;
 import service.GameService;
@@ -13,12 +14,19 @@ import java.util.Map;
 
 public class Server {
 
+//    private final GameService service;
+    private final WebSocketHandler webSocketHandler;
+
     public Server() {
+//        this.service = service;
+        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints and handle exceptions here.
 

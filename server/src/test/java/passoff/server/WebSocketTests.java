@@ -70,6 +70,7 @@ public class WebSocketTests {
     @Order(2)
     @DisplayName("Normal Connect")
     public void connectGood() {
+        System.out.println("starting normal connect:");
         setupNormalGame();    //Connects 3 Users to the game, and notifies others upon connection
     }
 
