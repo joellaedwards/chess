@@ -28,8 +28,13 @@ public class ConnectionManager {
 
         // TODO check list of all games see if the gameid is there
 
-
+        var authList = dataAccess.getAuth(authToken);
         var gamesList = dataAccess.listGames();
+
+        if (authList == null) {
+            System.out.println("authToken not found. returning false");
+            return false;
+        }
 
         for (var game : gamesList) {
             if (game.gameID() == gameId) {
