@@ -1,7 +1,6 @@
 package passoff.server;
 
 import chess.*;
-import dataaccess.DataAccessException;
 import org.junit.jupiter.api.*;
 import passoff.model.*;
 import passoff.websocket.*;
@@ -32,7 +31,7 @@ public class WebSocketTests {
     }
 
     @BeforeAll
-    public static void init() throws URISyntaxException, DataAccessException {
+    public static void init() throws URISyntaxException {
         server = new Server();
         var port = Integer.toString(server.run(0));
         System.out.println("Started test HTTP server on " + port);

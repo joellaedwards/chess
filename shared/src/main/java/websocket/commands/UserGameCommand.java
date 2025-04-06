@@ -1,5 +1,7 @@
 package websocket.commands;
 
+import chess.ChessMove;
+
 import java.util.Objects;
 
 /**
@@ -60,3 +62,4 @@ public class UserGameCommand {
         return Objects.hash(getCommandType(), getAuthToken(), getGameID());
     }
 }
+

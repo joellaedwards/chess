@@ -8,6 +8,7 @@ import passoff.model.TestListResult;
 import server.Server;
 import server.ServerFacade;
 import service.GameService;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.lang.reflect.Array;
@@ -90,68 +91,71 @@ public class ConnectionManager {
         sessionMap.remove(gameId);
     }
 
-    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean added) throws IOException {
+    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType) throws IOException {
         System.out.println("inside broadcast");
-        System.out.println("length of sessionMap: " + sessionMap.values());
-        ArrayList<Integer> removeList = new ArrayList<>();
-        // just tell it to the people in that game but not the one who is literally in this session
-        // bc they alr know they made that move or that they're there etc
+
         System.out.println("gameid: " + gameId);
-        if (!added) {
-            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, "Game not found.");
+        if (!success) {
+            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, msg);
             var errorJson = new Gson().toJson(errorMessage);
             currSession.getRemote().sendString(errorJson);
-        }
-        else {
+        } else {
         for (var k : sessionMap.keySet()) {
             if (k == gameId) {
                 // all sessions associated w the current gameid
                 ArrayList<Connection> currConnections = sessionMap.get(k);
 
-                for (var c : currConnections) {
-                    System.out.println("checking conn: " + c.authToken);
-                    if (c.session.isOpen()) {
-
-                        if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                            System.out.println("send notification");
-                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                    null, "someone just joined ur game!", null);
-                            var notifJson = new Gson().toJson(notification);
-                            System.out.println(notifJson);
-
-                            c.session.getRemote().sendString(notifJson);
-                            // return notification to others
-                        } else {
-                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "123", null, null);
+                if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+                    System.out.println("make move messages");
+                    // all the connections
+                    for (var c : currConnections) {
+                        if (c.session.isOpen()) {
+                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "game name", null, null);
                             System.out.println("sending message to authToken: " + c.authToken);
                             var jsonString = new Gson().toJson(loadMessage);
                             System.out.println(jsonString);
                             c.session.getRemote().sendString(jsonString);
+                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                        null, msg, null);
+                                var notifJson = new Gson().toJson(notification);
+                                System.out.println(notifJson);
+                                c.session.getRemote().sendString(notifJson);
+                            }
                         }
                     }
-//                    if (!Objects.equals(c.authToken, exceptAuthToken)) {
-//                        System.out.println("sending message to authToken: " + c.authToken);
-//                        var jsonString = new Gson().toJson(message);
-//                        c.session.getRemote().sendString(jsonString);
-//                    }
+
+
+                } else if (commandType == UserGameCommand.CommandType.CONNECT) {
+                    for (var c : currConnections) {
+                        if (c.session.isOpen()) {
+                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                                System.out.println("send notification");
+                                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                        null, msg, null);
+                                var notifJson = new Gson().toJson(notification);
+                                System.out.println(notifJson);
+
+                                c.session.getRemote().sendString(notifJson);
+                                // return notification to others
+                            } else {
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "game name", null, null);
+                                System.out.println("sending message to authToken: " + c.authToken);
+                                var jsonString = new Gson().toJson(loadMessage);
+                                System.out.println(jsonString);
+                                c.session.getRemote().sendString(jsonString);
+                            }
+                        }
+                    }
+
+
+                }
+
                 }
             }
         }
 
         }
-
-
-        // frankly idk what these do lol
-//            else {
-//                System.out.println("apparently it doesnt contain the gameId");
-//                removeList.add(gameId);
-//            }
-//
-//        for (int c : removeList) {
-//            sessionMap.remove(c);
-//        }
-
-    }
 
     }
 

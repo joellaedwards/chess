@@ -1,6 +1,8 @@
 package server.websocket;
 
+import chess.ChessGame;
 import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
@@ -12,6 +14,7 @@ import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import org.eclipse.jetty.websocket.api.Session;
 import server.Server;
 import server.ServerFacade;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -35,7 +38,6 @@ public class WebSocketHandler {
     }
 
     @OnWebSocketMessage
-
     public void onMessage(Session session, String message) throws IOException, DataAccessException {
         DataAccess dataAccess = new MySqlDataAccess();
 
@@ -44,13 +46,32 @@ public class WebSocketHandler {
 
 
         UserGameCommand userGameCommand = new Gson().fromJson(message, UserGameCommand.class);
+        MakeMoveCommand makeMoveCommand = new Gson().fromJson(message, MakeMoveCommand.class);
         switch (userGameCommand.getCommandType()) {
             case CONNECT -> connect(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
             // idk there's probs some type of string of params or something here.
             // test what comes through.
-//            case MAKE_MOVE -> makeMove(userGameCommand.getAuthToken(), userGameCommand.getGameID(), move);
+            case MAKE_MOVE -> makeMove(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID(), makeMoveCommand.getMove(), session, dataAccess);
 //            case LEAVE -> leaveGame;
 //            case RESIGN -> resign;
+        }
+    }
+
+    private void makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess) throws IOException {
+        GameData currGameData = dataAccess.getGame(gameId);
+        ChessGame currGame = currGameData.game();
+
+        if (dataAccess.getAuth(authToken) == null) {
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
+        } else {
+            try {
+                System.out.println("try make move");
+                currGame.makeMove(move);
+                connections.broadcast(gameId, authToken, session, true, "Valid move.", UserGameCommand.CommandType.MAKE_MOVE);
+            } catch (InvalidMoveException e) {
+                System.out.println("not a valid move");
+                connections.broadcast(gameId, authToken, session,false, "Not a valid move.", UserGameCommand.CommandType.MAKE_MOVE);
+            }
         }
     }
 
@@ -63,11 +84,11 @@ public class WebSocketHandler {
 
         if (connections.add(gameId, authToken, session, dataAccess)) {
             System.out.println("should be loading game now..");
-            connections.broadcast(gameId, authToken, session, true);
+            connections.broadcast(gameId, authToken, session, true, authToken + "joined your game!", UserGameCommand.CommandType.CONNECT);
         }
         else {
             System.out.println("gameid not found");
-            connections.broadcast(gameId, authToken, session, false);
+            connections.broadcast(gameId, authToken, session, false, "gameid not found.", UserGameCommand.CommandType.CONNECT);
         }
 
         // connect to the game in the whole huge listOfChessGames list
@@ -82,9 +103,7 @@ public class WebSocketHandler {
 
     }
 
-    private void makeMove(String authToken, int gameId, ChessMove move) {
 
-    }
 
 
 }
