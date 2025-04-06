@@ -17,7 +17,7 @@ public class Server {
 //    private final GameService service;
     private final WebSocketHandler webSocketHandler;
 
-    public Server() {
+    public Server() throws DataAccessException {
 //        this.service = service;
         webSocketHandler = new WebSocketHandler();
     }
