@@ -19,6 +19,10 @@ public interface DataAccess {
     GameData getGame(int gameId);
 
     void makeMoveDataBase(ChessGame game, int gameId);
+
+
+    void playerLeaveGame(int gameId, ChessGame.TeamColor userColor) throws DataAccessException;
+
     void endGame(int gameId);
 
     boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username);

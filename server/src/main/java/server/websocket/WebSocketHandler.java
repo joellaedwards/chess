@@ -11,17 +11,11 @@ import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import org.eclipse.jetty.websocket.api.Session;
-import server.Server;
-import server.ServerFacade;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
-import websocket.messages.ServerMessage;
 
-import javax.sound.midi.SysexMessage;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 // make a list of current games. have it hold gameId. cause then that has
@@ -54,9 +48,41 @@ public class WebSocketHandler {
             // idk there's probs some type of string of params or something here.
             // test what comes through.
             case MAKE_MOVE -> makeMove(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID(), makeMoveCommand.getMove(), session, dataAccess);
-//            case LEAVE -> leaveGame;
+            case LEAVE -> leaveGame(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
             case RESIGN -> resign(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
         }
+    }
+
+
+
+    private int leaveGame(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException, DataAccessException {
+        if (dataAccess.getAuth(authToken) == null) {
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.LEAVE);
+        }
+        else {
+            AuthData currAuth = dataAccess.getAuth(authToken);
+            GameData currGame = dataAccess.getGame(gameId);
+            if (Objects.equals(currGame.blackUsername(), currAuth.username())) {
+                dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.BLACK);
+                System.out.println("broadcasting!");
+                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE);
+            }
+            else if (Objects.equals(currGame.whiteUsername(), currAuth.username())) {
+                dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.WHITE);
+                System.out.println("broadcasting!");
+                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE);
+            }
+            else {
+                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE);
+
+            }
+
+        }
+//        If a player is leaving, then the game is updated to remove the root client. Game is updated in the database.
+//        Server sends a Notification message to all other clients in that game informing them
+//        that the root client left. This applies to both players and observers.
+
+        return 0;
     }
 
     private int resign(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {

@@ -233,6 +233,33 @@ public class MySqlDataAccess implements DataAccess {
         return false;
     }
 
+    @Override
+    public void playerLeaveGame(int gameId, ChessGame.TeamColor userColor) throws DataAccessException {
+        System.out.println("leaving game in database");
+        var query = "";
+        if (userColor == ChessGame.TeamColor.WHITE) {
+            query = "UPDATE gametable SET whiteusername = NULL WHERE gameID = ?";
+        } else if (userColor == ChessGame.TeamColor.BLACK) {
+            query = "UPDATE gametable SET blackusername = NULL WHERE gameID = ?";
+        }
+
+            try (var conn = DatabaseManager.getConnection()) {
+
+                System.out.println("trying to leave");
+                PreparedStatement stmt = conn.prepareStatement(query);
+
+                stmt.setInt(1, gameId);
+                stmt.executeUpdate();
+
+
+            } catch (SQLException e) {
+                System.out.println("eh she didnt work");
+                throw new RuntimeException(e);
+            }
+
+    }
+
+    @Override
     public void endGame(int gameId) {
         var query = "UPDATE gametable SET GameOver = true WHERE gameID = ?";
 

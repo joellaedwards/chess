@@ -1,17 +1,10 @@
 package server.websocket;
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import dataaccess.DataAccess;
-import exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
-import passoff.model.TestListResult;
-import server.Server;
-import server.ServerFacade;
-import service.GameService;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import java.io.IOException;
@@ -87,10 +80,6 @@ public class ConnectionManager {
 
     }
 
-    public void remove(int gameId) {
-        sessionMap.remove(gameId);
-    }
-
     public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType) throws IOException {
 
         // could legit just pass in a ServerMessage then u don't have to deal w the whole omg this is an error thing
@@ -158,6 +147,19 @@ public class ConnectionManager {
                             var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null);
                             var notifJson = new Gson().toJson(notification);
                             c.session.getRemote().sendString(notifJson);
+                        }
+                    }
+                } else if (commandType == UserGameCommand.CommandType.LEAVE) {
+                    System.out.println("broadcasting leave inside manager");
+                    for (var c : currConnections) {
+                        if (c.session.isOpen()) {
+                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null);
+                                var json = new Gson().toJson(notif);
+                                c.session.getRemote().sendString(json);
+                            } else {
+                                c.session.close();
+                            }
                         }
                     }
                 }

@@ -55,6 +55,12 @@ public class InMemoryDataAccess implements DataAccess {
     }
 
     @Override
+    public void playerLeaveGame(int gameId, ChessGame.TeamColor userColor)  {
+
+    }
+
+
+    @Override
     public void endGame(int gameId) {
 
     }
