@@ -55,9 +55,29 @@ public class WebSocketHandler {
             // test what comes through.
             case MAKE_MOVE -> makeMove(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID(), makeMoveCommand.getMove(), session, dataAccess);
 //            case LEAVE -> leaveGame;
-//            case RESIGN -> resign;
+            case RESIGN -> resign(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
         }
     }
+
+    private void resign(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {
+        if (dataAccess.getAuth(authToken) == null) {
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
+        } else {
+
+            dataAccess.endGame(gameId);
+            connections.broadcast(gameId, authToken, session, true, "Player resigned :O", UserGameCommand.CommandType.RESIGN);
+
+
+//            Server marks the game as over (no more moves can be made). Game is updated in the database.
+//            Server sends a Notification message to all clients in that game informing them that the root
+//            client resigned. This applies to both players and observers.
+
+        }
+
+    }
+
+
+
 
     private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess) throws IOException {
         GameData currGameData = dataAccess.getGame(gameId);

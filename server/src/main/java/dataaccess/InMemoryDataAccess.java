@@ -49,6 +49,11 @@ public class InMemoryDataAccess implements DataAccess {
 
     }
 
+    @Override
+    public void endGame(int gameId) {
+
+    }
+
 
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username) {
         if (teamColor == ChessGame.TeamColor.WHITE) {

@@ -197,15 +197,14 @@ public class MySqlDataAccess implements DataAccess {
         return false;
     }
 
-    public boolean endGame(GameData game) throws SQLException {
+    public void endGame(int gameId) {
         var query = "UPDATE gametable SET GameOver = true WHERE gameID = ?";
 
         try (var conn = DatabaseManager.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);
 
-            stmt.setInt(1, game.gameID());
+            stmt.setInt(1, gameId);
             stmt.executeUpdate();
-            return true;
 
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);

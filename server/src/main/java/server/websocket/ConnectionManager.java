@@ -151,7 +151,15 @@ public class ConnectionManager {
                         }
                     }
 
-
+                } else if (commandType == UserGameCommand.CommandType.RESIGN) {
+                    for (var c : currConnections) {
+                        // send notification to everyone! someone resigned!
+                        if (c.session.isOpen()) {
+                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null);
+                            var notifJson = new Gson().toJson(notification);
+                            c.session.getRemote().sendString(notifJson);
+                        }
+                    }
                 }
 
                 }
