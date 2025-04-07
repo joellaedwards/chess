@@ -92,6 +92,9 @@ public class ConnectionManager {
     }
 
     public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType) throws IOException {
+
+        // could legit just pass in a ServerMessage then u don't have to deal w the whole omg this is an error thing
+
         System.out.println("inside broadcast");
 
         System.out.println("gameid: " + gameId);

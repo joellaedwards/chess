@@ -114,6 +114,14 @@ public class ChessGame {
 
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
+        System.out.println("in make move");
+
+        System.out.println("turn: " + getTeamTurn());
+        System.out.println("piece color: " + board.getPiece(move.getStartPosition()).getTeamColor());
+        if (getTeamTurn() != board.getPiece(move.getStartPosition()).getTeamColor()) {
+            throw new InvalidMoveException("not your color.");
+        }
+
         if (board.getPiece(move.getStartPosition()) == null) {
             throw new InvalidMoveException("no piece at starting position");
         }
@@ -197,6 +205,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         // see if its in check
         if (isInCheck(teamColor)) {
+            System.out.println("checking to see if we can get out of check.");
             return getOutOfCheck(teamColor);
         }
         return false;
@@ -227,6 +236,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
+
             return getOutOfCheck(teamColor);
         }
         return false;

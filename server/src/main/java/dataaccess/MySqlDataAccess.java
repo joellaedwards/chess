@@ -172,6 +172,23 @@ public class MySqlDataAccess implements DataAccess {
         return false;
     }
 
+    public boolean endGame(GameData game) throws SQLException {
+        var query = "UPDATE gametable SET GameOver = true WHERE gameID = ?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query);
+
+            stmt.setInt(1, game.gameID());
+            stmt.executeUpdate();
+            return true;
+
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
     private boolean updateColorUsername(GameData game, String username, String query) {
         try (var conn = DatabaseManager.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -352,6 +369,7 @@ public class MySqlDataAccess implements DataAccess {
             `blackUsername` varchar(256),
             `gameName` varchar(256) NOT NULL,
             `ChessGame` JSON NOT NULL,
+            `GameOver` boolean default false,
             UNIQUE (`gameID`) )
 """,
             """
