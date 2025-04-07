@@ -152,9 +152,11 @@ public class ChessGame {
 
 
         if (getTeamTurn() == TeamColor.WHITE) {
+            System.out.println("turn is now black");
             setTeamTurn(TeamColor.BLACK);
         }
         else {
+            System.out.println("turn is now white");
             setTeamTurn(TeamColor.WHITE);
         }
     }

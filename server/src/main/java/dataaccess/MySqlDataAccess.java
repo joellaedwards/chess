@@ -154,6 +154,31 @@ public class MySqlDataAccess implements DataAccess {
 
 
     @Override
+    public void makeMoveDataBase(ChessGame game, int gameId) {
+
+        System.out.println("updating gametable w new move!");
+
+
+        System.out.println("team in database updating: " + game.getTeamTurn());
+
+        var query = "UPDATE gametable SET ChessGame = ? WHERE gameID = ?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+                Gson gson = new Gson();
+                String chessGameJson = gson.toJson(game);
+                stmt.setString(1, chessGameJson);stmt.setInt(2, gameId);
+                stmt.executeUpdate();
+
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("problem in making move in database");
+        }
+
+
+    }
+
+    @Override
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username){
         if (teamColor == ChessGame.TeamColor.WHITE) {
             if (game.whiteUsername() == null) {

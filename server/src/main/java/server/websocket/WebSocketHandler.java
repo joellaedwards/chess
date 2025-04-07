@@ -63,17 +63,18 @@ public class WebSocketHandler {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
 
+
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
         } else {
             AuthData currUser = dataAccess.getAuth(authToken);
+            System.out.println("making move for color: " + currUser.username());
 
-            if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)
-            || currGame.isInStalemate(ChessGame.TeamColor.WHITE) || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
-
-
-            }
-
+//            if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)
+//            || currGame.isInStalemate(ChessGame.TeamColor.WHITE) || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
+//
+//
+//            }
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
                 System.out.println("turn: black");
                 if (!Objects.equals(currGameData.blackUsername(), currUser.username())) {
@@ -95,9 +96,17 @@ public class WebSocketHandler {
             try {
                 System.out.println("try make move");
                 currGame.makeMove(move);
+                dataAccess.makeMoveDataBase(currGame, gameId);
                 System.out.println("blackusername: " + currGameData.blackUsername());
                 System.out.println("whiteusername: " + currGameData.whiteUsername());
+
+                System.out.println("curr turn now: " + currGame.getTeamTurn());
+
+                GameData dataGame = dataAccess.getGame(gameId);
+                ChessGame gamefromData = dataGame.game();
+                System.out.println("curr turn from database: " + gamefromData.getTeamTurn());
                 connections.broadcast(gameId, authToken, session, true, "Valid move.", UserGameCommand.CommandType.MAKE_MOVE);
+
                 return 0;
             } catch (InvalidMoveException e) {
                 System.out.println("not a valid move");

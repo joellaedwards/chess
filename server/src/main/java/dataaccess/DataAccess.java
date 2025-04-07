@@ -14,6 +14,9 @@ public interface DataAccess {
 
     int addGame(String gameName);
     GameData getGame(int gameId);
+
+    void makeMoveDataBase(ChessGame game, int gameId);
+
     boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username);
     ArrayList<GameData> listGames();
 

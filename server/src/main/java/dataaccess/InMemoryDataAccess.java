@@ -44,6 +44,12 @@ public class InMemoryDataAccess implements DataAccess {
         return null;
     }
 
+    @Override
+    public void makeMoveDataBase(ChessGame game, int gameId) {
+
+    }
+
+
     public boolean joinGame(GameData game, ChessGame.TeamColor teamColor, String username) {
         if (teamColor == ChessGame.TeamColor.WHITE) {
             if (game.whiteUsername() == null) {
