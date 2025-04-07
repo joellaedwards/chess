@@ -13,6 +13,9 @@ public interface DataAccess {
     UserData getUser(String username);
 
     int addGame(String gameName);
+
+    boolean gameIsOver(int gameId);
+
     GameData getGame(int gameId);
 
     void makeMoveDataBase(ChessGame game, int gameId);

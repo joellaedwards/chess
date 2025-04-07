@@ -84,9 +84,20 @@ public class WebSocketHandler {
         ChessGame currGame = currGameData.game();
 
 
+
+
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
         } else {
+
+            boolean isOver = dataAccess.gameIsOver(gameId);
+            if (isOver) {
+                System.out.println("game is over u cant move.");
+                connections.broadcast(gameId, authToken, session, false, "Game is over u cant move.",
+                        UserGameCommand.CommandType.MAKE_MOVE);
+                return 1;
+            }
+
             AuthData currUser = dataAccess.getAuth(authToken);
             System.out.println("making move for color: " + currUser.username());
 

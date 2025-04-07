@@ -35,6 +35,11 @@ public class InMemoryDataAccess implements DataAccess {
         return gameNum;
     }
 
+    @Override
+    public boolean gameIsOver(int gameId) {
+        return false;
+    }
+
     public GameData getGame(int gameId) {
         for (GameData currGame : gameList) {
             if (gameId == currGame.gameID()) {

@@ -117,6 +117,42 @@ public class MySqlDataAccess implements DataAccess {
         }
     }
 
+    @Override
+    public boolean gameIsOver(int gameId) {
+        System.out.println("checking if game is over");
+        var query = "SELECT GameOver FROM gametable WHERE gameID=?";
+
+        try (var conn = DatabaseManager.getConnection()) {
+            PreparedStatement stm = conn.prepareStatement(query);
+
+            stm.setInt(1, gameId);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("returning something in gameover");
+                System.out.println("gameover: " + rs.getBoolean("GameOver"));
+
+                return rs.getBoolean("GameOver");
+            }
+            // true means it is over.
+//            if (rs.next() && rs.getString("gameId") != null) {
+//                System.out.println("got something...");
+//                boolean gameIsOver = rs.getBoolean("GameOver");
+//                System.out.println("game over var: " + gameIsOver);
+//                return gameIsOver;
+//            }
+
+            System.out.println("nothing found but the try worked");
+
+
+
+        } catch (SQLException | DataAccessException e) {
+            System.out.println("so that didnt work");
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
 
 
     @Override
