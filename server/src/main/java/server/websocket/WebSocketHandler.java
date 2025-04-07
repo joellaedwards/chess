@@ -59,11 +59,20 @@ public class WebSocketHandler {
         }
     }
 
-    private void resign(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {
+    private int resign(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {
         if (dataAccess.getAuth(authToken) == null) {
-            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.RESIGN);
+        }
+        else if (dataAccess.gameIsOver(gameId)) {
+            connections.broadcast(gameId, authToken, session, false, "Game over.", UserGameCommand.CommandType.RESIGN);
         } else {
+            GameData currGameData = dataAccess.getGame(gameId);
+            AuthData currAuth = dataAccess.getAuth(authToken);
 
+            if (!Objects.equals(currAuth.username(), currGameData.blackUsername()) && !Objects.equals(currAuth.username(), currGameData.whiteUsername())) {
+                connections.broadcast(gameId, authToken, session, false, "Cannot resign as an observer.", UserGameCommand.CommandType.RESIGN);
+                return 0;
+            }
             dataAccess.endGame(gameId);
             connections.broadcast(gameId, authToken, session, true, "Player resigned :O", UserGameCommand.CommandType.RESIGN);
 
@@ -73,7 +82,7 @@ public class WebSocketHandler {
 //            client resigned. This applies to both players and observers.
 
         }
-
+        return 0;
     }
 
 
@@ -82,9 +91,6 @@ public class WebSocketHandler {
     private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess) throws IOException {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
-
-
-
 
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
@@ -101,11 +107,6 @@ public class WebSocketHandler {
             AuthData currUser = dataAccess.getAuth(authToken);
             System.out.println("making move for color: " + currUser.username());
 
-//            if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)
-//            || currGame.isInStalemate(ChessGame.TeamColor.WHITE) || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
-//
-//
-//            }
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
                 System.out.println("turn: black");
                 if (!Objects.equals(currGameData.blackUsername(), currUser.username())) {
@@ -127,6 +128,12 @@ public class WebSocketHandler {
             try {
                 System.out.println("try make move");
                 currGame.makeMove(move);
+                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE)
+                        || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)
+                        || currGame.isInStalemate(ChessGame.TeamColor.WHITE)
+                        || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    dataAccess.endGame(gameId);
+                }
                 dataAccess.makeMoveDataBase(currGame, gameId);
                 System.out.println("blackusername: " + currGameData.blackUsername());
                 System.out.println("whiteusername: " + currGameData.whiteUsername());
