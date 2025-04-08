@@ -284,6 +284,16 @@ public class ChessClient {
                     - Observe <Game Number> - observe a game
                     - Help - list options
                     """;
+        } else if (state == State.INGAME) {
+            return """
+                    
+                    -Redraw - redraw board
+                    -Leave - leave game
+                    -Move <Starting square> <Ending square>
+                    -Resign - forfeit and leave game
+                    -Highlight - highlight legal moves
+                    
+                    """;
         }
 
         return "Something went really wrong. Check the state.";
