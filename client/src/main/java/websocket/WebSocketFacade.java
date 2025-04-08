@@ -2,6 +2,7 @@ package websocket;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 
@@ -9,6 +10,11 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+
+// When a user begins playing or observes a game, their client should establish a WebSocket connection with the server.
+// doesnt need it for like register etc i dont think.
+
 
 public class WebSocketFacade extends Endpoint {
 
@@ -50,5 +56,18 @@ public class WebSocketFacade extends Endpoint {
 
     }
 
+    public void connectToGame(String currAuthToken, int gameId) throws ResponseException {
+        try {
+            var command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, currAuthToken, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+        } catch (IOException ex) {
+            throw new ResponseException(500, ex.getMessage());
+        }
+
+
+        // case CONNECT -> connect(userGameCommand.getGameID(),
+        // userGameCommand.getAuthToken(), session, dataAccess);
+
+    }
 
 }

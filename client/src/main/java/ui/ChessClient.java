@@ -5,6 +5,8 @@ import com.google.gson.internal.LinkedTreeMap;
 import model.*;
 import exception.ResponseException;
 import server.ServerFacade;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,8 @@ public class ChessClient {
     private String username = null;
     private final ServerFacade server;
     private final String serverUrl;
+    private NotificationHandler notificationHandler;
+    private WebSocketFacade ws;
     public static State state = State.SIGNEDOUT;
     private String currAuthToken = null;
 
@@ -23,46 +27,6 @@ public class ChessClient {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
     }
-
-    public String newEval(String input) {
-        try {
-            var tokens = input.toLowerCase().split(" ");
-            var cmd = (tokens.length > 0) ? tokens[0] : "help";
-            var params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            return switch (cmd) {
-                case "register" -> register2(params);
-            }
-        }
-    }
-
-    public String register2(String... params) {
-//        System.out.println("register within chessClient!!");
-        if (params.length == 3) {
-
-            // ok i think everything can have an Action type thats enumerated in the
-            // lil action class. and then based on that the websocket handler has its
-            // moment wohoo!
-
-            // TODO you need to make it pretty and also get the loadgame to actually load the game.
-            UserData user = new UserData(params[0], params[1], params[2]);
-
-
-
-            AuthData auth = server.registerUser(user);
-            if (auth != null) {
-                currAuthToken = auth.authToken();
-                state = State.SIGNEDIN;
-//                System.out.println("Registered and signed in");
-                return "Registered and signed in. Welcome to chess!";
-            }
-            return "User already registered. Login with username and password.";
-        }
-        else {
-            currAuthToken = null;
-            return "Make sure to enter a valid username, password, and email.";
-        }
-    }
-
 
 
     public Object eval(String input) throws ResponseException {
@@ -78,7 +42,7 @@ public class ChessClient {
                 default -> help();
             };
         }
-        else {
+        else if (state == State.SIGNEDIN) {
             return switch (cmd) {
                 case "logout" -> logout();
                 case "create" -> createGame(params);
@@ -89,10 +53,23 @@ public class ChessClient {
                 case "clear" -> clearAll();
                 default -> help();
             };
+        } else if (state == State.INGAME) {
+            return switch (cmd) {
+                case "redraw" -> redrawBoard();
+
+                default -> help();
+            };
         }
+        return null;
     }
 
-
+    public String redrawBoard() throws ResponseException {
+//        ws = new WebSocketFacade(serverUrl, notificationHandler);
+//        ws.redrawBoard();
+        // jk this shouldnt need a websocket cause it's only drawn for the one
+        // user.
+        return "this is the board: ";
+    }
 
     public String clearAll() throws ResponseException {
 //        System.out.println("clearing...");
@@ -116,6 +93,11 @@ public class ChessClient {
                 LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
                 ArrayList<Object> onlyGames = treeMap.get("games");
                 if (onlyGames.size() >= id && id >= 1) {
+                    state = State.INGAME;
+
+                    ws = new WebSocketFacade(serverUrl, notificationHandler);
+                    ws.connectToGame(currAuthToken, id);
+
                     return "Observing game.";
                 }
             }
@@ -150,6 +132,9 @@ public class ChessClient {
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
 //            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
+                state = State.INGAME;
+                ws = new WebSocketFacade(serverUrl, notificationHandler);
+                ws.connectToGame(currAuthToken, id);
                 return "Game joined as " + color.toLowerCase();
             }
             return "Please enter a valid game number and unassigned color.";
