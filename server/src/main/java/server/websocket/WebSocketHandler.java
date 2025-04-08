@@ -118,6 +118,8 @@ public class WebSocketHandler {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
 
+        // TODO check to see if move results in check, checkmate, or stalemate and then
+        // send notification to all clients.
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE);
         } else {

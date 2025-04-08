@@ -21,6 +21,7 @@ public class ChessClient {
     private WebSocketFacade ws;
     public static State state = State.SIGNEDOUT;
     private String currAuthToken = null;
+    private int currGameId = -2;
 
 
     public ChessClient(String serverUrl) {
@@ -56,14 +57,37 @@ public class ChessClient {
         } else if (state == State.INGAME) {
             return switch (cmd) {
                 case "redraw" -> redrawBoard();
-
+                case "leave" -> leaveGame();
+                case "resign" -> resign();
                 default -> help();
             };
         }
         return null;
     }
 
-    public String redrawBoard() throws ResponseException {
+
+    public String resign() throws ResponseException {
+
+        state = State.SIGNEDIN;
+
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.resigneFromGame(currAuthToken, currGameId);
+
+        return "Resigned game";
+
+    }
+
+    public String leaveGame() throws ResponseException {
+
+        state = State.SIGNEDIN;
+
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.leaveCurrGame(currAuthToken, currGameId);
+
+        return "Observing game.";
+    }
+
+    public String redrawBoard()  {
 //        ws = new WebSocketFacade(serverUrl, notificationHandler);
 //        ws.redrawBoard();
         // jk this shouldnt need a websocket cause it's only drawn for the one
@@ -94,6 +118,7 @@ public class ChessClient {
                 ArrayList<Object> onlyGames = treeMap.get("games");
                 if (onlyGames.size() >= id && id >= 1) {
                     state = State.INGAME;
+                    currGameId = id;
 
                     ws = new WebSocketFacade(serverUrl, notificationHandler);
                     ws.connectToGame(currAuthToken, id);
@@ -133,6 +158,7 @@ public class ChessClient {
 //            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
                 state = State.INGAME;
+                currGameId = id;
                 ws = new WebSocketFacade(serverUrl, notificationHandler);
                 ws.connectToGame(currAuthToken, id);
                 return "Game joined as " + color.toLowerCase();

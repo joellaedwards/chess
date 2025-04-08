@@ -64,10 +64,26 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException(500, ex.getMessage());
         }
 
+    }
 
-        // case CONNECT -> connect(userGameCommand.getGameID(),
-        // userGameCommand.getAuthToken(), session, dataAccess);
+    public void leaveCurrGame(String currAuthToken, int gameId) throws ResponseException {
+        try {
+            var command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, currAuthToken, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+            this.session.close();
+        } catch (IOException e) {
+            throw new ResponseException(500, e.getMessage());
+        }
+    }
 
+    public void resigneFromGame(String currAuthToken, int gameId) throws ResponseException {
+        try {
+            var command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, currAuthToken, gameId);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+            this.session.close();
+        } catch (IOException e) {
+            throw new ResponseException(500, e.getMessage());
+        }
     }
 
 }
