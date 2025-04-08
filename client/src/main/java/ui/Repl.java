@@ -1,6 +1,8 @@
 package ui;
 import exception.ResponseException;
+import websocket.messages.ServerMessage;
 
+import static java.awt.Color.RED;
 import static ui.EscapeSequences.*;
 import static ui.State.SIGNEDOUT;
 
@@ -38,6 +40,12 @@ public class Repl {
 
         }
         System.out.println();
+    }
+
+    // based on the pet shop idk how itll come into play yet
+    public void notify(ServerMessage serverMessage) {
+        System.out.println(RED + serverMessage.getServerMessage());
+        printPrompt();
     }
 
 

@@ -24,6 +24,46 @@ public class ChessClient {
         this.serverUrl = serverUrl;
     }
 
+    public String newEval(String input) {
+        try {
+            var tokens = input.toLowerCase().split(" ");
+            var cmd = (tokens.length > 0) ? tokens[0] : "help";
+            var params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            return switch (cmd) {
+                case "register" -> register2(params);
+            }
+        }
+    }
+
+    public String register2(String... params) {
+//        System.out.println("register within chessClient!!");
+        if (params.length == 3) {
+
+            // ok i think everything can have an Action type thats enumerated in the
+            // lil action class. and then based on that the websocket handler has its
+            // moment wohoo!
+
+            // TODO you need to make it pretty and also get the loadgame to actually load the game.
+            UserData user = new UserData(params[0], params[1], params[2]);
+
+
+
+            AuthData auth = server.registerUser(user);
+            if (auth != null) {
+                currAuthToken = auth.authToken();
+                state = State.SIGNEDIN;
+//                System.out.println("Registered and signed in");
+                return "Registered and signed in. Welcome to chess!";
+            }
+            return "User already registered. Login with username and password.";
+        }
+        else {
+            currAuthToken = null;
+            return "Make sure to enter a valid username, password, and email.";
+        }
+    }
+
+
 
     public Object eval(String input) throws ResponseException {
 //        System.out.println("input: " + input);

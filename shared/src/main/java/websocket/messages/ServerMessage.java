@@ -33,6 +33,13 @@ public class ServerMessage {
         return this.serverMessageType;
     }
 
+    public String getServerMessage() {
+        if (this.errorMessage != null) {
+            return this.errorMessage;
+        }
+        return this.message;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
