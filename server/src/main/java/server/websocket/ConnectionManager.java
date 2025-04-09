@@ -1,6 +1,7 @@
 package server.websocket;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -80,7 +81,7 @@ public class ConnectionManager {
 
     }
 
-    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType) throws IOException {
+    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType, String gameName) throws IOException {
 
         // could legit just pass in a ServerMessage then u don't have to deal w the whole omg this is an error thing
 
@@ -102,7 +103,7 @@ public class ConnectionManager {
                     // all the connections
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
-                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "game name", null, null);
+                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null);
                             System.out.println("sending message to authToken: " + c.authToken);
                             var jsonString = new Gson().toJson(loadMessage);
                             System.out.println(jsonString);
@@ -122,7 +123,6 @@ public class ConnectionManager {
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
                             if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                System.out.println("send notification");
                                 var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                                         null, msg, null);
                                 var notifJson = new Gson().toJson(notification);
@@ -131,7 +131,8 @@ public class ConnectionManager {
                                 c.session.getRemote().sendString(notifJson);
                                 // return notification to others
                             } else {
-                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "game name", null, null);
+
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null);
                                 System.out.println("sending message to authToken: " + c.authToken);
                                 var jsonString = new Gson().toJson(loadMessage);
                                 System.out.println(jsonString);
