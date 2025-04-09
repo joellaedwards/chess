@@ -14,6 +14,9 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
+import javax.websocket.*;
+import javax.websocket.server.ServerEndpoint;
+
 
 import java.io.IOException;
 import java.util.Objects;
@@ -24,20 +27,18 @@ import java.util.Objects;
 // is just the num/index in the list
 
 // have list of games hold the actual ChessGame object.
-
 @WebSocket
 public class WebSocketHandler {
 
     private final server.websocket.ConnectionManager connections = new server.websocket.ConnectionManager();
 
-    public WebSocketHandler()  {
-    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException {
+        System.out.println("in onMessage");
+
         DataAccess dataAccess = new MySqlDataAccess();
 
-        System.out.println("in onMessage");
         System.out.println("message: " + message);
 
 
@@ -56,6 +57,7 @@ public class WebSocketHandler {
 
 
     private int leaveGame(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException, DataAccessException {
+        System.out.println("leaving game from handler!!");
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.LEAVE);
         }

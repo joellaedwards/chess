@@ -40,6 +40,10 @@ public class ServerMessage {
         return this.message;
     }
 
+    public String getGameName() {
+        return this.game;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

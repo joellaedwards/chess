@@ -1,5 +1,6 @@
 package ui;
 import exception.ResponseException;
+import websocket.NotificationHandler;
 import websocket.messages.ServerMessage;
 
 import static java.awt.Color.RED;
@@ -8,12 +9,12 @@ import static ui.State.SIGNEDOUT;
 
 import java.util.Scanner;
 
-public class Repl {
+public class Repl implements NotificationHandler {
     private final ChessClient client;
     private String result = "";
 
     public Repl(String serverUrl) {
-        client = new ChessClient(serverUrl);
+        client = new ChessClient(serverUrl, this);
     }
 
     public void run() {
@@ -44,7 +45,11 @@ public class Repl {
 
     // based on the pet shop idk how itll come into play yet
     public void notify(ServerMessage serverMessage) {
-        System.out.println(RED + serverMessage.getServerMessage());
+//        System.out.println(RED + serverMessage.getServerMessage());
+        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+            System.out.println("you joined " + serverMessage.getGameName());
+        }
+        System.out.println(serverMessage.getServerMessage());
         printPrompt();
     }
 
@@ -120,9 +125,17 @@ public class Repl {
 
     private void printPrompt() {
 
+//        System.out.println("this is what it returned: " + result);
         String textColor = SET_TEXT_COLOR_RED;
 
-        if (result.contains("white") || result.contains("Observing")) {
+
+
+        if (result.contains("Games: \n")) {
+            System.out.println(result);
+        }
+
+
+        else if (result.contains("white") || result.contains("Observing")) {
             printWhiteBoard();
         }
 
@@ -199,9 +212,12 @@ public class Repl {
             System.out.print("\n" + RESET_BG_COLOR + textColor + result);
         }
         else {
+//            System.out.println("printing else...");
             textColor = SET_TEXT_COLOR_WHITE;
             System.out.print("\n" + RESET_BG_COLOR + textColor + result);
         }
+
+
         if (ChessClient.state == SIGNEDOUT) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[LOGGED OUT] >>> ");
         }

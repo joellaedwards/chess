@@ -24,9 +24,10 @@ public class ChessClient {
     private int currGameId = -2;
 
 
-    public ChessClient(String serverUrl) {
+    public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
+        this.notificationHandler = notificationHandler;
     }
 
 
@@ -71,7 +72,7 @@ public class ChessClient {
         state = State.SIGNEDIN;
 
         ws = new WebSocketFacade(serverUrl, notificationHandler);
-        ws.resigneFromGame(currAuthToken, currGameId);
+        ws.resignFromGame(currAuthToken, currGameId);
 
         return "Resigned game";
 
@@ -84,7 +85,7 @@ public class ChessClient {
         ws = new WebSocketFacade(serverUrl, notificationHandler);
         ws.leaveCurrGame(currAuthToken, currGameId);
 
-        return "Observing game.";
+        return "Left game.";
     }
 
     public String redrawBoard()  {
@@ -189,11 +190,12 @@ public class ChessClient {
             if (fullList.isEmpty()) {
                 return "No games found.";
             }
-            return fullList.toString();
+            return "Games: \n" + fullList;
         }
         return null;
     }
 
+    // fix the board stuff and make the repl file prettier lol
 
     public String createGame(String... params) throws ResponseException {
 //        System.out.println("in creategame in chess client");

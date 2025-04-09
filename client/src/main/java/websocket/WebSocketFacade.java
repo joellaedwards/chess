@@ -1,6 +1,7 @@
 package websocket;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import exception.ResponseException;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -24,18 +25,25 @@ public class WebSocketFacade extends Endpoint {
 
     public WebSocketFacade(String url, NotificationHandler notificationHandler) throws ResponseException {
         try {
+
+            System.out.println("original url: " + url);
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");
+
+            System.out.println("new url: " + socketURI);
             this.notificationHandler = notificationHandler;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
 
             //set message handler
+            Gson gson = new GsonBuilder().registerTypeAdapter(ServerMessage.class, new Deserializer()).create();
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    System.out.println("in this other onMessage dont be too excited");
+                    ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
+                    System.out.println("servermessagetype: " + serverMessage.getServerMessageType());
                     notificationHandler.notify(serverMessage);
                 }
             });
@@ -47,9 +55,6 @@ public class WebSocketFacade extends Endpoint {
     }
 
 
-
-
-
     //Endpoint requires this method, but you don't have to do anything
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
@@ -58,7 +63,17 @@ public class WebSocketFacade extends Endpoint {
 
     public void connectToGame(String currAuthToken, int gameId) throws ResponseException {
         try {
+            System.out.println("in connectToGame in facade");
+//            System.out.println("session: " + this.session);
+//
+//            if (this.session.isOpen()) {
+//                System.out.println("session is open!");
+//            }
             var command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, currAuthToken, gameId);
+            System.out.println("json sent: ");
+            System.out.println(new Gson().toJson(command));
+
+            System.out.println("sending to handler");
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
             throw new ResponseException(500, ex.getMessage());
@@ -68,6 +83,7 @@ public class WebSocketFacade extends Endpoint {
 
     public void leaveCurrGame(String currAuthToken, int gameId) throws ResponseException {
         try {
+            System.out.println("leaving curr game from facade");
             var command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, currAuthToken, gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
             this.session.close();
@@ -76,7 +92,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void resigneFromGame(String currAuthToken, int gameId) throws ResponseException {
+    public void resignFromGame(String currAuthToken, int gameId) throws ResponseException {
         try {
             var command = new UserGameCommand(UserGameCommand.CommandType.RESIGN, currAuthToken, gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
