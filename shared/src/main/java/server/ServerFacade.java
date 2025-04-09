@@ -94,6 +94,7 @@ public class ServerFacade {
         }
     }
 
+
     public void clearAll() throws ResponseException {
         var path = "/db";
         this.makeRequest("DELETE", path, null, null, null);

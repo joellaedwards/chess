@@ -1,7 +1,6 @@
 package server.websocket;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
-import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -81,7 +80,7 @@ public class ConnectionManager {
 
     }
 
-    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType, String gameName) throws IOException {
+    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType, String gameName, chess.ChessGame chessGame) throws IOException {
 
         // could legit just pass in a ServerMessage then u don't have to deal w the whole omg this is an error thing
 
@@ -89,7 +88,7 @@ public class ConnectionManager {
 
         System.out.println("gameid: " + gameId);
         if (!success) {
-            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, msg);
+            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, msg, null);
             var errorJson = new Gson().toJson(errorMessage);
             currSession.getRemote().sendString(errorJson);
         } else {
@@ -103,14 +102,14 @@ public class ConnectionManager {
                     // all the connections
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
-                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null);
+                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null, chessGame);
                             System.out.println("sending message to authToken: " + c.authToken);
                             var jsonString = new Gson().toJson(loadMessage);
                             System.out.println(jsonString);
                             c.session.getRemote().sendString(jsonString);
                             if (!Objects.equals(c.authToken, exceptAuthToken)) {
                                 var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                        null, msg, null);
+                                        null, msg, null, chessGame);
                                 var notifJson = new Gson().toJson(notification);
                                 System.out.println(notifJson);
                                 c.session.getRemote().sendString(notifJson);
@@ -124,7 +123,7 @@ public class ConnectionManager {
                         if (c.session.isOpen()) {
                             if (!Objects.equals(c.authToken, exceptAuthToken)) {
                                 var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                        null, msg, null);
+                                        null, msg, null, chessGame);
                                 var notifJson = new Gson().toJson(notification);
                                 System.out.println(notifJson);
 
@@ -132,7 +131,7 @@ public class ConnectionManager {
                                 // return notification to others
                             } else {
 
-                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null);
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null, chessGame);
                                 System.out.println("sending message to authToken: " + c.authToken);
                                 var jsonString = new Gson().toJson(loadMessage);
                                 System.out.println(jsonString);
@@ -145,7 +144,7 @@ public class ConnectionManager {
                     for (var c : currConnections) {
                         // send notification to everyone! someone resigned!
                         if (c.session.isOpen()) {
-                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null);
+                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, chessGame);
                             var notifJson = new Gson().toJson(notification);
                             c.session.getRemote().sendString(notifJson);
                         }
@@ -155,7 +154,7 @@ public class ConnectionManager {
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
                             if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null);
+                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, chessGame);
                                 var json = new Gson().toJson(notif);
                                 c.session.getRemote().sendString(json);
                             } else {

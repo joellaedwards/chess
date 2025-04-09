@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.internal.LinkedTreeMap;
 import model.*;
@@ -21,7 +22,10 @@ public class ChessClient {
     private WebSocketFacade ws;
     public static State state = State.SIGNEDOUT;
     private String currAuthToken = null;
+    private ChessBoard currBoard = null;
+    private String currUser = null;
     private int currGameId = -2;
+    private ChessGame.TeamColor currColor = null;
 
 
     public ChessClient(String serverUrl, NotificationHandler notificationHandler) {
@@ -93,7 +97,14 @@ public class ChessClient {
 //        ws.redrawBoard();
         // jk this shouldnt need a websocket cause it's only drawn for the one
         // user.
-        return "this is the board: ";
+
+        System.out.print("in redraw");
+        if (currColor == ChessGame.TeamColor.BLACK) {
+            System.out.print("color is black");
+            return "redraw black";
+        } else {
+            return "redraw white";
+        }
     }
 
     public String clearAll() throws ResponseException {
@@ -144,25 +155,31 @@ public class ChessClient {
             }
             String color = params[1];
 //            System.out.println("color: " + color);
-            ChessGame.TeamColor myColor;
             if (Objects.equals(color, "white")) {
-                myColor = ChessGame.TeamColor.WHITE;
+                currColor = ChessGame.TeamColor.WHITE;
             }
             else if (Objects.equals(color, "black")){
-                myColor = ChessGame.TeamColor.BLACK;
+                currColor = ChessGame.TeamColor.BLACK;
             }
             else {
                 return "Please enter a valid color. Black or White.";
             }
-            ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(myColor, id);
+            ServerFacade.JoinGameObj joinObj = new ServerFacade.JoinGameObj(currColor, id);
             Object joinInfo = server.joinGame(joinObj, currAuthToken);
-//            System.out.println("joinInfo: " + joinInfo);
+
+            //            System.out.println("joinInfo: " + joinInfo);
             if (joinInfo != null) {
                 state = State.INGAME;
                 currGameId = id;
+
                 ws = new WebSocketFacade(serverUrl, notificationHandler);
                 ws.connectToGame(currAuthToken, id);
-                return "Game joined as " + color.toLowerCase();
+                if (currColor == ChessGame.TeamColor.BLACK) {
+                    return "redraw black";
+                }
+                else {
+                    return "redraw white";
+                }
             }
             return "Please enter a valid game number and unassigned color.";
         }
@@ -218,6 +235,7 @@ public class ChessClient {
             if (server.logoutUser(currAuthToken) != null) {
                 state = State.SIGNEDOUT;
                 currAuthToken = null;
+                currUser = null;
                 return "Successfully logged out!";
             }
         }
@@ -233,6 +251,7 @@ public class ChessClient {
             AuthData auth = server.registerUser(user);
             if (auth != null) {
                 currAuthToken = auth.authToken();
+                currUser = auth.username();
                 state = State.SIGNEDIN;
 //                System.out.println("Registered and signed in");
                 return "Registered and signed in. Welcome to chess!";
@@ -241,6 +260,7 @@ public class ChessClient {
         }
         else {
             currAuthToken = null;
+            currUser = null;
             return "Make sure to enter a valid username, password, and email.";
         }
     }
@@ -252,8 +272,8 @@ public class ChessClient {
             AuthData auth = server.loginUser(user);
             if (auth != null) {
                 state = State.SIGNEDIN;
-                username = user.username();
                 currAuthToken = auth.authToken();
+                currUser = auth.username();
 //                System.out.println("logged in!");
                 return "Logged in! Type 'help' for options.";
             }
