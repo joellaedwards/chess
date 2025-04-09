@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.ResponseException;
+import server.Server;
 import websocket.NotificationHandler;
 import websocket.messages.ServerMessage;
 
@@ -16,7 +17,7 @@ import java.util.Scanner;
 public class Repl implements NotificationHandler {
     private final ChessClient client;
     private String result = "";
-    private ChessGame currGame = null;
+    private ChessGame currGame = new ChessGame();
 
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl, this);
@@ -50,8 +51,10 @@ public class Repl implements NotificationHandler {
 
     // based on the pet shop idk how itll come into play yet
     public void notify(ServerMessage serverMessage) {
-//        System.out.println(RED + serverMessage.getServerMessage());
+        System.out.println("notifying now");
+        System.out.print("serverMessage: " + serverMessage);
         if (serverMessage.getChessGame() != null) {
+            System.out.print("currgame: " + serverMessage.getChessGame());
             currGame = serverMessage.getChessGame();
         }
         if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
@@ -66,10 +69,10 @@ public class Repl implements NotificationHandler {
     private void printPrompt() {
 
 //        System.out.println("this is what it returned: " + result);
-        String textColor = SET_TEXT_COLOR_RED;
-
 
         if (Objects.equals(result, "redraw white")) {
+
+            ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_BLACK;
             boolean leaveColor = false;
@@ -78,9 +81,11 @@ public class Repl implements NotificationHandler {
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                     + RESET_BG_COLOR);
 
-            for (int i = 1; i <= 8; ++i) {
+            // rows
+            for (int i = 8; i >= 1; --i) {
                 leaveColor = true;
-                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (9 - i) + "  ");
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+                // columns
                 for (int k = 1; k <= 8; ++k) {
                     if (!leaveColor) {
                         if (Objects.equals(currColor, SET_BG_COLOR_BLACK)) {
@@ -95,14 +100,14 @@ public class Repl implements NotificationHandler {
                     // if no pieces. add empty space.
                     if (currPiece == null) {
                         System.out.print(currColor + "     ");
-                    } else if (currPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    } else if (currPiece.getTeamColor() == myColor) {
                         printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
                     } else if (currPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
                         printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
                     }
 
                 }
-                System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (9 - i) + "  ");
+                System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
             }
             System.out.print(RESET_BG_COLOR);
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
@@ -113,19 +118,20 @@ public class Repl implements NotificationHandler {
 
 
         if (Objects.equals(result, "redraw black")) {
+            ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
             System.out.println("redrwaing black now");
             ChessBoard currBoard = currGame.getBoard();
-            String currColor = SET_BG_COLOR_BLACK;
+            String currColor = SET_BG_COLOR_LIGHT_GREY;
             boolean leaveColor = false;
 
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                     + RESET_BG_COLOR);
 
-            for (int i = 1; i <= 8; ++i) {
+            for (int i = 8; i >=1 ; --i) {
                 leaveColor = true;
                 System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
-                for (int k = 1; k <= 8; ++k) {
+                for (int k = 8; k >= 1; --k) {
                     if (!leaveColor) {
                         if (Objects.equals(currColor, SET_BG_COLOR_BLACK)) {
                             currColor = SET_BG_COLOR_LIGHT_GREY;
@@ -139,9 +145,9 @@ public class Repl implements NotificationHandler {
                     // if no pieces. add empty space.
                     if (currPiece == null) {
                         System.out.print(currColor + "     ");
-                    } else if (currPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                    } else if (currPiece.getTeamColor() == myColor) {
                         printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
-                    } else if (currPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                    } else {
                         printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
                     }
 
@@ -165,17 +171,14 @@ public class Repl implements NotificationHandler {
 
         else if (result.contains("invalid") || result.contains("Please") ||
                 result.contains("valid") || result.contains("already") || result.contains("authorized")) {
-            textColor = SET_TEXT_COLOR_RED;
-            System.out.print("\n" + RESET_BG_COLOR + textColor + result);
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_RED + result);
         }
         else if (result.contains("!")) {
-            textColor = SET_TEXT_COLOR_GREEN;
-            System.out.print("\n" + RESET_BG_COLOR + textColor + result);
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_GREEN + result);
         }
         else {
 //            System.out.println("printing else...");
-            textColor = SET_TEXT_COLOR_WHITE;
-            System.out.print("\n" + RESET_BG_COLOR + textColor + result);
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
         }
 
 
@@ -187,9 +190,9 @@ public class Repl implements NotificationHandler {
         }
     }
 
-    private void printPieces(String currColor, ChessPiece currPiece, String setTextColorBlue) {
+    private void printPieces(String currColor, ChessPiece currPiece, String setTextColor) {
         String textColor1;
-        textColor1 = setTextColorBlue;
+        textColor1 = setTextColor;
         if (currPiece.getPieceType().equals(ChessPiece.PieceType.KING)) {
             System.out.print(currColor + textColor1 + "  K  ");
         } else if (currPiece.getPieceType().equals(ChessPiece.PieceType.ROOK)) {
@@ -204,4 +207,5 @@ public class Repl implements NotificationHandler {
             System.out.print(currColor + textColor1 + "  P  ");
         }
     }
+
 }
