@@ -2,6 +2,8 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import com.google.gson.internal.LinkedTreeMap;
 import model.*;
 import exception.ResponseException;
@@ -63,11 +65,83 @@ public class ChessClient {
             return switch (cmd) {
                 case "redraw" -> redrawBoard();
                 case "leave" -> leaveGame();
+                case "move" -> movePiece(params);
                 case "resign" -> resign();
                 default -> help();
             };
         }
         return null;
+    }
+
+
+    public String movePiece(String ... params) throws ResponseException {
+        if (params.length != 2) {
+            System.out.print("length: " + params.length);
+            return "Please enter a starting and ending position.";
+        }
+
+        String start = params[0];
+        String end = params[1];
+
+        if (start.length() < 2 || end.length() < 2 || start.length() > 3 || end.length() > 3) {
+            return "Please enter valid starting and ending positions";
+        }
+
+        char col = start.charAt(0);
+
+        int rowInt = start.charAt(1);
+        int colInt = -2;
+
+        if (col == 'a') {
+            colInt = 1;
+        } else if (col == 'b') {
+            colInt = 2;
+        } else if (col == 'c') {
+            colInt = 3;
+        } else if (col == 'd') {
+            colInt = 4;
+        } else if (col == 'e') {
+            colInt = 5;
+        } else if (col == 'f') {
+            colInt = 6;
+        } else if (col == 'g') {
+            colInt = 7;
+        } else if (col == 'h') {
+            colInt = 8;
+        }
+
+
+        ChessPosition startingPos = new ChessPosition(rowInt, colInt);
+
+        col = end.charAt(0);
+        rowInt = end.charAt(1);
+
+        if (col == 'a') {
+            colInt = 1;
+        } else if (col == 'b') {
+            colInt = 2;
+        } else if (col == 'c') {
+            colInt = 3;
+        } else if (col == 'd') {
+            colInt = 4;
+        } else if (col == 'e') {
+            colInt = 5;
+        } else if (col == 'f') {
+            colInt = 6;
+        } else if (col == 'g') {
+            colInt = 7;
+        } else if (col == 'h') {
+            colInt = 8;
+        }
+
+        ChessPosition endPos = new ChessPosition(rowInt, colInt);
+
+        ChessMove move = new ChessMove(startingPos, endPos, null);
+
+        ws = new WebSocketFacade(serverUrl, notificationHandler);
+        ws.makeMove(currAuthToken, currGameId, move);
+
+        return "piece moved";
     }
 
 

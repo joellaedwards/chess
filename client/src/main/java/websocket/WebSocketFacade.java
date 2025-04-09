@@ -1,8 +1,10 @@
 package websocket;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import exception.ResponseException;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -58,6 +60,20 @@ public class WebSocketFacade extends Endpoint {
     //Endpoint requires this method, but you don't have to do anything
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+
+    }
+
+    public void makeMove(String currAuthToken, int gameId, ChessMove chessMove) {
+        try {
+            System.out.print("in makemove in ws facade");
+
+            var command = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuthToken, gameId, chessMove);
+            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 

@@ -69,7 +69,8 @@ public class Repl implements NotificationHandler {
     private void printPrompt() {
 
 //        System.out.println("this is what it returned: " + result);
-
+        // TODO might have to do something fancy when you get the piece at each place like it might look weird
+        // from dif perspectices idk
         if (Objects.equals(result, "redraw white")) {
 
             ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
