@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Repl implements NotificationHandler {
     private final ChessClient client;
     private String result = "";
-    private ChessGame currGame = new ChessGame();
+    private ChessGame currGame = null;
 
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl, this);
@@ -30,13 +30,14 @@ public class Repl implements NotificationHandler {
         Scanner scanner = new Scanner(System.in);
         String line;
         while (!result.equals("quit")) {
-            printPrompt();
+            if (!result.equals("move") && !result.contains("join") && !result.equals("piece moved")) {
+                printPrompt();
+            }
             line = scanner.nextLine();
 
             try {
 //                System.out.println("Line: " + line);
                 result = (String) client.eval(line);
-//                printPrompt();
 //                System.out.println(result);
 
             } catch (ResponseException e) {
@@ -52,18 +53,21 @@ public class Repl implements NotificationHandler {
     // based on the pet shop idk how itll come into play yet
     public void notify(ServerMessage serverMessage) {
         System.out.println("notifying now");
-        System.out.print("serverMessage: " + serverMessage);
         if (serverMessage.getChessGame() != null) {
-            System.out.print("currgame: " + serverMessage.getChessGame());
+            System.out.println("currgame: " + serverMessage.getChessGame());
             currGame = serverMessage.getChessGame();
+            // TODO switch currGame to update here?
         }
-        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
-            System.out.println("you joined " + serverMessage.getGameName());
-        }
+//        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+////            if (result.contains("join"))
+//            System.out.println("load message type");
+//            currGame = serverMessage.getChessGame();
+////          printGame();
+//        }
+        System.out.println("printing server message: ");
         System.out.println(serverMessage.getServerMessage());
         printPrompt();
     }
-
 
 
     private void printPrompt() {
@@ -71,10 +75,21 @@ public class Repl implements NotificationHandler {
 //        System.out.println("this is what it returned: " + result);
         // TODO might have to do something fancy when you get the piece at each place like it might look weird
         // from dif perspectices idk
-        if (Objects.equals(result, "redraw white")) {
+
+        if (Objects.equals(result, "piece moved")) {
+            System.out.println("currGame: " + currGame);
+            System.out.print("piece moved successfully.");
+        }
+
+        if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
 
             ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
-            ChessBoard currBoard = currGame.getBoard();
+            ChessGame newGame = new ChessGame();
+            ChessBoard currBoard = newGame.getBoard();
+            if (currGame != null) {
+                currBoard = currGame.getBoard();
+            }
+
             String currColor = SET_BG_COLOR_BLACK;
             boolean leaveColor = false;
 
@@ -118,9 +133,9 @@ public class Repl implements NotificationHandler {
 
 
 
-        if (Objects.equals(result, "redraw black")) {
+        if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
             ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
-            System.out.println("redrwaing black now");
+            System.out.println("drawing black now");
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_LIGHT_GREY;
             boolean leaveColor = false;
@@ -160,8 +175,6 @@ public class Repl implements NotificationHandler {
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                     + RESET_BG_COLOR);
         }
-
-
 
 
         if (result.contains("Games: \n")) {

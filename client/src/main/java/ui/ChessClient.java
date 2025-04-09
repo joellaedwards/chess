@@ -88,8 +88,8 @@ public class ChessClient {
         }
 
         char col = start.charAt(0);
-
-        int rowInt = start.charAt(1);
+        char row = start.charAt(1);
+        int rowInt = row - '0';
         int colInt = -2;
 
         if (col == 'a') {
@@ -114,7 +114,7 @@ public class ChessClient {
         ChessPosition startingPos = new ChessPosition(rowInt, colInt);
 
         col = end.charAt(0);
-        rowInt = end.charAt(1);
+        rowInt = end.charAt(1) - '0';
 
         if (col == 'a') {
             colInt = 1;
@@ -166,13 +166,17 @@ public class ChessClient {
         return "Left game.";
     }
 
-    public String redrawBoard()  {
+    public String redrawBoard() throws ResponseException {
 //        ws = new WebSocketFacade(serverUrl, notificationHandler);
 //        ws.redrawBoard();
         // jk this shouldnt need a websocket cause it's only drawn for the one
         // user.
 
-        System.out.print("in redraw");
+//        System.out.print("in redraw");
+//
+//        ws = new WebSocketFacade(serverUrl, notificationHandler);
+//        ws.redrawGame(currAuthToken, currGameId);
+
         if (currColor == ChessGame.TeamColor.BLACK) {
             System.out.print("color is black");
             return "redraw black";
@@ -249,10 +253,10 @@ public class ChessClient {
                 ws = new WebSocketFacade(serverUrl, notificationHandler);
                 ws.connectToGame(currAuthToken, id);
                 if (currColor == ChessGame.TeamColor.BLACK) {
-                    return "redraw black";
+                    return "join black";
                 }
                 else {
-                    return "redraw white";
+                    return "join white";
                 }
             }
             return "Please enter a valid game number and unassigned color.";

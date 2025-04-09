@@ -63,6 +63,8 @@ public class WebSocketFacade extends Endpoint {
 
     }
 
+
+
     public void makeMove(String currAuthToken, int gameId, ChessMove chessMove) {
         try {
             System.out.print("in makemove in ws facade");
@@ -76,6 +78,17 @@ public class WebSocketFacade extends Endpoint {
 
 
     }
+
+//    public void redrawGame(String currAuthToken, int gameId) {
+//
+//        try {
+//            var command = new UserGameCommand(UserGameCommand.CommandType.REDRAW, currAuthToken, gameId);
+//            this.session.getBasicRemote().sendText(new Gson().toJson(command));
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public void connectToGame(String currAuthToken, int gameId) throws ResponseException {
         try {

@@ -5,6 +5,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
+import java.awt.*;
 import java.util.*;
 
 import java.io.IOException;

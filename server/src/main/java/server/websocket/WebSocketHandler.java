@@ -117,6 +117,7 @@ public class WebSocketHandler {
     private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess) throws IOException {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
+        String gameName = currGameData.gameName();
 
         // TODO check to see if move results in check, checkmate, or stalemate and then
         // send notification to all clients.
@@ -170,7 +171,7 @@ public class WebSocketHandler {
 
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
-                connections.broadcast(gameId, authToken, session, true, "Valid move.", UserGameCommand.CommandType.MAKE_MOVE, null, gamefromData);
+                connections.broadcast(gameId, authToken, session, true, "Valid move.", UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
 
                 return 0;
             } catch (InvalidMoveException e) {
