@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import exception.ResponseException;
-import server.Server;
 import websocket.NotificationHandler;
 import websocket.messages.ServerMessage;
 
@@ -97,11 +96,11 @@ public class Repl implements NotificationHandler {
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                     + RESET_BG_COLOR);
 
-            // rows
+            // rows, 8 down to 1
             for (int i = 8; i >= 1; --i) {
                 leaveColor = true;
                 System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
-                // columns
+                // columns, a - h
                 for (int k = 1; k <= 8; ++k) {
                     if (!leaveColor) {
                         if (Objects.equals(currColor, SET_BG_COLOR_BLACK)) {
@@ -144,9 +143,12 @@ public class Repl implements NotificationHandler {
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                     + RESET_BG_COLOR);
 
-            for (int i = 8; i >=1 ; --i) {
+            // rows 1 to 8
+            for (int i = 1; i <= 8 ; ++i) {
                 leaveColor = true;
                 System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+
+                // col h to a
                 for (int k = 8; k >= 1; --k) {
                     if (!leaveColor) {
                         if (Objects.equals(currColor, SET_BG_COLOR_BLACK)) {
@@ -162,9 +164,9 @@ public class Repl implements NotificationHandler {
                     if (currPiece == null) {
                         System.out.print(currColor + "     ");
                     } else if (currPiece.getTeamColor() == myColor) {
-                        printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
-                    } else {
                         printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
+                    } else {
+                        printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
                     }
 
                 }
