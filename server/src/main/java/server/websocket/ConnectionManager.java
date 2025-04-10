@@ -1,4 +1,5 @@
 package server.websocket;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import org.eclipse.jetty.websocket.api.Session;

@@ -16,6 +16,7 @@ public class ServerMessage {
     String game;
     String errorMessage;
     ChessGame chessGame;
+    ChessGame.TeamColor myColor;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -49,6 +50,7 @@ public class ServerMessage {
     public ChessGame getChessGame() {
         return this.chessGame;
     }
+
 
     @Override
     public boolean equals(Object o) {

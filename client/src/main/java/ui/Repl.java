@@ -17,7 +17,7 @@ public class Repl implements NotificationHandler {
     private final ChessClient client;
     private String result = "";
     private ChessGame currGame = null;
-    private ChessGame.TeamColor myColor = null;
+//    private ChessGame.TeamColor myColor = null;
 
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl, this);
@@ -56,10 +56,10 @@ public class Repl implements NotificationHandler {
             currGame = serverMessage.getChessGame();
         }
         if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
-            if (myColor == ChessGame.TeamColor.BLACK) {
-                result = "join black";
-            } else {
-                result = "join white";
+            try {
+                result = (String) client.eval("redraw");
+            } catch (ResponseException e) {
+                throw new RuntimeException(e);
             }
             printPrompt();
         }
@@ -81,16 +81,15 @@ public class Repl implements NotificationHandler {
     private void printPrompt() {
 
 //        System.out.println("this is what it returned: " + result);
-        // TODO might have to do something fancy when you get the piece at each place like it might look weird
         // from dif perspectices idk
 
-        if (Objects.equals(result, "piece moved")) {
-//            System.out.println("currGame: " + currGame);
-//            System.out.print("piece moved successfully.");
-        }
+//        if (Objects.equals(result, "piece moved")) {
+////            System.out.println("currGame: " + currGame);
+////            System.out.print("piece moved successfully.");
+//        }
 
         if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
-            myColor = ChessGame.TeamColor.WHITE;
+            ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
             ChessGame newGame = new ChessGame();
             ChessBoard currBoard = newGame.getBoard();
             if (currGame != null) {
@@ -140,8 +139,8 @@ public class Repl implements NotificationHandler {
 
 
 
-        if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
-            myColor = ChessGame.TeamColor.BLACK;
+        else if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
+            ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_LIGHT_GREY;
             boolean leaveColor = false;
@@ -186,7 +185,7 @@ public class Repl implements NotificationHandler {
         }
 
 
-        if (result.contains("Games: \n")) {
+        else if (result.contains("Games: \n")) {
             System.out.println(result);
         }
 
@@ -199,10 +198,13 @@ public class Repl implements NotificationHandler {
         else if (result.contains("!")) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_GREEN + result);
         }
-//        else {
-////            System.out.println("printing else...");
-//            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
-//        }
+        else if (result.contains("Help")) {
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
+        }
+        else {
+//            System.out.println("printing else...");
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
+        }
 
 
         if (ChessClient.state == SIGNEDOUT) {

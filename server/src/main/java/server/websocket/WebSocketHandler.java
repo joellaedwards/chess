@@ -65,15 +65,15 @@ public class WebSocketHandler {
             if (Objects.equals(currGame.blackUsername(), currAuth.username())) {
                 dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.BLACK);
                 System.out.println("broadcasting!");
-                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
             }
             else if (Objects.equals(currGame.whiteUsername(), currAuth.username())) {
                 dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.WHITE);
                 System.out.println("broadcasting!");
-                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
             }
             else {
-                connections.broadcast(gameId, authToken, session, true, "someone left!", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
 
             }
 

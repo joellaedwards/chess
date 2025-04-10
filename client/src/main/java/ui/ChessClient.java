@@ -366,7 +366,6 @@ public class ChessClient {
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
-                    
                     - Register <username> <password> <email>
                     - Login <username> <password>
                     - Help
@@ -376,7 +375,6 @@ public class ChessClient {
         }
         else if (state == State.SIGNEDIN) {
             return """
-                    
                     - Logout
                     - Create <GameName> - create new game
                     - List - list all games
@@ -386,12 +384,12 @@ public class ChessClient {
                     """;
         } else if (state == State.INGAME) {
             return """
-                    
-                    -Redraw - redraw board
-                    -Leave - leave game
-                    -Move <Starting square> <Ending square>
-                    -Resign - forfeit and leave game
-                    -Highlight - highlight legal moves
+                    - Redraw - redraw board
+                    - Leave - leave game
+                    - Move <Starting square> <Ending square>
+                    - Resign - forfeit and leave game
+                    - Highlight - highlight legal moves
+                    - Help - list options
                     
                     """;
         }

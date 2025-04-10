@@ -102,7 +102,6 @@ public class WebSocketFacade extends Endpoint {
 
     public void leaveCurrGame(String currAuthToken, int gameId) throws ResponseException {
         try {
-            System.out.println("leaving curr game from facade");
             var command = new UserGameCommand(UserGameCommand.CommandType.LEAVE, currAuthToken, gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
             this.session.close();
