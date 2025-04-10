@@ -179,7 +179,7 @@ public class ChessClient {
 
     public String resign() throws ResponseException {
 
-        state = State.SIGNEDIN;
+//        state = State.SIGNEDIN;
 
         ws = new WebSocketFacade(serverUrl, notificationHandler);
         ws.resignFromGame(currAuthToken, currGameId);

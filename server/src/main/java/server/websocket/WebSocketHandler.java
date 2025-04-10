@@ -2,6 +2,7 @@ package server.websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
@@ -157,31 +158,44 @@ public class WebSocketHandler {
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
 
-                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) ||
-                        currGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE)) {
                     connections.broadcast(gameId, authToken, session, true, currUser.username() +
-                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
                             UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-                    connections.broadcast(gameId, authToken, session, true, "In checkmate. Game over.",
+                    connections.broadcast(gameId, authToken, session, true, "White is in checkmate. Game over.",
                             null, null, null);
                     dataAccess.endGame(gameId);
                     return 0;
 
-                } else if (currGame.isInStalemate(ChessGame.TeamColor.WHITE) ||
+                } else if (currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() +
+                                    " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
+                            UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "Black is in checkmate. Game over.",
+                            null, null, null);
+                    dataAccess.endGame(gameId);
+                    return 0;
+                }
+                else if (currGame.isInStalemate(ChessGame.TeamColor.WHITE) ||
                         currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
                     connections.broadcast(gameId, authToken, session, true, currUser.username() +
-                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
                             UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
                     connections.broadcast(gameId, authToken, session, true, "In stalemate. Game over.",
                             null, null, null);
                     dataAccess.endGame(gameId);
                     return 0;
-                } else if (currGame.isInCheck(ChessGame.TeamColor.WHITE) ||
-                        currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
+                } else if (currGame.isInCheck(ChessGame.TeamColor.WHITE)) {
                     connections.broadcast(gameId, authToken, session, true, currUser.username() +
-                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
                             UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-                    connections.broadcast(gameId, authToken, session, true, "In check.", null,
+                    connections.broadcast(gameId, authToken, session, true, "White is in check.", null,
+                            null, null);
+                } else if (currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() +
+                                    " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
+                            UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "Black is in check.", null,
                             null, null);
                 }
                 dataAccess.makeMoveDataBase(currGame, gameId);
@@ -189,7 +203,7 @@ public class WebSocketHandler {
                 dataGame = dataAccess.getGame(gameId);
                 gamefromData = dataGame.game();
                 connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " +
-                        move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                        printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
                         UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
                 return 0;
             } catch (InvalidMoveException e) {
@@ -201,6 +215,30 @@ public class WebSocketHandler {
         return 0;
     }
 
+
+    private String printPosition(ChessPosition position) {
+        // row is a num
+        String rowString = String.valueOf(position.getRow());
+        String colString = "";
+        if (position.getColumn() == 1) {
+            colString = "a";
+        } else if (position.getColumn() == 2) {
+            colString = "b";
+        } else if (position.getColumn() == 3) {
+            colString = "c";
+        } else if (position.getColumn() == 4) {
+            colString = "d";
+        } else if (position.getColumn() == 5) {
+            colString = "e";
+        } else if (position.getColumn() == 6) {
+            colString = "f";
+        } else if (position.getColumn() == 7) {
+            colString = "g";
+        } else if (position.getColumn() == 8) {
+            colString = "h";
+        }
+        return colString + rowString;
+    }
 
     private void connect(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {
         System.out.println("inside connect");
