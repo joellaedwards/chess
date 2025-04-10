@@ -67,12 +67,52 @@ public class ChessClient {
                 case "leave" -> leaveGame();
                 case "move" -> movePiece(params);
                 case "resign" -> resign();
+                case "highlight" -> highlight(params);
                 default -> help();
             };
         }
         return null;
     }
 
+
+    public String highlight(String ... params) {
+        if (params.length != 1) {
+            return "Please enter a starting square for which you want possible moves highlighted";
+        }
+
+        char col = params[0].charAt(0);
+        char row = params[0].charAt(1);
+        int rowInt = row - '0';
+        int colInt = -2;
+
+        if (col == 'a') {
+            colInt = 1;
+        } else if (col == 'b') {
+            colInt = 2;
+        } else if (col == 'c') {
+            colInt = 3;
+        } else if (col == 'd') {
+            colInt = 4;
+        } else if (col == 'e') {
+            colInt = 5;
+        } else if (col == 'f') {
+            colInt = 6;
+        } else if (col == 'g') {
+            colInt = 7;
+        } else if (col == 'h') {
+            colInt = 8;
+        }
+
+        ChessPosition startPos = new ChessPosition(rowInt, colInt);
+
+        if (currColor == ChessGame.TeamColor.WHITE) {
+            return "Highlight white " + rowInt + " " + colInt;
+        } else {
+            return "Highlight black";
+        }
+
+
+    }
 
     public String movePiece(String ... params) throws ResponseException {
         if (params.length != 2) {
@@ -172,10 +212,6 @@ public class ChessClient {
         // jk this shouldnt need a websocket cause it's only drawn for the one
         // user.
 
-//        System.out.print("in redraw");
-//
-//        ws = new WebSocketFacade(serverUrl, notificationHandler);
-//        ws.redrawGame(currAuthToken, currGameId);
 
         if (currColor == ChessGame.TeamColor.BLACK) {
 //            System.out.print("color is black");
@@ -209,6 +245,7 @@ public class ChessClient {
                 if (onlyGames.size() >= id && id >= 1) {
                     state = State.INGAME;
                     currGameId = id;
+
 
                     ws = new WebSocketFacade(serverUrl, notificationHandler);
                     ws.connectToGame(currAuthToken, id);
@@ -388,7 +425,7 @@ public class ChessClient {
                     - Leave - leave game
                     - Move <Starting square> <Ending square>
                     - Resign - forfeit and leave game
-                    - Highlight - highlight legal moves
+                    - Highlight <starting square> - highlight legal moves
                     - Help - list options
                     
                     """;

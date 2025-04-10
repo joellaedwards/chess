@@ -100,7 +100,7 @@ public class WebSocketHandler {
                 return 0;
             }
             dataAccess.endGame(gameId);
-            connections.broadcast(gameId, authToken, session, true, "Player resigned :O", UserGameCommand.CommandType.RESIGN, null, null);
+            connections.broadcast(gameId, authToken, session, true, currAuth.username() + " resigned. Game over.", UserGameCommand.CommandType.RESIGN, null, null);
 
 
 //            Server marks the game as over (no more moves can be made). Game is updated in the database.
