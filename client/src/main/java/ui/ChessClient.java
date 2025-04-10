@@ -14,6 +14,7 @@ import websocket.WebSocketFacade;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Scanner;
 
 
 public class ChessClient {
@@ -180,12 +181,19 @@ public class ChessClient {
     public String resign() throws ResponseException {
 
 //        state = State.SIGNEDIN;
+        System.out.print("Resign? Type 'y' if yes.");
 
-        ws = new WebSocketFacade(serverUrl, notificationHandler);
-        ws.resignFromGame(currAuthToken, currGameId);
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
 
-        return "Resigned game";
+        if (Objects.equals(input, "y")) {
+            ws = new WebSocketFacade(serverUrl, notificationHandler);
+            ws.resignFromGame(currAuthToken, currGameId);
 
+            return "Resigned game";
+        }
+
+        return "no change";
     }
 
     public String leaveGame() throws ResponseException {
