@@ -99,7 +99,18 @@ public class ConnectionManager {
                 // all sessions associated w the current gameid
                 ArrayList<Connection> currConnections = sessionMap.get(k);
 
-                if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
+
+                if (commandType == null) {
+                    for (var c : currConnections) {
+                        if (c.session.isOpen()) {
+                            var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, null);
+                            var jsonString = new Gson().toJson(notif);
+                            c.session.getRemote().sendString(jsonString);
+                        }
+                    }
+                }
+
+                else if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
                     System.out.println("make move messages");
                     // all the connections
                     for (var c : currConnections) {
@@ -173,4 +184,3 @@ public class ConnectionManager {
         }
 
     }
-
