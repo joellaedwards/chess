@@ -10,7 +10,8 @@ public class Deserializer implements JsonDeserializer<ServerMessage> {
 
 
     @Override
-    public ServerMessage deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public ServerMessage deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext
+            jsonDeserializationContext) throws JsonParseException {
         ServerMessage serverMessage = null;
         JsonObject obj = jsonElement.getAsJsonObject();
         String messageType = obj.get("serverMessageType").getAsString();

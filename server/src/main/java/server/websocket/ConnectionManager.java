@@ -49,6 +49,95 @@ public class ConnectionManager {
 
     }
 
+    public void nullCmdType(ArrayList<Connection> currConnections, String msg) throws IOException {
+        for (var c : currConnections) {
+            if (c.session.isOpen()) {
+                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg,
+                        null, null);
+                var jsonString = new Gson().toJson(notif);
+                c.session.getRemote().sendString(jsonString);
+            }
+        }
+    }
+
+
+    public void makeMoveType(ArrayList<Connection> currConnections, chess.ChessGame chessGame, String gameName,
+                             String exceptAuthToken, String msg) throws IOException {
+        System.out.println("make move messages");
+        // all the connections
+        for (var c : currConnections) {
+            if (c.session.isOpen()) {
+                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
+                        null, null, chessGame);
+                System.out.println("sending message to authToken: " + c.authToken);
+                var jsonString = new Gson().toJson(loadMessage);
+                System.out.println(jsonString);
+                c.session.getRemote().sendString(jsonString);
+                if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                    var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            null, msg, null, chessGame);
+                    var notifJson = new Gson().toJson(notification);
+                    System.out.println(notifJson);
+                    c.session.getRemote().sendString(notifJson);
+                }
+            }
+        }
+    }
+
+    public void connectType(ArrayList<Connection> currConnections, chess.ChessGame chessGame, String gameName,
+                            String exceptAuthToken, String msg) throws IOException {
+        for (var c : currConnections) {
+            if (c.session.isOpen()) {
+                if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                    var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            null, msg, null, chessGame);
+                    var notifJson = new Gson().toJson(notification);
+                    System.out.println(notifJson);
+
+                    c.session.getRemote().sendString(notifJson);
+                    // return notification to others
+                } else {
+
+                    var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
+                            null, null, chessGame);
+                    System.out.println("sending message to authToken: " + c.authToken);
+                    var jsonString = new Gson().toJson(loadMessage);
+                    System.out.println(jsonString);
+                    c.session.getRemote().sendString(jsonString);
+                }
+            }
+        }
+    }
+
+    public void resignType(ArrayList<Connection> currConnections, chess.ChessGame chessGame, String msg) throws IOException {
+        for (var c : currConnections) {
+            // send notification to everyone! someone resigned!
+            if (c.session.isOpen()) {
+                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                        null, msg, null, chessGame);
+                var notifJson = new Gson().toJson(notification);
+                c.session.getRemote().sendString(notifJson);
+            }
+        }
+    }
+
+    public void leaveType(ArrayList<Connection> currConnections, chess.ChessGame chessGame, String exceptAuthToken,
+                          String msg) throws IOException {
+        System.out.println("broadcasting leave inside manager");
+        for (var c : currConnections) {
+            if (c.session.isOpen()) {
+                if (!Objects.equals(c.authToken, exceptAuthToken)) {
+                    var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null,
+                            msg, null, chessGame);
+                    var json = new Gson().toJson(notif);
+                    c.session.getRemote().sendString(json);
+                } else {
+                    c.session.close();
+                }
+            }
+        }
+    }
+
     public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg,
                           UserGameCommand.CommandType commandType, String gameName, chess.ChessGame chessGame)
             throws IOException {
@@ -61,7 +150,10 @@ public class ConnectionManager {
                     null);
             var errorJson = new Gson().toJson(errorMessage);
             currSession.getRemote().sendString(errorJson);
-        } else {
+        }
+
+
+        else {
         for (var k : sessionMap.keySet()) {
             if (k == gameId) {
                 // all sessions associated w the current gameid
@@ -69,85 +161,19 @@ public class ConnectionManager {
 
 
                 if (commandType == null) {
-                    for (var c : currConnections) {
-                        if (c.session.isOpen()) {
-                            var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg,
-                                    null, null);
-                            var jsonString = new Gson().toJson(notif);
-                            c.session.getRemote().sendString(jsonString);
-                        }
-                    }
+                    nullCmdType(currConnections, msg);
                 }
 
                 else if (commandType == UserGameCommand.CommandType.MAKE_MOVE) {
-                    System.out.println("make move messages");
-                    // all the connections
-                    for (var c : currConnections) {
-                        if (c.session.isOpen()) {
-                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
-                                    null, null, chessGame);
-                            System.out.println("sending message to authToken: " + c.authToken);
-                            var jsonString = new Gson().toJson(loadMessage);
-                            System.out.println(jsonString);
-                            c.session.getRemote().sendString(jsonString);
-                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                        null, msg, null, chessGame);
-                                var notifJson = new Gson().toJson(notification);
-                                System.out.println(notifJson);
-                                c.session.getRemote().sendString(notifJson);
-                            }
-                        }
-                    }
-
+                    makeMoveType(currConnections, chessGame, gameName, exceptAuthToken, msg);
 
                 } else if (commandType == UserGameCommand.CommandType.CONNECT) {
-                    for (var c : currConnections) {
-                        if (c.session.isOpen()) {
-                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                        null, msg, null, chessGame);
-                                var notifJson = new Gson().toJson(notification);
-                                System.out.println(notifJson);
-
-                                c.session.getRemote().sendString(notifJson);
-                                // return notification to others
-                            } else {
-
-                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
-                                        null, null, chessGame);
-                                System.out.println("sending message to authToken: " + c.authToken);
-                                var jsonString = new Gson().toJson(loadMessage);
-                                System.out.println(jsonString);
-                                c.session.getRemote().sendString(jsonString);
-                            }
-                        }
-                    }
+                    connectType(currConnections,chessGame,gameName,exceptAuthToken,msg);
 
                 } else if (commandType == UserGameCommand.CommandType.RESIGN) {
-                    for (var c : currConnections) {
-                        // send notification to everyone! someone resigned!
-                        if (c.session.isOpen()) {
-                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                    null, msg, null, chessGame);
-                            var notifJson = new Gson().toJson(notification);
-                            c.session.getRemote().sendString(notifJson);
-                        }
-                    }
+                    resignType(currConnections,chessGame,msg);
                 } else if (commandType == UserGameCommand.CommandType.LEAVE) {
-                    System.out.println("broadcasting leave inside manager");
-                    for (var c : currConnections) {
-                        if (c.session.isOpen()) {
-                            if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null,
-                                        msg, null, chessGame);
-                                var json = new Gson().toJson(notif);
-                                c.session.getRemote().sendString(json);
-                            } else {
-                                c.session.close();
-                            }
-                        }
-                    }
+                    leaveType(currConnections,chessGame,exceptAuthToken,msg);
                 }
 
                 }
