@@ -108,7 +108,7 @@ public class ChessClient {
         if (currColor == ChessGame.TeamColor.WHITE) {
             return "Highlight white " + rowInt + " " + colInt;
         } else {
-            return "Highlight black";
+            return "Highlight black " + rowInt + " " + colInt;
         }
 
 

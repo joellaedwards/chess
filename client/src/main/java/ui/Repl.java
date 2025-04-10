@@ -190,10 +190,7 @@ public class Repl implements NotificationHandler {
         }
 
         else if (result.contains("Highlight white ")) {
-            System.out.println("highlighting white");
             String[] vals = result.split("\\s+");
-            System.out.println("at 2: " + vals[2]);
-            System.out.println("at 3: " + vals[3]);
 
             int row = Integer.parseInt(vals[2]);
             int col = Integer.parseInt(vals[3]);
@@ -276,7 +273,85 @@ public class Repl implements NotificationHandler {
         }
 
 
+        else if (result.contains("Highlight black ")) {
+            String[] vals = result.split("\\s+");
 
+            int row = Integer.parseInt(vals[2]);
+            int col = Integer.parseInt(vals[3]);
+
+            ChessPosition startPos = new ChessPosition(row, col);
+            Collection<ChessMove> validMoves = currGame.validMoves(startPos);
+            ArrayList<ChessPosition> highlight = new ArrayList<>();
+
+            for (ChessMove move : validMoves) {
+                highlight.add(move.getEndPosition());
+            }
+
+
+            // PRINT BOARD
+
+            ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
+
+            String highlightColor = SET_BG_COLOR_GREEN;
+            ChessBoard currBoard = currGame.getBoard();
+            String currColor = SET_BG_COLOR_LIGHT_GREY;
+            boolean leaveColor = false;
+
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
+
+            // rows 1 to 8
+            for (int i = 1; i <= 8 ; ++i) {
+                leaveColor = true;
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+
+                // col h to a
+                for (int k = 8; k >= 1; --k) {
+                    if (!leaveColor) {
+                        if (Objects.equals(currColor, SET_BG_COLOR_BLACK)) {
+                            currColor = SET_BG_COLOR_LIGHT_GREY;
+                            highlightColor = SET_BG_COLOR_GREEN;
+                        } else {
+                            currColor = SET_BG_COLOR_BLACK;
+                            highlightColor = SET_BG_COLOR_DARK_GREEN;
+                        }
+                    }
+                    leaveColor = false;
+                    ChessPosition currPosition = new ChessPosition(i,k);
+                    ChessPiece currPiece = currBoard.getPiece(currPosition);
+                    // if no pieces. add empty space.
+                    if (currPiece == null) {
+                        if (highlight.contains(currPosition)) {
+                            System.out.print(highlightColor + "     ");
+
+                        } else {
+                            System.out.print(currColor + "     ");
+                        }
+                    } else if (currPiece.getTeamColor() == myColor) {
+                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() == startPos.getColumn()) {
+                            printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_BLUE);
+                        }
+                        else {
+                            printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
+                        }
+                    } else {
+                        if (highlight.contains(currPosition)) {
+                            printPieces(highlightColor, currPiece, SET_TEXT_COLOR_RED);
+                            System.out.print(currColor);
+                        } else {
+                            printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
+                        }
+                    }
+
+                }
+                System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+            }
+            System.out.print(RESET_BG_COLOR);
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
+        }
 
 
         else if (result.contains("Games: \n")) {
