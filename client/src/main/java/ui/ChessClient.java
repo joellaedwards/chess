@@ -1,9 +1,6 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 import com.google.gson.internal.LinkedTreeMap;
 import model.*;
 import exception.ResponseException;
@@ -136,9 +133,9 @@ public class ChessClient {
     }
 
     public String movePiece(String ... params) throws ResponseException {
-        if (params.length != 2) {
+        if (params.length != 2 && params.length != 3) {
             System.out.print("length: " + params.length);
-            return "Please enter a starting and ending position.";
+            return "Please enter a starting and ending position. If applicable, enter a piece you would like to promote to.";
         }
 
         String start = params[0];
@@ -169,7 +166,47 @@ public class ChessClient {
 
         ChessPosition endPos = new ChessPosition(rowInt, colInt);
 
-        ChessMove move = new ChessMove(startingPos, endPos, null);
+        ChessMove move;
+
+        if (params.length == 3) {
+            if (rowInt != 8 && rowInt != 1) {
+                return "Invalid attempt at promotion. This piece cannot be promoted.";
+            }
+            else {
+
+                String piece = params[2];
+                ChessPiece.PieceType promo;
+
+                if (Objects.equals(piece, "king")) {
+                    promo = ChessPiece.PieceType.KING;
+                } else if (Objects.equals(piece, "queen")) {
+                    promo = ChessPiece.PieceType.QUEEN;
+                } else if (Objects.equals(piece, "rook")) {
+                    promo = ChessPiece.PieceType.ROOK;
+                } else if (Objects.equals(piece, "bishop")) {
+                    promo = ChessPiece.PieceType.BISHOP;
+                } else if (Objects.equals(piece, "knight")) {
+                    promo = ChessPiece.PieceType.KNIGHT;
+                } else if (Objects.equals(piece, "pawn")) {
+                    promo = ChessPiece.PieceType.PAWN;
+                } else {
+                    promo = null;
+                    return "Please enter a valid promotion piece.";
+                }
+
+
+                move = new ChessMove(startingPos, endPos, promo);
+
+                ws = new WebSocketFacade(serverUrl, notificationHandler);
+                ws.makeMove(currAuthToken, currGameId, move);
+
+                return "piece moved";
+            }
+        }
+
+
+
+        move = new ChessMove(startingPos, endPos, null);
 
         ws = new WebSocketFacade(serverUrl, notificationHandler);
         ws.makeMove(currAuthToken, currGameId, move);
