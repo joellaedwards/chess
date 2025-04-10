@@ -1,4 +1,5 @@
 package server.websocket;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import org.eclipse.jetty.websocket.api.Session;
@@ -67,12 +68,7 @@ public class ConnectionManager {
         // all the connections
         for (var c : currConnections) {
             if (c.session.isOpen()) {
-                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
-                        null, null, chessGame);
-                System.out.println("sending message to authToken: " + c.authToken);
-                var jsonString = new Gson().toJson(loadMessage);
-                System.out.println(jsonString);
-                c.session.getRemote().sendString(jsonString);
+                prepMessage(chessGame, gameName, c);
                 if (!Objects.equals(c.authToken, exceptAuthToken)) {
                     var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                             null, msg, null, chessGame);
@@ -82,6 +78,15 @@ public class ConnectionManager {
                 }
             }
         }
+    }
+
+    private void prepMessage(ChessGame chessGame, String gameName, Connection c) throws IOException {
+        var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
+                null, null, chessGame);
+        System.out.println("sending message to authToken: " + c.authToken);
+        var jsonString = new Gson().toJson(loadMessage);
+        System.out.println(jsonString);
+        c.session.getRemote().sendString(jsonString);
     }
 
     public void connectType(ArrayList<Connection> currConnections, chess.ChessGame chessGame, String gameName,
@@ -98,12 +103,7 @@ public class ConnectionManager {
                     // return notification to others
                 } else {
 
-                    var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
-                            null, null, chessGame);
-                    System.out.println("sending message to authToken: " + c.authToken);
-                    var jsonString = new Gson().toJson(loadMessage);
-                    System.out.println(jsonString);
-                    c.session.getRemote().sendString(jsonString);
+                    prepMessage(chessGame, gameName, c);
                 }
             }
         }

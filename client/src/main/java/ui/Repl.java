@@ -104,20 +104,32 @@ public class Repl implements NotificationHandler {
     private void printPrompt() {
 
         if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+                    + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
+                    + RESET_BG_COLOR);
             drawWhiteFull();
         }
 
 
         else if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
             drawBlackFull();
         }
 
         else if (result.contains("Highlight white ")) {
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+                    + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
+                    + RESET_BG_COLOR);
             highlightWhiteFull();
         }
 
 
         else if (result.contains("Highlight black ")) {
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+                    + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
+                    + RESET_BG_COLOR);
             highlightBlackFull();
         }
 
@@ -165,10 +177,6 @@ public class Repl implements NotificationHandler {
 
         String currColor = SET_BG_COLOR_BLACK;
         boolean leaveColor;
-
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-                + RESET_BG_COLOR);
 
         // rows, 8 down to 1
         for (int i = 8; i >= 1; --i) {
@@ -229,9 +237,7 @@ public class Repl implements NotificationHandler {
         String currColor = SET_BG_COLOR_BLACK;
         boolean leaveColor;
 
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
-                + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
-                + RESET_BG_COLOR);
+
 
         // rows, 8 down to 1
         for (int i = 8; i >= 1; --i) {
@@ -270,10 +276,6 @@ public class Repl implements NotificationHandler {
         ChessBoard currBoard = currGame.getBoard();
         String currColor = SET_BG_COLOR_LIGHT_GREY;
         boolean leaveColor;
-
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
-                + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
-                + RESET_BG_COLOR);
 
         // rows 1 to 8
         for (int i = 1; i <= 8 ; ++i) {
@@ -328,10 +330,6 @@ public class Repl implements NotificationHandler {
         ChessBoard currBoard = currGame.getBoard();
         String currColor = SET_BG_COLOR_LIGHT_GREY;
         boolean leaveColor;
-
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
-                + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
-                + RESET_BG_COLOR);
 
         // rows 1 to 8
         for (int i = 1; i <= 8 ; ++i) {
