@@ -127,8 +127,8 @@ public class WebSocketHandler {
 
             boolean isOver = dataAccess.gameIsOver(gameId);
             if (isOver) {
-                System.out.println("game is over u cant move.");
-                connections.broadcast(gameId, authToken, session, false, "Game is over u cant move.",
+                System.out.println("game is over you cant move.");
+                connections.broadcast(gameId, authToken, session, false, "Game is over you cant move.",
                         UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 1;
             }
@@ -171,11 +171,23 @@ public class WebSocketHandler {
             try {
                 System.out.println("try make move");
                 currGame.makeMove(move);
-                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE)
-                        || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)
-                        || currGame.isInStalemate(ChessGame.TeamColor.WHITE)
-                        || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                GameData dataGame = dataAccess.getGame(gameId);
+                ChessGame gamefromData = dataGame.game();
+
+                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In checkmate. Game over.", null, null, null);
                     dataAccess.endGame(gameId);
+                    return 0;
+
+                } else if (currGame.isInStalemate(ChessGame.TeamColor.WHITE) || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In stalemate. Game over.", null, null, null);
+                    dataAccess.endGame(gameId);
+                    return 0;
+                } else if (currGame.isInCheck(ChessGame.TeamColor.WHITE) || currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In check.", null, null, null);
                 }
                 dataAccess.makeMoveDataBase(currGame, gameId);
                 System.out.println("blackusername: " + currGameData.blackUsername());
@@ -183,8 +195,6 @@ public class WebSocketHandler {
 
                 System.out.println("curr turn now: " + currGame.getTeamTurn());
 
-                GameData dataGame = dataAccess.getGame(gameId);
-                ChessGame gamefromData = dataGame.game();
                 connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
 
                 return 0;
