@@ -197,11 +197,14 @@ public class Repl implements NotificationHandler {
 
             ChessPosition startPos = new ChessPosition(row, col);
             Collection<ChessMove> validMoves = currGame.validMoves(startPos);
-            ArrayList<ChessPosition> highlight = new ArrayList<>();
 
-            for (ChessMove move : validMoves) {
-                highlight.add(move.getEndPosition());
+            ArrayList<ChessPosition> highlight = new ArrayList<>();
+            if (validMoves != null) {
+                for (ChessMove move : validMoves) {
+                    highlight.add(move.getEndPosition());
+                }
             }
+
 
 
             // PRINT BOARD

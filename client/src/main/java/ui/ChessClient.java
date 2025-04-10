@@ -80,6 +80,24 @@ public class ChessClient {
             return "Please enter a starting square for which you want possible moves highlighted";
         }
 
+        ArrayList<String> validInputs = new ArrayList<>();
+
+        String letter = "a";
+        for (int i = 1; i <= 8; ++i) {
+            validInputs.add("a" + i);
+            validInputs.add("b" + i);
+            validInputs.add("c" + i);
+            validInputs.add("d" + i);
+            validInputs.add("e" + i);
+            validInputs.add("f" + i);
+            validInputs.add("g" + i);
+            validInputs.add("h" + i);
+        }
+
+        if (!validInputs.contains(params[0])) {
+            return "Please enter a valid starting position.";
+        }
+
         char col = params[0].charAt(0);
         char row = params[0].charAt(1);
         int rowInt = row - '0';
@@ -124,6 +142,7 @@ public class ChessClient {
         String end = params[1];
 
         if (start.length() < 2 || end.length() < 2 || start.length() > 3 || end.length() > 3) {
+            System.out.println("wrong length of inputs");
             return "Please enter valid starting and ending positions";
         }
 
@@ -148,6 +167,8 @@ public class ChessClient {
             colInt = 7;
         } else if (col == 'h') {
             colInt = 8;
+        } else {
+            return "Please enter valid starting and ending positions.";
         }
 
 
@@ -172,6 +193,8 @@ public class ChessClient {
             colInt = 7;
         } else if (col == 'h') {
             colInt = 8;
+        } else {
+            return "Please enter valid starting and ending positions.";
         }
 
         ChessPosition endPos = new ChessPosition(rowInt, colInt);
