@@ -50,6 +50,14 @@ public class ConnectionManager {
 
     }
 
+    public void sendNotif(String msg, chess.ChessGame chessGame, Session session) throws IOException {
+        var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                null, msg, null, chessGame);
+        var notifJson = new Gson().toJson(notification);
+        System.out.println(notifJson);
+        session.getRemote().sendString(notifJson);
+    }
+
     public void nullCmdType(ArrayList<Connection> currConnections, String msg) throws IOException {
         for (var c : currConnections) {
             if (c.session.isOpen()) {
@@ -94,12 +102,7 @@ public class ConnectionManager {
         for (var c : currConnections) {
             if (c.session.isOpen()) {
                 if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                    var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                            null, msg, null, chessGame);
-                    var notifJson = new Gson().toJson(notification);
-                    System.out.println(notifJson);
-
-                    c.session.getRemote().sendString(notifJson);
+                    sendNotif(msg, chessGame, c.session);
                     // return notification to others
                 } else {
 
@@ -113,10 +116,7 @@ public class ConnectionManager {
         for (var c : currConnections) {
             // send notification to everyone! someone resigned!
             if (c.session.isOpen()) {
-                var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                        null, msg, null, chessGame);
-                var notifJson = new Gson().toJson(notification);
-                c.session.getRemote().sendString(notifJson);
+                sendNotif(msg,chessGame,c.session);
             }
         }
     }
