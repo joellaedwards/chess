@@ -112,22 +112,18 @@ public class WebSocketHandler {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
         String gameName = currGameData.gameName();
-
         // send notification to all clients.
         if (dataAccess.getAuth(authToken) == null) {
             connections.broadcast(gameId, authToken, session,false, "Invalid auth.",
                     UserGameCommand.CommandType.MAKE_MOVE, null, null);
         } else {
-
             boolean isOver = dataAccess.gameIsOver(gameId);
             if (isOver) {
                 connections.broadcast(gameId, authToken, session, false, "Game is over you cant move.",
                         UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 1;
             }
-
             AuthData currUser = dataAccess.getAuth(authToken);
-
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
                 if (!Objects.equals(currGameData.blackUsername(), currUser.username())) {
                     connections.broadcast(gameId, authToken, session, false, "Not your turn.",
@@ -152,12 +148,10 @@ public class WebSocketHandler {
                         UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 0;
             }
-
             try {
                 currGame.makeMove(move);
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
-
                 if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE)) {
                     connections.broadcast(gameId, authToken, session, true, currUser.username() +
                             " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
@@ -166,7 +160,6 @@ public class WebSocketHandler {
                             null, null, null);
                     dataAccess.endGame(gameId);
                     return 0;
-
                 } else if (currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
                     connections.broadcast(gameId, authToken, session, true, currUser.username() +
                                     " moved " + printPosition(move.getStartPosition()) + " to " + printPosition(move.getEndPosition()),
@@ -199,7 +192,6 @@ public class WebSocketHandler {
                             null, null);
                 }
                 dataAccess.makeMoveDataBase(currGame, gameId);
-
                 dataGame = dataAccess.getGame(gameId);
                 gamefromData = dataGame.game();
                 connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " +
