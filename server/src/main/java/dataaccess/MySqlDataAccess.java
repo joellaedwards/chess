@@ -15,17 +15,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 
-// idk maybe make a whole list of users and then also
-// a list of authObjects etc just to keep track
-// for now w no database
-
 public class MySqlDataAccess implements DataAccess {
 
     public MySqlDataAccess() throws DataAccessException {
         System.out.println("creating mysqldataaccess");
         configureDatabase();
     }
-//    int gameNum = 0;
 
     @Override
     public void addUser(UserData user) {
@@ -134,13 +129,6 @@ public class MySqlDataAccess implements DataAccess {
 
                 return rs.getBoolean("GameOver");
             }
-            // true means it is over.
-//            if (rs.next() && rs.getString("gameId") != null) {
-//                System.out.println("got something...");
-//                boolean gameIsOver = rs.getBoolean("GameOver");
-//                System.out.println("game over var: " + gameIsOver);
-//                return gameIsOver;
-//            }
 
             System.out.println("nothing found but the try worked");
 
@@ -185,8 +173,6 @@ public class MySqlDataAccess implements DataAccess {
 
         return null;
     }
-
-
 
 
     @Override

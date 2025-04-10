@@ -69,29 +69,11 @@ public class WebSocketFacade extends Endpoint {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-//    public void redrawGame(String currAuthToken, int gameId) {
-//
-//        try {
-//            var command = new UserGameCommand(UserGameCommand.CommandType.REDRAW, currAuthToken, gameId);
-//            this.session.getBasicRemote().sendText(new Gson().toJson(command));
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     public void connectToGame(String currAuthToken, int gameId) throws ResponseException {
         try {
-//            System.out.println("in connectToGame in facade");
-//            System.out.println("session: " + this.session);
-//
-//            if (this.session.isOpen()) {
-//                System.out.println("session is open!");
-//            }
             var command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, currAuthToken, gameId);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {

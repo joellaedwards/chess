@@ -7,6 +7,7 @@ import websocket.messages.ServerMessage;
 import static ui.EscapeSequences.*;
 import static ui.State.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -83,15 +84,25 @@ public class Repl implements NotificationHandler {
     }
 
 
+    private ArrayList<ChessPosition> createHighlightList() {
+        String[] vals = result.split("\\s+");
+
+        int row = Integer.parseInt(vals[2]);
+        int col = Integer.parseInt(vals[3]);
+
+        ChessPosition startPos = new ChessPosition(row, col);
+        Collection<ChessMove> validMoves = currGame.validMoves(startPos);
+
+        ArrayList<ChessPosition> highlight = new ArrayList<>();
+        if (validMoves != null) {
+            for (ChessMove move : validMoves) {
+                highlight.add(move.getEndPosition());
+            }
+        }
+        return highlight;
+    }
+
     private void printPrompt() {
-
-//        System.out.println("this is what it returned: " + result);
-        // from dif perspectices idk
-
-//        if (Objects.equals(result, "piece moved")) {
-////            System.out.println("currGame: " + currGame);
-////            System.out.print("piece moved successfully.");
-//        }
 
         if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
             ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
@@ -111,7 +122,8 @@ public class Repl implements NotificationHandler {
             // rows, 8 down to 1
             for (int i = 8; i >= 1; --i) {
                 leaveColor = true;
-                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+                        (i) + "  ");
                 // columns, a - h
                 for (int k = 1; k <= 8; ++k) {
                     if (!leaveColor) {
@@ -143,7 +155,6 @@ public class Repl implements NotificationHandler {
         }
 
 
-
         else if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
             ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
             ChessBoard currBoard = currGame.getBoard();
@@ -157,7 +168,8 @@ public class Repl implements NotificationHandler {
             // rows 1 to 8
             for (int i = 1; i <= 8 ; ++i) {
                 leaveColor = true;
-                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+                        (i) + "  ");
 
                 // col h to a
                 for (int k = 8; k >= 1; --k) {
@@ -196,14 +208,7 @@ public class Repl implements NotificationHandler {
             int col = Integer.parseInt(vals[3]);
 
             ChessPosition startPos = new ChessPosition(row, col);
-            Collection<ChessMove> validMoves = currGame.validMoves(startPos);
-
-            ArrayList<ChessPosition> highlight = new ArrayList<>();
-            if (validMoves != null) {
-                for (ChessMove move : validMoves) {
-                    highlight.add(move.getEndPosition());
-                }
-            }
+            ArrayList<ChessPosition> highlight = createHighlightList();
 
 
 
@@ -227,7 +232,8 @@ public class Repl implements NotificationHandler {
             // rows, 8 down to 1
             for (int i = 8; i >= 1; --i) {
                 leaveColor = true;
-                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+                        (i) + "  ");
                 // columns, a - h
                 for (int k = 1; k <= 8; ++k) {
                     if (!leaveColor) {
@@ -251,7 +257,8 @@ public class Repl implements NotificationHandler {
                             System.out.print(currColor + "     ");
                         }
                     } else if (currPiece.getTeamColor() == myColor) {
-                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() == startPos.getColumn()) {
+                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() ==
+                                startPos.getColumn()) {
                             printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_RED);
                         }
                         else {
@@ -283,13 +290,7 @@ public class Repl implements NotificationHandler {
             int col = Integer.parseInt(vals[3]);
 
             ChessPosition startPos = new ChessPosition(row, col);
-            Collection<ChessMove> validMoves = currGame.validMoves(startPos);
-            ArrayList<ChessPosition> highlight = new ArrayList<>();
-
-            for (ChessMove move : validMoves) {
-                highlight.add(move.getEndPosition());
-            }
-
+            ArrayList<ChessPosition> highlight = createHighlightList();
 
             // PRINT BOARD
 
@@ -307,7 +308,8 @@ public class Repl implements NotificationHandler {
             // rows 1 to 8
             for (int i = 1; i <= 8 ; ++i) {
                 leaveColor = true;
-                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+                System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+                        (i) + "  ");
 
                 // col h to a
                 for (int k = 8; k >= 1; --k) {

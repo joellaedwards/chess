@@ -19,12 +19,7 @@ import websocket.commands.UserGameCommand;
 import java.io.IOException;
 import java.util.Objects;
 
-// make a list of current games. have it hold gameId. cause then that has
-// to somehow be together w the game id they enter. check it through.
-// maybe literally just have it in the list and then gameid that they enter
-// is just the num/index in the list
 
-// have list of games hold the actual ChessGame object.
 @WebSocket
 public class WebSocketHandler {
 
@@ -44,9 +39,8 @@ public class WebSocketHandler {
         MakeMoveCommand makeMoveCommand = new Gson().fromJson(message, MakeMoveCommand.class);
         switch (userGameCommand.getCommandType()) {
             case CONNECT -> connect(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
-            // idk there's probs some type of string of params or something here.
-            // test what comes through.
-            case MAKE_MOVE -> makeMove(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID(), makeMoveCommand.getMove(), session, dataAccess);
+            case MAKE_MOVE -> makeMove(makeMoveCommand.getAuthToken(), makeMoveCommand.getGameID(),
+                    makeMoveCommand.getMove(), session, dataAccess);
             case LEAVE -> leaveGame(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
             case RESIGN -> resign(userGameCommand.getGameID(), userGameCommand.getAuthToken(), session, dataAccess);
         }
@@ -54,10 +48,12 @@ public class WebSocketHandler {
 
 
 
-    private int leaveGame(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException, DataAccessException {
+    private int leaveGame(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException,
+            DataAccessException {
         System.out.println("leaving game from handler!!");
         if (dataAccess.getAuth(authToken) == null) {
-            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.LEAVE, null, null);
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.",
+                    UserGameCommand.CommandType.LEAVE, null, null);
         }
         else {
             AuthData currAuth = dataAccess.getAuth(authToken);
@@ -65,48 +61,46 @@ public class WebSocketHandler {
             if (Objects.equals(currGame.blackUsername(), currAuth.username())) {
                 dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.BLACK);
                 System.out.println("broadcasting!");
-                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() +
+                        " left your game", UserGameCommand.CommandType.LEAVE, null, null);
             }
             else if (Objects.equals(currGame.whiteUsername(), currAuth.username())) {
                 dataAccess.playerLeaveGame(gameId, ChessGame.TeamColor.WHITE);
                 System.out.println("broadcasting!");
-                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() +
+                        " left your game", UserGameCommand.CommandType.LEAVE, null, null);
             }
             else {
-                connections.broadcast(gameId, authToken, session, true, currAuth.username() + " left your game", UserGameCommand.CommandType.LEAVE, null, null);
+                connections.broadcast(gameId, authToken, session, true, currAuth.username() +
+                        " left your game", UserGameCommand.CommandType.LEAVE, null, null);
 
             }
 
         }
-//        If a player is leaving, then the game is updated to remove the root client. Game is updated in the database.
-//        Server sends a Notification message to all other clients in that game informing them
-//        that the root client left. This applies to both players and observers.
-
         return 0;
     }
 
     private int resign(int gameId, String authToken, Session session, DataAccess dataAccess) throws IOException {
         if (dataAccess.getAuth(authToken) == null) {
-            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.RESIGN, null, null);
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.",
+                    UserGameCommand.CommandType.RESIGN, null, null);
         }
         else if (dataAccess.gameIsOver(gameId)) {
-            connections.broadcast(gameId, authToken, session, false, "Game over.", UserGameCommand.CommandType.RESIGN, null, null);
+            connections.broadcast(gameId, authToken, session, false, "Game over.",
+                    UserGameCommand.CommandType.RESIGN, null, null);
         } else {
             GameData currGameData = dataAccess.getGame(gameId);
             AuthData currAuth = dataAccess.getAuth(authToken);
 
-            if (!Objects.equals(currAuth.username(), currGameData.blackUsername()) && !Objects.equals(currAuth.username(), currGameData.whiteUsername())) {
-                connections.broadcast(gameId, authToken, session, false, "Cannot resign as an observer.", UserGameCommand.CommandType.RESIGN, null, null);
+            if (!Objects.equals(currAuth.username(), currGameData.blackUsername()) &&
+                    !Objects.equals(currAuth.username(), currGameData.whiteUsername())) {
+                connections.broadcast(gameId, authToken, session, false, "Cannot resign as an observer.",
+                        UserGameCommand.CommandType.RESIGN, null, null);
                 return 0;
             }
             dataAccess.endGame(gameId);
-            connections.broadcast(gameId, authToken, session, true, currAuth.username() + " resigned. Game over.", UserGameCommand.CommandType.RESIGN, null, null);
-
-
-//            Server marks the game as over (no more moves can be made). Game is updated in the database.
-//            Server sends a Notification message to all clients in that game informing them that the root
-//            client resigned. This applies to both players and observers.
-
+            connections.broadcast(gameId, authToken, session, true, currAuth.username() +
+                    " resigned. Game over.", UserGameCommand.CommandType.RESIGN, null, null);
         }
         return 0;
     }
@@ -114,15 +108,16 @@ public class WebSocketHandler {
 
 
 
-    private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess) throws IOException {
+    private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess)
+            throws IOException {
         GameData currGameData = dataAccess.getGame(gameId);
         ChessGame currGame = currGameData.game();
         String gameName = currGameData.gameName();
 
-        // TODO check to see if move results in check, checkmate, or stalemate and then
         // send notification to all clients.
         if (dataAccess.getAuth(authToken) == null) {
-            connections.broadcast(gameId, authToken, session,false, "Invalid auth.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+            connections.broadcast(gameId, authToken, session,false, "Invalid auth.",
+                    UserGameCommand.CommandType.MAKE_MOVE, null, null);
         } else {
 
             boolean isOver = dataAccess.gameIsOver(gameId);
@@ -135,12 +130,6 @@ public class WebSocketHandler {
 
             AuthData currUser = dataAccess.getAuth(authToken);
             System.out.println("making move for color: " + currUser.username());
-
-//            if (!Objects.equals(currUser.username(), currGameData.blackUsername()) && !Objects.equals(currUser.username(), currGameData.whiteUsername())) {
-//                connections.broadcast(gameId, authToken, session, false, "Observers cannot move pieces on the board.",
-//                        UserGameCommand.CommandType.MAKE_MOVE, null, null);
-//                return 0;
-//            }
 
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
                 System.out.println("turn: black");
@@ -160,11 +149,14 @@ public class WebSocketHandler {
                 }
             }
             if (currGame.getBoard().getPiece(move.getStartPosition()) == null) {
-                connections.broadcast(gameId, authToken, session, false, "No piece found at starting position.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+                connections.broadcast(gameId, authToken, session, false,
+                        "No piece found at starting position.", UserGameCommand.CommandType.MAKE_MOVE,
+                        null, null);
                 return 0;
             }
             if (currGame.getBoard().getPiece(move.getStartPosition()).getTeamColor() != currGame.getTeamTurn()) {
-                connections.broadcast(gameId, authToken, session, false, "That isn't your piece.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+                connections.broadcast(gameId, authToken, session, false, "That isn't your piece.",
+                        UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 0;
             }
 
@@ -174,20 +166,32 @@ public class WebSocketHandler {
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
 
-                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) || currGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
-                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-                    connections.broadcast(gameId, authToken, session, true, "In checkmate. Game over.", null, null, null);
+                if (currGame.isInCheckmate(ChessGame.TeamColor.WHITE) ||
+                        currGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() +
+                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In checkmate. Game over.",
+                            null, null, null);
                     dataAccess.endGame(gameId);
                     return 0;
 
-                } else if (currGame.isInStalemate(ChessGame.TeamColor.WHITE) || currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
-                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-                    connections.broadcast(gameId, authToken, session, true, "In stalemate. Game over.", null, null, null);
+                } else if (currGame.isInStalemate(ChessGame.TeamColor.WHITE) ||
+                        currGame.isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() +
+                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In stalemate. Game over.",
+                            null, null, null);
                     dataAccess.endGame(gameId);
                     return 0;
-                } else if (currGame.isInCheck(ChessGame.TeamColor.WHITE) || currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
-                    connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-                    connections.broadcast(gameId, authToken, session, true, "In check.", null, null, null);
+                } else if (currGame.isInCheck(ChessGame.TeamColor.WHITE) ||
+                        currGame.isInCheck(ChessGame.TeamColor.BLACK)) {
+                    connections.broadcast(gameId, authToken, session, true, currUser.username() +
+                            " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                            UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                    connections.broadcast(gameId, authToken, session, true, "In check.", null,
+                            null, null);
                 }
                 dataAccess.makeMoveDataBase(currGame, gameId);
                 System.out.println("blackusername: " + currGameData.blackUsername());
@@ -197,12 +201,15 @@ public class WebSocketHandler {
 
                 dataGame = dataAccess.getGame(gameId);
                 gamefromData = dataGame.game();
-                connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " +
+                        move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
+                        UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
 
                 return 0;
             } catch (InvalidMoveException e) {
                 System.out.println("not a valid move");
-                connections.broadcast(gameId, authToken, session,false, "Not a valid move.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+                connections.broadcast(gameId, authToken, session,false, "Not a valid move.",
+                        UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 0;
             }
         }
@@ -219,32 +226,25 @@ public class WebSocketHandler {
             String username = authData.username();
             GameData gameData = dataAccess.getGame(gameId);
             if (Objects.equals(gameData.whiteUsername(), username)) {
-                connections.broadcast(gameId, authToken, session, true, username + " joined your game as white.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username +
+                        " joined your game as white.", UserGameCommand.CommandType.CONNECT, gameData.gameName(),
+                        gameData.game());
             } else if (Objects.equals(gameData.blackUsername(), username)) {
-                connections.broadcast(gameId, authToken, session, true, username + " joined your game as black.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username +
+                        " joined your game as black.", UserGameCommand.CommandType.CONNECT, gameData.gameName(),
+                        gameData.game());
             } else {
-                connections.broadcast(gameId, authToken, session, true, username + " joined your game as an observer.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username +
+                        " joined your game as an observer.", UserGameCommand.CommandType.CONNECT, gameData.gameName(),
+                        gameData.game());
 
             }
         }
         else {
             System.out.println("gameid not found");
-            connections.broadcast(gameId, authToken, session, false, "gameid not found.", UserGameCommand.CommandType.CONNECT, null, null);
+            connections.broadcast(gameId, authToken, session, false, "gameid not found.",
+                    UserGameCommand.CommandType.CONNECT, null, null);
         }
-
-        // connect to the game in the whole huge listOfChessGames list
-        // that corresponds in one way or another to the gameId
-
-        // connections should maybe be a hashmap that has the game id as key
-        // and then the vals can be like white: black: observer
-
-
-        // oops no jk that's something u should do in the create/join game moment
-        // here is just for connecting to the WebSocket. for player but also for observer
-
     }
-
-
-
 
 }

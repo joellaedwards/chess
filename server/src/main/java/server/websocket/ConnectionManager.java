@@ -20,8 +20,6 @@ public class ConnectionManager {
         System.out.println("inside add with authToken: " + authToken);
         var connection = new Connection(authToken, session);
 
-        // TODO check list of all games see if the gameid is there
-
         var authList = dataAccess.getAuth(authToken);
         var gamesList = dataAccess.listGames();
 
@@ -49,46 +47,18 @@ public class ConnectionManager {
         return false;
 
 
-
-
-
-//        var listOfGames = facade.listGames(authToken);
-//        ArrayList<String> stringList = new ArrayList<>();
-//
-//        if (listOfGames instanceof LinkedTreeMap<?,?>) {
-//            LinkedTreeMap<String, ArrayList<Object>> treeMap = (LinkedTreeMap<String, ArrayList<Object>>) listOfGames;
-//            stringList = new ArrayList<>();
-//            Set keySet = ((LinkedTreeMap<?, ?>) listOfGames).keySet();
-//            int i = 1;
-//            for (Object game : treeMap.get("games")) {
-//                if (game instanceof LinkedTreeMap<?, ?>) {
-//                    LinkedTreeMap<String, String> gameInfo = (LinkedTreeMap<String, String>) game;
-//                    String stringToAdd = i + ".   " + gameInfo.get("gameName") +
-//                            ",   " + gameInfo.get("whiteUsername") + ",   " + gameInfo.get("blackUsername");
-//                    ++i;
-//                    stringList.add(stringToAdd);
-//                }
-//
-//            }
-//        }
-//
-//        if (!stringList.contains(gameId)) {
-//
-//            return false;
-//        }
-
-
     }
 
-    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg, UserGameCommand.CommandType commandType, String gameName, chess.ChessGame chessGame) throws IOException {
-
-        // could legit just pass in a ServerMessage then u don't have to deal w the whole omg this is an error thing
+    public void broadcast(int gameId, String exceptAuthToken, Session currSession, boolean success, String msg,
+                          UserGameCommand.CommandType commandType, String gameName, chess.ChessGame chessGame)
+            throws IOException {
 
         System.out.println("inside broadcast");
 
         System.out.println("gameid: " + gameId);
         if (!success) {
-            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, msg, null);
+            var errorMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null, null, msg,
+                    null);
             var errorJson = new Gson().toJson(errorMessage);
             currSession.getRemote().sendString(errorJson);
         } else {
@@ -101,7 +71,8 @@ public class ConnectionManager {
                 if (commandType == null) {
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
-                            var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, null);
+                            var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg,
+                                    null, null);
                             var jsonString = new Gson().toJson(notif);
                             c.session.getRemote().sendString(jsonString);
                         }
@@ -113,7 +84,8 @@ public class ConnectionManager {
                     // all the connections
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
-                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null, chessGame);
+                            var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
+                                    null, null, chessGame);
                             System.out.println("sending message to authToken: " + c.authToken);
                             var jsonString = new Gson().toJson(loadMessage);
                             System.out.println(jsonString);
@@ -142,7 +114,8 @@ public class ConnectionManager {
                                 // return notification to others
                             } else {
 
-                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName, null, null, chessGame);
+                                var loadMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameName,
+                                        null, null, chessGame);
                                 System.out.println("sending message to authToken: " + c.authToken);
                                 var jsonString = new Gson().toJson(loadMessage);
                                 System.out.println(jsonString);
@@ -155,7 +128,8 @@ public class ConnectionManager {
                     for (var c : currConnections) {
                         // send notification to everyone! someone resigned!
                         if (c.session.isOpen()) {
-                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, chessGame);
+                            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                    null, msg, null, chessGame);
                             var notifJson = new Gson().toJson(notification);
                             c.session.getRemote().sendString(notifJson);
                         }
@@ -165,7 +139,8 @@ public class ConnectionManager {
                     for (var c : currConnections) {
                         if (c.session.isOpen()) {
                             if (!Objects.equals(c.authToken, exceptAuthToken)) {
-                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null, msg, null, chessGame);
+                                var notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, null,
+                                        msg, null, chessGame);
                                 var json = new Gson().toJson(notif);
                                 c.session.getRemote().sendString(json);
                             } else {

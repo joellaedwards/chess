@@ -101,27 +101,7 @@ public class ChessClient {
         char col = params[0].charAt(0);
         char row = params[0].charAt(1);
         int rowInt = row - '0';
-        int colInt = -2;
-
-        if (col == 'a') {
-            colInt = 1;
-        } else if (col == 'b') {
-            colInt = 2;
-        } else if (col == 'c') {
-            colInt = 3;
-        } else if (col == 'd') {
-            colInt = 4;
-        } else if (col == 'e') {
-            colInt = 5;
-        } else if (col == 'f') {
-            colInt = 6;
-        } else if (col == 'g') {
-            colInt = 7;
-        } else if (col == 'h') {
-            colInt = 8;
-        }
-
-        ChessPosition startPos = new ChessPosition(rowInt, colInt);
+        int colInt = getColInt(col);
 
         if (currColor == ChessGame.TeamColor.WHITE) {
             return "Highlight white " + rowInt + " " + colInt;
@@ -130,6 +110,28 @@ public class ChessClient {
         }
 
 
+    }
+
+    private static int getColInt(char col) {
+        if (col == 'a') {
+            return 1;
+        } else if (col == 'b') {
+            return 2;
+        } else if (col == 'c') {
+            return 3;
+        } else if (col == 'd') {
+            return 4;
+        } else if (col == 'e') {
+            return 5;
+        } else if (col == 'f') {
+            return 6;
+        } else if (col == 'g') {
+            return 7;
+        } else if (col == 'h') {
+            return 8;
+        }
+
+        return -2;
     }
 
     public String movePiece(String ... params) throws ResponseException {
@@ -149,51 +151,18 @@ public class ChessClient {
         char col = start.charAt(0);
         char row = start.charAt(1);
         int rowInt = row - '0';
-        int colInt = -2;
+        int colInt = getColInt(col);
 
-        if (col == 'a') {
-            colInt = 1;
-        } else if (col == 'b') {
-            colInt = 2;
-        } else if (col == 'c') {
-            colInt = 3;
-        } else if (col == 'd') {
-            colInt = 4;
-        } else if (col == 'e') {
-            colInt = 5;
-        } else if (col == 'f') {
-            colInt = 6;
-        } else if (col == 'g') {
-            colInt = 7;
-        } else if (col == 'h') {
-            colInt = 8;
-        } else {
+        if (colInt == -2) {
             return "Please enter valid starting and ending positions.";
         }
-
 
         ChessPosition startingPos = new ChessPosition(rowInt, colInt);
 
         col = end.charAt(0);
         rowInt = end.charAt(1) - '0';
-
-        if (col == 'a') {
-            colInt = 1;
-        } else if (col == 'b') {
-            colInt = 2;
-        } else if (col == 'c') {
-            colInt = 3;
-        } else if (col == 'd') {
-            colInt = 4;
-        } else if (col == 'e') {
-            colInt = 5;
-        } else if (col == 'f') {
-            colInt = 6;
-        } else if (col == 'g') {
-            colInt = 7;
-        } else if (col == 'h') {
-            colInt = 8;
-        } else {
+        colInt = getColInt(col);
+        if (colInt == -2) {
             return "Please enter valid starting and ending positions.";
         }
 
