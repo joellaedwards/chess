@@ -8,7 +8,7 @@ import websocket.NotificationHandler;
 import websocket.messages.ServerMessage;
 
 import static ui.EscapeSequences.*;
-import static ui.State.SIGNEDOUT;
+import static ui.State.*;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -17,6 +17,7 @@ public class Repl implements NotificationHandler {
     private final ChessClient client;
     private String result = "";
     private ChessGame currGame = null;
+    private ChessGame.TeamColor myColor = null;
 
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl, this);
@@ -51,21 +52,29 @@ public class Repl implements NotificationHandler {
 
     // based on the pet shop idk how itll come into play yet
     public void notify(ServerMessage serverMessage) {
-        System.out.println("notifying now");
         if (serverMessage.getChessGame() != null) {
-            System.out.println("currgame: " + serverMessage.getChessGame());
             currGame = serverMessage.getChessGame();
-            // TODO switch currGame to update here?
         }
-//        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
-////            if (result.contains("join"))
-//            System.out.println("load message type");
-//            currGame = serverMessage.getChessGame();
-////          printGame();
-//        }
-        System.out.println("printing server message: ");
-        System.out.println(serverMessage.getServerMessage());
-        printPrompt();
+        if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+            if (myColor == ChessGame.TeamColor.BLACK) {
+                result = "join black";
+            } else {
+                result = "join white";
+            }
+            printPrompt();
+        }
+
+
+        if (serverMessage.getServerMessage() != null) {
+//            System.out.println("printing server message: ");
+            if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
+                System.out.print(SET_TEXT_COLOR_RED + serverMessage.getServerMessage());
+            }
+            System.out.println(serverMessage.getServerMessage());
+            if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
+                System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[IN GAME] >>> ");
+            }
+        }
     }
 
 
@@ -76,13 +85,12 @@ public class Repl implements NotificationHandler {
         // from dif perspectices idk
 
         if (Objects.equals(result, "piece moved")) {
-            System.out.println("currGame: " + currGame);
-            System.out.print("piece moved successfully.");
+//            System.out.println("currGame: " + currGame);
+//            System.out.print("piece moved successfully.");
         }
 
         if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
-
-            ChessGame.TeamColor myColor = ChessGame.TeamColor.WHITE;
+            myColor = ChessGame.TeamColor.WHITE;
             ChessGame newGame = new ChessGame();
             ChessBoard currBoard = newGame.getBoard();
             if (currGame != null) {
@@ -133,8 +141,7 @@ public class Repl implements NotificationHandler {
 
 
         if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
-            ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
-            System.out.println("drawing black now");
+            myColor = ChessGame.TeamColor.BLACK;
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_LIGHT_GREY;
             boolean leaveColor = false;
@@ -192,17 +199,20 @@ public class Repl implements NotificationHandler {
         else if (result.contains("!")) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_GREEN + result);
         }
-        else {
-//            System.out.println("printing else...");
-            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
-        }
+//        else {
+////            System.out.println("printing else...");
+//            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + result);
+//        }
 
 
         if (ChessClient.state == SIGNEDOUT) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[LOGGED OUT] >>> ");
         }
-        else {
+        else if (ChessClient.state == SIGNEDIN){
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[LOGGED IN] >>> ");
+        }
+        else if (ChessClient.state == INGAME) {
+            System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[IN GAME] >>> ");
         }
     }
 

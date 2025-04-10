@@ -193,11 +193,11 @@ public class WebSocketHandler {
             String username = authData.username();
             GameData gameData = dataAccess.getGame(gameId);
             if (Objects.equals(gameData.whiteUsername(), username)) {
-                connections.broadcast(gameId, authToken, session, true, username + "joined your game as white.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username + " joined your game as white.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
             } else if (Objects.equals(gameData.blackUsername(), username)) {
-                connections.broadcast(gameId, authToken, session, true, username + "joined your game as black.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username + " joined your game as black.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
             } else {
-                connections.broadcast(gameId, authToken, session, true, username + "joined your game as an observer.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
+                connections.broadcast(gameId, authToken, session, true, username + " joined your game as an observer.", UserGameCommand.CommandType.CONNECT, gameData.gameName(), gameData.game());
 
             }
         }

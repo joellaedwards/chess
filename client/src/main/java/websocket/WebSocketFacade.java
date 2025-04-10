@@ -28,11 +28,9 @@ public class WebSocketFacade extends Endpoint {
     public WebSocketFacade(String url, NotificationHandler notificationHandler) throws ResponseException {
         try {
 
-            System.out.println("original url: " + url);
             url = url.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");
 
-            System.out.println("new url: " + socketURI);
             this.notificationHandler = notificationHandler;
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -43,9 +41,7 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    System.out.println("in this other onMessage dont be too excited");
                     ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
-                    System.out.println("servermessagetype: " + serverMessage.getServerMessageType());
                     notificationHandler.notify(serverMessage);
                 }
             });
@@ -67,8 +63,6 @@ public class WebSocketFacade extends Endpoint {
 
     public void makeMove(String currAuthToken, int gameId, ChessMove chessMove) {
         try {
-            System.out.print("in makemove in ws facade");
-
             var command = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuthToken, gameId, chessMove);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
 
@@ -92,17 +86,13 @@ public class WebSocketFacade extends Endpoint {
 
     public void connectToGame(String currAuthToken, int gameId) throws ResponseException {
         try {
-            System.out.println("in connectToGame in facade");
+//            System.out.println("in connectToGame in facade");
 //            System.out.println("session: " + this.session);
 //
 //            if (this.session.isOpen()) {
 //                System.out.println("session is open!");
 //            }
             var command = new UserGameCommand(UserGameCommand.CommandType.CONNECT, currAuthToken, gameId);
-            System.out.println("json sent: ");
-            System.out.println(new Gson().toJson(command));
-
-            System.out.println("sending to handler");
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch (IOException ex) {
             throw new ResponseException(500, ex.getMessage());
