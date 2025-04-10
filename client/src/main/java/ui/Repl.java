@@ -104,7 +104,7 @@ public class Repl implements NotificationHandler {
     private void printPrompt() {
 
         if (Objects.equals(result, "redraw white") || Objects.equals(result, "join white")) {
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  a  "
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                     + RESET_BG_COLOR);
             drawWhiteFull();
@@ -112,14 +112,14 @@ public class Repl implements NotificationHandler {
 
 
         else if (Objects.equals(result, "redraw black") || Objects.equals(result, "join black")) {
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                     + RESET_BG_COLOR);
             drawBlackFull();
         }
 
         else if (result.contains("Highlight white ")) {
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  a  "
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                     + RESET_BG_COLOR);
             highlightWhiteFull();
@@ -127,7 +127,7 @@ public class Repl implements NotificationHandler {
 
 
         else if (result.contains("Highlight black ")) {
-            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+            System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                     + RESET_BG_COLOR);
             highlightBlackFull();
@@ -181,7 +181,7 @@ public class Repl implements NotificationHandler {
         // rows, 8 down to 1
         for (int i = 8; i >= 1; --i) {
             leaveColor = true;
-            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " +
                     (i) + "  ");
             // columns, a - h
             for (int k = 1; k <= 8; ++k) {
@@ -205,10 +205,10 @@ public class Repl implements NotificationHandler {
                 }
 
             }
-            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " + (i) + "  ");
         }
         System.out.print(RESET_BG_COLOR);
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  a  "
                 + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                 + RESET_BG_COLOR);
     }
@@ -242,7 +242,7 @@ public class Repl implements NotificationHandler {
         // rows, 8 down to 1
         for (int i = 8; i >= 1; --i) {
             leaveColor = true;
-            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " +
                     (i) + "  ");
             // columns, a - h
             for (int k = 1; k <= 8; ++k) {
@@ -262,10 +262,10 @@ public class Repl implements NotificationHandler {
                 highlightWhite(currPiece,highlight,currPosition,highlightColor,currColor,myColor,startPos);
 
             }
-            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " + (i) + "  ");
         }
         System.out.print(RESET_BG_COLOR);
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  a  "
                 + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
                 + RESET_BG_COLOR);
     }
@@ -280,7 +280,7 @@ public class Repl implements NotificationHandler {
         // rows 1 to 8
         for (int i = 1; i <= 8 ; ++i) {
             leaveColor = true;
-            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " +
                     (i) + "  ");
 
             // col h to a
@@ -305,10 +305,10 @@ public class Repl implements NotificationHandler {
                 }
 
             }
-            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " + (i) + "  ");
         }
         System.out.print(RESET_BG_COLOR);
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  h  "
                 + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                 + RESET_BG_COLOR);
     }
@@ -334,7 +334,7 @@ public class Repl implements NotificationHandler {
         // rows 1 to 8
         for (int i = 1; i <= 8 ; ++i) {
             leaveColor = true;
-            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " +
+            System.out.print(RESET_BG_COLOR + "\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " +
                     (i) + "  ");
 
             // col h to a
@@ -355,10 +355,10 @@ public class Repl implements NotificationHandler {
                 highlightBlack(currPiece, highlight, currPosition, highlightColor, currColor, myColor,startPos);
 
             }
-            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
+            System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "  " + (i) + "  ");
         }
         System.out.print(RESET_BG_COLOR);
-        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
+        System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_WHITE + "     " + "  h  "
                 + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
                 + RESET_BG_COLOR);
     }
