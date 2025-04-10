@@ -251,7 +251,7 @@ public class Repl implements NotificationHandler {
                             System.out.print(currColor + "     ");
                         }
                     } else if (currPiece.getTeamColor() == myColor) {
-                        if (currPosition.getRow() == startPos.getRow() && currPosition) {
+                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() == startPos.getColumn()) {
                             printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_RED);
                         }
                         else {
