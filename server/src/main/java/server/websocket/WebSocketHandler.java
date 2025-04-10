@@ -106,8 +106,6 @@ public class WebSocketHandler {
     }
 
 
-
-
     private int makeMove(String authToken, int gameId, ChessMove move, Session session, DataAccess dataAccess)
             throws IOException {
         GameData currGameData = dataAccess.getGame(gameId);
@@ -122,27 +120,21 @@ public class WebSocketHandler {
 
             boolean isOver = dataAccess.gameIsOver(gameId);
             if (isOver) {
-                System.out.println("game is over you cant move.");
                 connections.broadcast(gameId, authToken, session, false, "Game is over you cant move.",
                         UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 1;
             }
 
             AuthData currUser = dataAccess.getAuth(authToken);
-            System.out.println("making move for color: " + currUser.username());
 
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
-                System.out.println("turn: black");
                 if (!Objects.equals(currGameData.blackUsername(), currUser.username())) {
-                    System.out.println("ERROR! u cant move that piece bestie");
                     connections.broadcast(gameId, authToken, session, false, "Not your turn.",
                             UserGameCommand.CommandType.MAKE_MOVE, null, null);
                     return 0;
                 }
             } else {
-                System.out.println("turn: white");
                 if (!Objects.equals(currGameData.whiteUsername(), currUser.username())) {
-                    System.out.println("ERROR! u cant move that bestie");
                     connections.broadcast(gameId, authToken, session, false, "Not your turn.",
                             UserGameCommand.CommandType.MAKE_MOVE, null, null);
                     return 0;
@@ -161,7 +153,6 @@ public class WebSocketHandler {
             }
 
             try {
-                System.out.println("try make move");
                 currGame.makeMove(move);
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
@@ -194,20 +185,14 @@ public class WebSocketHandler {
                             null, null);
                 }
                 dataAccess.makeMoveDataBase(currGame, gameId);
-                System.out.println("blackusername: " + currGameData.blackUsername());
-                System.out.println("whiteusername: " + currGameData.whiteUsername());
-
-                System.out.println("curr turn now: " + currGame.getTeamTurn());
 
                 dataGame = dataAccess.getGame(gameId);
                 gamefromData = dataGame.game();
                 connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " +
                         move.getStartPosition().toString() + " to " + move.getEndPosition().toString(),
                         UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
-
                 return 0;
             } catch (InvalidMoveException e) {
-                System.out.println("not a valid move");
                 connections.broadcast(gameId, authToken, session,false, "Not a valid move.",
                         UserGameCommand.CommandType.MAKE_MOVE, null, null);
                 return 0;

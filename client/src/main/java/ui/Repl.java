@@ -113,7 +113,7 @@ public class Repl implements NotificationHandler {
             }
 
             String currColor = SET_BG_COLOR_BLACK;
-            boolean leaveColor = false;
+            boolean leaveColor;
 
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
@@ -159,7 +159,7 @@ public class Repl implements NotificationHandler {
             ChessGame.TeamColor myColor = ChessGame.TeamColor.BLACK;
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_LIGHT_GREY;
-            boolean leaveColor = false;
+            boolean leaveColor;
 
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
@@ -223,7 +223,7 @@ public class Repl implements NotificationHandler {
 
             String highlightColor = SET_BG_COLOR_DARK_GREEN;
             String currColor = SET_BG_COLOR_BLACK;
-            boolean leaveColor = false;
+            boolean leaveColor;
 
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  a  "
                     + "  b  " + "  c  " + "  d  " + "  e  " + "  f  " + "  g  " + "  h  " + "     "
@@ -249,29 +249,7 @@ public class Repl implements NotificationHandler {
                     ChessPosition currPosition = new ChessPosition(i,k);
                     ChessPiece currPiece = currBoard.getPiece(currPosition);
                     // if no pieces. add empty space.
-                    if (currPiece == null) {
-                        if (highlight.contains(currPosition)) {
-                            System.out.print(highlightColor + "     ");
-
-                        } else {
-                            System.out.print(currColor + "     ");
-                        }
-                    } else if (currPiece.getTeamColor() == myColor) {
-                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() ==
-                                startPos.getColumn()) {
-                            printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_RED);
-                        }
-                        else {
-                            printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
-                        }
-                    } else if (currPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                        if (highlight.contains(currPosition)) {
-                            printPieces(highlightColor, currPiece, SET_TEXT_COLOR_BLUE);
-                            System.out.print(currColor);
-                        } else {
-                            printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
-                        }
-                    }
+                    highlightWhite(currPiece,highlight,currPosition,highlightColor,currColor,myColor,startPos);
 
                 }
                 System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
@@ -299,7 +277,7 @@ public class Repl implements NotificationHandler {
             String highlightColor = SET_BG_COLOR_GREEN;
             ChessBoard currBoard = currGame.getBoard();
             String currColor = SET_BG_COLOR_LIGHT_GREY;
-            boolean leaveColor = false;
+            boolean leaveColor;
 
             System.out.print("\n" + SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "     " + "  h  "
                     + "  g  " + "  f  " + "  e  " + "  d  " + "  c  " + "  b  " + "  a  " + "     "
@@ -326,28 +304,7 @@ public class Repl implements NotificationHandler {
                     ChessPosition currPosition = new ChessPosition(i,k);
                     ChessPiece currPiece = currBoard.getPiece(currPosition);
                     // if no pieces. add empty space.
-                    if (currPiece == null) {
-                        if (highlight.contains(currPosition)) {
-                            System.out.print(highlightColor + "     ");
-
-                        } else {
-                            System.out.print(currColor + "     ");
-                        }
-                    } else if (currPiece.getTeamColor() == myColor) {
-                        if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() == startPos.getColumn()) {
-                            printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_BLUE);
-                        }
-                        else {
-                            printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
-                        }
-                    } else {
-                        if (highlight.contains(currPosition)) {
-                            printPieces(highlightColor, currPiece, SET_TEXT_COLOR_RED);
-                            System.out.print(currColor);
-                        } else {
-                            printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
-                        }
-                    }
+                    highlightBlack(currPiece, highlight, currPosition, highlightColor, currColor, myColor,startPos);
 
                 }
                 System.out.print(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_BLACK + "  " + (i) + "  ");
@@ -389,6 +346,59 @@ public class Repl implements NotificationHandler {
         }
         else if (ChessClient.state == INGAME) {
             System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[IN GAME] >>> ");
+        }
+    }
+
+    private void highlightWhite(ChessPiece currPiece, ArrayList<ChessPosition> highlight, ChessPosition currPosition, String highlightColor,
+                                String currColor, ChessGame.TeamColor myColor, ChessPosition startPos) {
+        if (currPiece == null) {
+            if (highlight.contains(currPosition)) {
+                System.out.print(highlightColor + "     ");
+
+            } else {
+                System.out.print(currColor + "     ");
+            }
+        } else if (currPiece.getTeamColor() == myColor) {
+            if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() ==
+                    startPos.getColumn()) {
+                printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_RED);
+            }
+            else {
+                printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
+            }
+        } else if (currPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            if (highlight.contains(currPosition)) {
+                printPieces(highlightColor, currPiece, SET_TEXT_COLOR_BLUE);
+                System.out.print(currColor);
+            } else {
+                printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
+            }
+        }
+    }
+
+    private void highlightBlack(ChessPiece currPiece, ArrayList<ChessPosition> highlight, ChessPosition currPosition, String highlightColor,
+                                String currColor, ChessGame.TeamColor myColor, ChessPosition startPos) {
+        if (currPiece == null) {
+            if (highlight.contains(currPosition)) {
+                System.out.print(highlightColor + "     ");
+
+            } else {
+                System.out.print(currColor + "     ");
+            }
+        } else if (currPiece.getTeamColor() == myColor) {
+            if (currPosition.getRow() == startPos.getRow() && currPosition.getColumn() == startPos.getColumn()) {
+                printPieces(SET_BG_COLOR_YELLOW, currPiece, SET_TEXT_COLOR_BLUE);
+            }
+            else {
+                printPieces(currColor, currPiece, SET_TEXT_COLOR_BLUE);
+            }
+        } else {
+            if (highlight.contains(currPosition)) {
+                printPieces(highlightColor, currPiece, SET_TEXT_COLOR_RED);
+                System.out.print(currColor);
+            } else {
+                printPieces(currColor, currPiece, SET_TEXT_COLOR_RED);
+            }
         }
     }
 
