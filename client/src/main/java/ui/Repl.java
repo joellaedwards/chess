@@ -69,11 +69,15 @@ public class Repl implements NotificationHandler {
 //            System.out.println("printing server message: ");
             if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
                 System.out.print(SET_TEXT_COLOR_RED + serverMessage.getServerMessage());
+                System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[IN GAME] >>> ");
+
             }
-            System.out.println(serverMessage.getServerMessage());
-            if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
+//            System.out.println(serverMessage.getServerMessage());
+            else if (serverMessage.getServerMessageType() == ServerMessage.ServerMessageType.NOTIFICATION) {
+                System.out.println(serverMessage.getServerMessage());
                 System.out.print("\n" + RESET_BG_COLOR + SET_TEXT_COLOR_WHITE + "[IN GAME] >>> ");
             }
+
         }
     }
 

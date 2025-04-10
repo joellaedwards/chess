@@ -178,7 +178,7 @@ public class ChessClient {
 //        ws.redrawGame(currAuthToken, currGameId);
 
         if (currColor == ChessGame.TeamColor.BLACK) {
-            System.out.print("color is black");
+//            System.out.print("color is black");
             return "redraw black";
         } else {
             return "redraw white";

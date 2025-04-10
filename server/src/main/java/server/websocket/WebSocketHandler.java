@@ -136,11 +136,17 @@ public class WebSocketHandler {
             AuthData currUser = dataAccess.getAuth(authToken);
             System.out.println("making move for color: " + currUser.username());
 
+//            if (!Objects.equals(currUser.username(), currGameData.blackUsername()) && !Objects.equals(currUser.username(), currGameData.whiteUsername())) {
+//                connections.broadcast(gameId, authToken, session, false, "Observers cannot move pieces on the board.",
+//                        UserGameCommand.CommandType.MAKE_MOVE, null, null);
+//                return 0;
+//            }
+
             if (currGame.getTeamTurn() == ChessGame.TeamColor.BLACK) {
                 System.out.println("turn: black");
                 if (!Objects.equals(currGameData.blackUsername(), currUser.username())) {
                     System.out.println("ERROR! u cant move that piece bestie");
-                    connections.broadcast(gameId, authToken, session, false, "You can't move that piece.",
+                    connections.broadcast(gameId, authToken, session, false, "Not your turn.",
                             UserGameCommand.CommandType.MAKE_MOVE, null, null);
                     return 0;
                 }
@@ -148,10 +154,18 @@ public class WebSocketHandler {
                 System.out.println("turn: white");
                 if (!Objects.equals(currGameData.whiteUsername(), currUser.username())) {
                     System.out.println("ERROR! u cant move that bestie");
-                    connections.broadcast(gameId, authToken, session, false, "You can't move that piece.",
+                    connections.broadcast(gameId, authToken, session, false, "Not your turn.",
                             UserGameCommand.CommandType.MAKE_MOVE, null, null);
                     return 0;
                 }
+            }
+            if (currGame.getBoard().getPiece(move.getStartPosition()) == null) {
+                connections.broadcast(gameId, authToken, session, false, "No piece found at starting position.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+                return 0;
+            }
+            if (currGame.getBoard().getPiece(move.getStartPosition()).getTeamColor() != currGame.getTeamTurn()) {
+                connections.broadcast(gameId, authToken, session, false, "That isn't your piece.", UserGameCommand.CommandType.MAKE_MOVE, null, null);
+                return 0;
             }
 
             try {
@@ -171,7 +185,7 @@ public class WebSocketHandler {
 
                 GameData dataGame = dataAccess.getGame(gameId);
                 ChessGame gamefromData = dataGame.game();
-                connections.broadcast(gameId, authToken, session, true, "Valid move.", UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
+                connections.broadcast(gameId, authToken, session, true, currUser.username() + " moved " + move.getStartPosition().toString() + " to " + move.getEndPosition().toString(), UserGameCommand.CommandType.MAKE_MOVE, gameName, gamefromData);
 
                 return 0;
             } catch (InvalidMoveException e) {
