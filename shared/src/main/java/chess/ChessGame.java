@@ -117,9 +117,11 @@ public class ChessGame {
         System.out.println("in make move");
 
         System.out.println("turn: " + getTeamTurn());
-        System.out.println("piece color: " + board.getPiece(move.getStartPosition()).getTeamColor());
-        if (getTeamTurn() != board.getPiece(move.getStartPosition()).getTeamColor()) {
-            throw new InvalidMoveException("not your color.");
+        if (board.getPiece(move.getStartPosition()) != null) {
+            System.out.println("piece color: " + board.getPiece(move.getStartPosition()).getTeamColor());
+            if (getTeamTurn() != board.getPiece(move.getStartPosition()).getTeamColor()) {
+                throw new InvalidMoveException("not your color.");
+            }
         }
 
         if (board.getPiece(move.getStartPosition()) == null) {
